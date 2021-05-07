@@ -1,0 +1,64 @@
+var treeData = window.treeData = [
+				   {  
+			            "id": "1",  
+			            "text": "我的学校",  
+			            "state": {  
+			                        "opened": true,          //展示第一个层级下面的node  
+			                        "disabled": true         //该根节点不可点击  
+			                     },  
+			            "children":[
+							{
+								"id": "2",  
+								"text": "计算机学院",  
+								"children": [
+								     {
+											"id": "3",  
+											"text": "年级",  
+											"children": [
+											     {
+														"id": "4",  
+														"text": "2012级",  
+											     },
+											     {
+														"id": "5",  
+														"text": "2013级",  
+											     },
+											     {
+														"id": "6",  
+														"text": "2014级",  
+											     }
+											 ]
+								     },
+								     {
+											"id": "7",  
+											"text": "教室",  
+											"children": [
+											     {
+														"id": "8",  
+														"text": "教室30101",  
+											     },
+											     {
+														"id": "9",  
+														"text": "教室30102",  
+											     },
+											     {
+														"id": "10",  
+														"text": "教室30103",  
+											     }
+											 ]
+								     }
+								 ]
+							},
+							{
+								"id": "11",  
+								"text": "化工学院",  
+								"children": []
+							},
+							{
+								"id": "12",  
+								"text": "马克思学院",  
+								"children": []
+							}
+			            ]
+			        }
+				];

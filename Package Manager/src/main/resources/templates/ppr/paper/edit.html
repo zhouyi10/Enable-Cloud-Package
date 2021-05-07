@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/" xmlns:v-on="http://www.w3.org/1999/xhtml"
+	  xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="UTF-8"/>
+	<title>ETS-School</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta content="yes" name="apple-mobile-web-app-capable"/>
+	<meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+	<meta content="telephone=yes" name="format-detection"/>
+	<meta content="email=yes" name="format-detection"/>
+	<link rel="shortcut icon" href="#" />
+	<link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/custom/package/ppr/css/paper/baseStyle.css(v=${_v})}"/>
+	<link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/custom/package/ppr/css/paper/style20190606.css(v=${_v})}"/>
+	<link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/custom/package/ppr/css/paper/iconfont/iconfont.css(v=${_v})}"/>
+	<link rel="stylesheet" th:href="${_contextPath} + @{/custom/package/ppr/css/jizhi.css(v=${_v})}" />
+	<style th:inline="text">
+		a.virtual_anchor {position: relative;top: -110px;display: block;height: 0;overflow: hidden;}
+		.paperPage .contentCenter .top_ .title_1 {width: 100%;}
+		.paperPage .contentCenter .paper_cont .list_ .num_ em b {margin-right: 0px; padding-right: 3px;}
+		*[contenteditable="true"][edit-text] {padding-left: 2px; padding-right: 2px;}
+		/**[contenteditable="true"][edit-text]:focus, *[contenteditable="true"][edit-text]:hover {background-color: #eef8ff;}*/
+		.layui-layer-tips .layui-layer-content {padding: 5px 13px!important;}
+		.paperPage .contentCenter .paper_cont .list_ img {max-width: 98%;}
+		*[v-cloak] {display: none;}
+		.ContainerWarp20190606 .fixed_header .cont_ .rt_1 .btn_ i.i_7,
+		.ContainerWarp20190606 .fixed_header .cont_ .rt_1 .btn_ i.i_7 {
+			background: url([[${_contextPath} + @{/custom/package/ppr/css/paper/img/i_7.png}]]) 0 0 no-repeat;
+			background-size: 100% 100%;
+		}
+
+		.paperPage .contentCenter .test-paper .title_2 {
+			line-height: 36px;
+			text-align: center;
+			color: #333;
+			margin-bottom: 10px;
+		}
+        .paperPage .contentCenter .test-paper .title_2 .remove_ {
+            overflow: hidden;
+            display: none;
+            float: right;
+            cursor: pointer;
+        }
+
+		.paperPage .contentCenter .test-paper .title_2:hover .remove_ {
+			display: inline-block;
+		}
+
+        .paperPage .contentCenter .test-paper .title_2:hover {
+			background-color: #eef8ff;
+			color: #1b92e2;
+			margin-bottom: 10px;
+        }
+        .paperPage .contentCenter .test-paper .title_2 ._l{
+            display: inline-block;
+            max-width: 90%;
+            min-width: 30%;
+        }
+		.paperPage .contentCenter .paper_cont .list_ .p_t {
+			overflow: hidden;
+		}
+		.paperPage .contentCenter .paper_cont .paper_title .remove_ {
+			margin-right: 10px;
+		}
+		.paperPage .contentCenter .paper_cont .paper_title .remove_ .i_remove {
+			margin: 12.5px 5px 0 0;
+		}
+		.paperPage .contentCenter .paper_cont .paper_title .remove_ .i_up {
+			margin: 12.5px 5px 0 0;
+		}
+		.paperPage .contentCenter .paper_cont .paper_title .remove_ .i_down {
+			margin: 12.5px 5px 0 0;
+		}
+		.paperPage .contentCenter .paper_cont .list_ .p_t .stem.question_blank_image_area {
+			margin: 0px 5px -5px 2px !important;
+		}
+		.num_01 span:nth-child(2){
+			color: red;
+		}
+		.right-asider .box_auto .list_ .l_ .b_ .question_{
+			width : 30px;
+		}
+    </style>
+
+	<script th:src="${_contextPath} + @{/comm/plugins/jQuery/jquery-3.0.0.min.js(v=${_v})}"></script>
+	<script type="text/javascript" th:src="${_contextPath} + @{/comm/js/BaseUtils.js(v=${_v})}"></script>
+	<script th:inline="javascript" th:src="${_contextPath} + @{/comm/fragments/fragments.0.0.2.js(v=${_v})}"></script>
+	<script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/layer/layer.js(v=${_v})}"></script>
+	<script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/vue-2.5.21/vue.min.js(v=${_v})}"></script>
+	<script type="text/javascript" th:src="${_contextPath} + @{/custom/package/ppr/js/Constants.js(v=${_v})}"></script>
+	<script type="text/javascript" th:src="${_contextPath} + @{/custom/package/ppr/js/CommUtils.js(v=${_v})}"></script>
+	<script type="text/javascript" th:src="${_contextPath} + @{/custom/package/ppr/js/paper/edit.js(v=${_v})}"></script>
+	<script type="text/javascript" th:src="${_contextPath} + @{/custom/package/ppr/js/question/questionDragDrop.js(v=${_v})}"></script>
+
+	<script type="text/javascript" th:inline="javascript">
+		if (window.i18n == undefined) {
+			window.i18n = {};
+		}
+		$.extend(i18n,{
+			'kind_0': [[#{UI_70_01_02_043}]],
+			'paper_info' : [[#{UI_70_01_02_044}]],
+			'paper' : [[#{UI_70_01_02_054}]],
+			'confirm' : [[#{UI_70_00_008}]],
+			'save_paper_success' : [[#{MSG_70_01_02_001}]],
+			'save_paper_error' : [[#{MSG_70_01_02_025}]],
+			'answer_card' : [[#{UI_70_01_02_047}]],
+			'view_knowledge_statistics' : [[#{UI_70_01_02_021}]],
+			'save_paper_first' : [[#{MSG_70_01_02_003}]],
+			'preview' : [[#{UI_70_01_01_007}]],
+			'choose_question_with_knowledge' : [[#{UI_70_01_02_016}]],
+			'choose_question_with_chapter' : [[#{UI_70_01_02_017}]],
+			'choose_question_with_paper' : [[#{UI_70_01_02_018}]],
+			'choose_question_with_collection' : [[#{UI_70_01_02_019}]],
+			'import_paper_template' : [[#{UI_70_01_02_041}]],
+			'edit_paper_template' : [[#{UI_70_01_02_042}]],
+			'change_question' : [[#{UI_70_01_02_083}]],
+			'input_question' : [[#{UI_70_01_02_020}]],
+			'paper_base_info_empty' : [[#{MSG_70_01_02_004}]],
+			'kind_empty' : [[#{MSG_70_01_02_005}]],
+			'paper_ques_type_empty' : [[#{MSG_70_01_02_006}]],
+			'ques_points_empty' : [[#{MSG_70_01_02_007}]],
+			'input_points_error' : [[#{MSG_70_01_02_008}]],
+			'repeat_save_paper' : [[#{MSG_70_01_02_009}]],
+			'tipBox_title' : [[#{MSG_70_00_008}]],
+			'question_recommendation_query_empty' : [[#{UI_38_07_012}]],
+			'question_recommendation_query_error' : [[#{UI_38_07_013}]],
+			'question_recommendation_query_some_empty' : [[#{MSG_38_07_011}]],
+			'ques_empty' : [[#{MSG_70_01_02_012}]],
+			'ques_child_points_empty' : [[#{MSG_70_01_02_013}]],
+			'paper_name_max': [[#{MSG_70_01_02_014}]],
+			'paper_knode_name_max': [[#{MSG_70_01_02_015}]],
+			'paper_type_question_name_max': [[#{MSG_70_01_02_016}]],
+			'question_point_not_matching_node' : [[#{MSG_70_01_02_017}]],
+			'question_point_not_matching_error' : [[#{MSG_70_01_02_018}]]
+		});
+		EditPaperPage.paper = [[${paper}]];
+		EditPaperPage.teacherBaseInfoStr = [[${session['_TEACHER_SGS_BASE_INFO']}]];
+		EditPaperPage.questionTypes = [[${questionTypes}]] || [];
+		EditPaperPage.editBaseInfoUrl = [[${_contextPath} + @{'/ppr/baseinfo/preedit'}]];
+		EditPaperPage.chooseQuestionWithKnowledgeUrl = [[${_contextPath} + @{'/ppr/question/choose/with/knowledge'}]];
+		EditPaperPage.chooseQuestionWithChapterUrl = [[${_contextPath} + @{'/ppr/question/choose/with/chapter'}]];
+		EditPaperPage.chooseQuestionWithPaperUrl = [[${_contextPath} + @{'/ppr/question/choose/with/paper'}]];
+		// EditPaperPage.chooseQuestionWithCollectionUrl = [[${_contextPath} + @{'/v3/question/choose/with/collection'}]];
+		EditPaperPage.chooseQuestionWithTeachingAssistantUrl = [[${_contextPath} + @{'/ppr/question/choose/with/teachingassistant'}]];
+		EditPaperPage.importPaperTemplateUrl = [[${_contextPath} + @{'/v3/template/import'}]];
+		EditPaperPage.editPaperTemplateUrl = [[${_contextPath} + @{'/v3/template/preedit'}]];
+		EditPaperPage.preEditQuestionUrl = [[${_contextPath} + @{'/question/preadd'}]];
+		EditPaperPage.viewKnowledgeStatisticsUrl = [[${_contextPath} + @{'/ppr/knowledge/look'}]];
+		// EditPaperPage.viewAnswerCardUrl = [[${_contextPath} + @{'/answerCard?examId={0}'}]];
+		EditPaperPage.viewAnswerCardUrl = [[${_contextPath} + @{'/v3/answercard/preedit?paperId={0}'}]];
+		EditPaperPage.viewPaperUrl = [[${_contextPath} + @{'/preview/{0}'}]];
+		EditPaperPage.savePaperUrl = [[${#strings.isEmpty(paper.paperId)} ? ${_contextPath} + @{'/ppr/add'} : ${_contextPath} + @{'/ppr/edit'}]];
+		EditPaperPage.getContentJsonUrl = [[${_contextPath} + @{'/ppr/content/json'}]];
+		EditPaperPage.increaseUsedNumberUrl = [[${_contextPath} + @{'/ppr/used/times/increase'}]];
+		EditPaperPage.listUrl = [[${contentManagerUrl}]] + '/myindex';
+		EditPaperPage.editType = [[${editType} ?: '_DEFAULT']];
+		EditPaperPage.isCertify = [[${isCertify}]];
+
+		// Set global layer title internationalization
+		layer.config({
+			title: i18n['tipBox_title']
+		});
+		$(function(){
+			if ([[${isCertify}]]){
+				$(document).attr("title", "探寶森林");
+			}
+			EditPaperPage.init();
+		})
+	</script>
+</head>
+<body>
+<div class="ContainerWarp20190606" v-cloak="" id="paper">
+	<div class="fixed_header">
+		<div class="cont_ maxw">
+			<span class="lt_1" v-on:click="editBaseInfo"><b th:text="|#{UI_70_01_02_015}：|">手动组卷：</b><b class="select_" >{{ifEmpty(paper.name)}}</b><i class="i_edit" id="editPaperInfo"></i></span>
+			<ul class="rt_1" v-if="'_DEFAULT' == editType">
+				<li class="btn_" th:if="${chooseQuestionWithKnowledge != false}"  v-on:click="chooseQuestionWithKnowledge"><i class="i_1"></i><b th:text="#{UI_70_01_02_016}">知识点选题</b></li>
+				<li class="btn_" v-on:click="chooseQuestionWithChapter"><i class="i_2"></i><b th:text="#{UI_70_01_02_017}">章节选题</b></li>
+				<li class="btn_" v-on:click="chooseQuestionWithPaper"><i class="i_3"></i><b th:text="#{UI_70_01_02_018}">试卷选题</b></li>
+				<li class="btn_" th:if="${chooseQuestionWithTeachingAssistant != false}" v-on:click="chooseQuestionWithTeachingAssistant"><i class="i_7"></i><b th:text="#{UI_70_01_02_033}">教辅选题</b></li>
+				<!--<li class="btn_" v-on:click="chooseQuestionWithCollection"><i class="i_4"></i><b th:text="#{UI_70_01_02_019}">收藏选题</b></li>-->
+
+			</ul>
+			<ul class="rt_1" v-else-if="'_PROFESSIONAL' == editType">
+				<li class="btn_" v-on:click="importPaperTemplate"><i class="i_5"></i><b th:text="#{UI_70_01_02_041}">导入模板</b></li>
+				<li class="btn_" v-on:click="editPaperTemplate"><i class="i_6"></i><b th:text="#{UI_70_01_02_042}">编辑模板</b></li>
+			</ul>
+		</div>
+	</div>
+	<div class="mainContent afterClearfix maxw paperPage">
+		<div class="contentCenter">
+			<div class="cont_">
+				<div class="top_">
+					<a v-bind:id="paper.paperId" class="virtual_anchor"></a>
+					<h2 class="title_1" v-on:input="inputPaperName" contenteditable="true" v-bind:edit-text="paper.name"></h2><br />
+				</div>
+				<div class="test-paper" v-for="(kNode, kIndex) in paper.nodes">
+					<a v-bind:id="kNode.nodeSearchCode" class="virtual_anchor"></a>
+					<h3 class="title_2">
+                        <span class="_l" v-bind:data-node-search-code="kNode.nodeSearchCode" contenteditable="true" v-bind:edit-text="kNode.name" v-on:keyup="inputNodeName(event, 1)"></span>
+                        <span v-if="kIndex !== 0" class="remove_" v-on:click="removeKindNode(kNode.nodeSearchCode)"><i class="i_remove"></i><b th:text="#{UI_70_00_007}">删除</b></span>
+                    </h3>
+					<div class="paper_cont" v-if="kNode.children.length > 0">
+						<div v-for="(tNode, tIndex) in kNode.children">
+							<a v-bind:id="tNode.nodeSearchCode" class="virtual_anchor"></a>
+							<h4 class="paper_title">
+								<span class="t_" v-bind:contenteditable="editType == '_PROFESSIONAL' ? false : true" v-bind:data-node-search-code='tNode.nodeSearchCode' v-bind:edit-text='tNode.name' v-on:input='inputNodeName(event, 2)'> {{tNode.name}} </span>
+								<span class="remove_" v-on:click="removeTypeNode(tNode.nodeSearchCode)"><i class="i_remove"></i><b th:text="#{UI_70_00_007}">删除</b></span>
+								<span v-if="tIndex !== kNode.children.length-1" class="remove_" v-on:click="moveQuestion(tNode.nodeSearchCode, 'down', 'tNode')"><i class="i_down"></i><b th:text="#{UI_70_01_02_082}">下移</b></span>
+								<span v-if="tIndex !== 0" class="remove_" v-on:click="moveQuestion(tNode.nodeSearchCode, 'up', 'tNode')"><i class="i_up"></i><b th:text="#{UI_70_01_02_081}">上移</b></span>
+							</h4>
+							<!--<div is="question-component" v-for="qNode in tNode.children"-->
+								 <!--v-bind:qNode="qNode" v-bind:changingNodeSearchCode="changingNodeSearchCode"  v-bind:key="qNode.nodeSearchCode"-->
+								 <!--v-on:remove-question="removeQuestion" v-on:move-question="moveQuestion" v-on:change-question="changeQuestion"-->
+								 <!--v-on:reset-points="resetPoints" v-on:change-paper-status="paper.isSaved = false" v-on:tips="tips"-->
+							<!--&gt;</div>-->
+
+							<div class="list_ node_code" v-for="qNode in tNode.children" v-bind:data-node-search-code="qNode.nodeSearchCode" v-bind:key="qNode.nodeSearchCode" v-bind:changing="qNode.nodeSearchCode == changingNodeSearchCode">
+								<a v-bind:id="qNode.nodeSearchCode" class="virtual_anchor"></a>
+								<div class="hand_">
+									<span class="btn_" v-on:click="removeQuestion(qNode.nodeSearchCode)"><i class="i_remove"></i><em th:text="#{UI_70_00_007}">删除</em></span>
+									<span class="btn_ up_" v-on:click="moveQuestion(qNode.nodeSearchCode, 'up')"><i class="i_up"></i><em th:text="#{UI_70_01_02_081}">上移</em></span>
+									<span class="btn_ down_" v-on:click="moveQuestion(qNode.nodeSearchCode, 'down')"><i class="i_down"></i><em th:text="#{UI_70_01_02_082}">下移</em></span>
+									<span class="btn_" v-on:click="changeQuestion(qNode.question == null ? '' : qNode.question, $event.target)"><i class="i_question"></i><em th:text="#{UI_70_01_02_083}">换题</em></span>
+									<!--<span class="btn_" v-on:click="inputQuestion(qNode.question == null ? '' : qNode.question.questionId, $event.target)"><i class="i_edit"></i><em th:text="#{UI_70_01_02_020}">录题</em></span>-->
+								</div>
+								<b class="num_">
+									<span contenteditable="true" v-bind:edit-text="qNode.externalNo" v-on:input="inputExternalNo"></span>.
+									<em th:inline="text">（
+										<b v-if="qNode.children.length == 0" contenteditable="true" v-bind:edit-text="qNode.points" v-on:input="inputPoints" v-on:blur="blurPoints"></b>
+										<b v-if="qNode.children.length > 0">{{qNode.points}}</b>
+										[[#{UI_70_01_02_080}]]）</em>
+								</b>
+								<div class="p_t" v-if="qNode.question != null &amp;&amp; qNode.question.stem != null" v-html="qNode.question.stem.richText"></div>
+								<div class="p_c" v-for="option in qNode.question.options" v-show="option.lable != null &amp;&amp; option.lable != '' ">{{option.alias}}.<span v-html="option.lable"></span></div>
+								<div class="p_child">
+									<div class="p_t node_code" v-for="cNode in qNode.children" v-bind:data-node-search-code="cNode.nodeSearchCode">
+										<a v-bind:id="cNode.nodeSearchCode" class="virtual_anchor"></a>
+										<span class="num_01" th:inline="text">
+											<span contenteditable="true" v-bind:edit-text="cNode.externalNo" v-on:input="inputExternalNo"></span>（<span contenteditable="true" v-bind:edit-text="cNode.points" v-on:input="inputPoints" v-on:blur="blurPoints"></span>[[#{UI_70_01_02_046}]]）</span>
+										<div v-if="cNode.question != null &amp;&amp; cNode.question.stem != null" v-html="cNode.question.stem.richText">对此问题你有什么看法？</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--noData_There is no prompt for the test questions. The actual display can be viewed by yourself-->
+				<div class="noData_" v-if="paper.nodes.length == 1 &amp;&amp; paper.nodes[0].children.length == 0">
+					<img th:src="${_contextPath} + @{/custom/package/ppr/css/paper/img/empty.png}"/>
+					<p th:text="#{MSG_70_01_02_002}">请选题进行组卷</p>
+				</div>
+			</div>
+		</div>
+		<div class="right-asider">
+			<div class="cont">
+				<div class="box_auto">
+					<h2 class="title_" th:text="#{UI_70_01_02_024}">试卷结构</h2>
+					<div class="list_" v-for="kNode in paper.nodes">
+						<h3 class="head_02" th:inline="text"><b>{{kNode.name}}</b>（[[#{UI_70_01_02_045}]]：{{kNode.points}}）</h3>
+						<dl class="l_" v-for="tNode in kNode.children">
+							<dt class="h_" th:inline="text">{{tNode.name}}（[[#{UI_70_01_02_045}]] <em>{{tNode.points}}</em>）</dt>
+							<dd class="b_">
+								<a class="question_" v-for="qNode in tNode.children" v-bind:href="'javascript:document.getElementById(\'' + qNode.nodeSearchCode + '\').scrollIntoView();'">{{qNode.externalNo}}</a>
+							</dd>
+						</dl>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="fixed_footer">
+		<div class="cont_ maxw">
+			<span class="lt_1" th:utext="${#messages.msg('UI_70_01_02_023', '&lt;em&gt;{{questionCount}}&lt;/em&gt;')} + '&lt;em&gt;{{paper.totalPoints}}&lt;/em&gt;' + #{UI_70_01_02_046}">共<em>{{questionCount}}</em>道题<em>{{paper.totalPoints}}</em>分</span>
+			<div class="btn_box">
+				<span class="btn_01" v-bind:class="questionCount==0 ? 'bg3' : ''" v-on:click="viewKnowledgeStatistics" th:text="#{UI_70_01_02_021}">查看知识点</span>
+				<span class="btn_01" th:if="${answerCard != false}" v-bind:class="paper.isSaved ? '' : 'bg3'" v-on:click="viewAnswerCard" th:text="#{UI_70_01_02_047}">答题卡</span>
+				<span class="btn_01" v-bind:class="paper.isSaved ? '' : 'bg3'" v-on:click="viewPaper" th:text="#{UI_70_01_02_022}">下载试卷</span>
+				<span class="btn_01" v-bind:class="!paper.isSaved ? 'bg2' : 'bg3'" v-on:click="savePaper(event)" th:text="#{UI_70_01_02_048}">保存试卷</span>
+				<th:block th:if="${paper.paperId != null}">
+					<span class="btn_01" v-if="!EditPaperPage.isCertify" v-bind:class="!paper.isSaved ? 'bg2' : 'bg3'" v-on:click="savePaper(event,'1')" th:text="#{UI_70_01_02_065}">另存</span>
+				</th:block>
+			</div>
+		</div>
+	</div>
+</div>
+<div v-cloak="" style="display: none;">
+	<div class="bgC_" id="chooseQuestionSource">
+		<ul class="selectqustion">
+			<li class="l_ active"><span class="on_"><i class="iconfont icon-htmal5icon22"></i></span><img th:src="${_contextPath} + @{/custom/package/ppr/css/paper/img/p_q1.png}"/><p>个人题库</p><span>2653道题</span></li>
+			<li class="l_"><span class="on_"><i class="iconfont icon-htmal5icon22"></i></span><img th:src="${_contextPath} + @{/custom/package/ppr/css/paper/img/p_q2.png}"/><p>校本题库</p><span>16535道题</span></li>
+			<li class="l_"><span class="on_"><i class="iconfont icon-htmal5icon22"></i></span><img th:src="${_contextPath} + @{/custom/package/ppr/css/paper/img/p_q3.png}"/><p>区域题库</p><span>125道题</span></li>
+			<li class="l_"><span class="on_"><i class="iconfont icon-htmal5icon22"></i></span><img th:src="${_contextPath} + @{/custom/package/ppr/css/paper/img/p_q4.png}"/><p>三三云题库</p><span>8574道题</span></li>
+		</ul>
+		<div class="textCenter"><div class="hidden_"><span class="btn_01">确定</span><span class="btn_01 bg3">取消</span></div></div>
+	</div>
+</div>
+</body>
+<div id="loadingTemplate" class="loading_" style="display: none">
+	<div class="cont_">
+		<img th:src="${_contextPath} + @{/custom/package/ppr/css/paper/img/loading.gif}"/>
+		<p th:text="#{UI_38_07_014}">系统正在进行智能组卷，请耐心等待…</p>
+	</div>
+</div>
+
+</html>

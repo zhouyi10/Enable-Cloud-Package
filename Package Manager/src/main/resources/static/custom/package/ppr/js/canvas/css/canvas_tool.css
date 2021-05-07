@@ -1,0 +1,244 @@
+@charset "UTF-8";
+ul, menu, dir { /* 基础ul样式 */
+    display: block;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+.text_no_select { /* 文字不可选中样式 */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Chrome/Safari/Opera */
+    -khtml-user-select: none; /* Konqueror */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently */
+}
+.canvas_curtain {position: absolute; z-index: 1; left: 0; top: 0; width: 100%; height: 100%;}
+.canvas_main {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 90%; 
+    width: 80%; 
+    margin: 2% 10% 2% 10%; 
+    z-index: 2;
+    transition: margin-left 1s;  /* 过渡效果，当margin-left改变时动态过渡 */
+    -moz-transition: margin-left 1s;	/* Firefox 4 */
+    -webkit-transition: margin-left 1s;	/* Safari 和 Chrome */
+    -o-transition: margin-left 1s;	/* Opera */
+}
+.canvas_main.off {margin-left: 100%;}
+/* 左侧按钮 */
+.canvas_main .canvas_left { float: left; width: 0px; height: 100%;}
+.canvas_main .canvas_left .tBrush {
+    position: relative;
+    left: -31px;
+    width: 30px;
+    height: 50px;
+    background: url("../img/canvas_tool.png") -12px -79px no-repeat #ECECEC;
+    border: 1px solid #ccc;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 4px;
+}
+/* 内容区域 */
+.canvas_main .canvas_body {
+    margin: 0px 60px 0px 0px;
+    height: 100%;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+}
+.canvas_main .canvas_body .canvas_area {
+    width: 100%;
+    height: 100%;
+    padding-bottom: 42px;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.7);
+}
+.canvas_main .canvas_body > .input_area {
+    position: absolute;
+    padding: 2px;
+    width: 50px;
+    border : 1px solid #ccc;
+    resize: none;
+    overflow: hidden;
+}
+.canvas_main .canvas_body .canvas_area canvas,
+.canvas_main .canvas_body .canvas_area video {width: 100%; height: 100%;}
+
+.canvas_main .canvas_body > img {position: absolute; z-index: 2;}
+.canvas_main .canvas_body .canvas_area canvas {position: relative; z-index: 3;}
+.canvas_main .canvas_body .canvas_area canvas.drawing_track {position: absolute; z-index: 9999; left: 1px; top: 1px;}
+
+/* 操作区域 */
+.canvas_main .canvas_body .canvas_op {
+    position: relative;
+    top: -41px;
+    width: 100%;
+}
+.canvas_main .canvas_body .canvas_op .canvas_op_wrapper {
+    width: 100%;
+    height: 42px;
+    background-color: #969696;
+}
+@media screen and (max-width : 990px) {
+    .canvas_main .canvas_body .canvas_area { padding-bottom: 84px; }
+    .canvas_main .canvas_body .canvas_op { top: -83px; height: 84px; }
+    .canvas_main .canvas_body .canvas_op .canvas_op_wrapper {height: 84px;}
+}
+@media screen and (max-width : 530px) {
+    .canvas_main .canvas_body .canvas_area { padding-bottom: 126px; }
+    .canvas_main .canvas_body .canvas_op { top: -125px; height: 126px; }
+    .canvas_main .canvas_body .canvas_op .canvas_op_wrapper {height: 126px;}
+}
+/* @media screen and (max-height : 485px) {
+    .canvas_main .canvas_body .canvas_area { padding-bottom: 84px; }
+    .canvas_main .canvas_body .canvas_op { top: -83px; height: 84px; }
+} */
+/* @media screen and (max-height : 330px) {
+    .canvas_main .canvas_body .canvas_area { padding-bottom: 126px; }
+    .canvas_main .canvas_body .canvas_op { top: -125px; height: 126px; }
+} */
+/* 工具 */
+.canvas_main .canvas_body .canvas_op .tools > li {float: left; margin: 2px; width: 36px; height: 36px; border: 1px solid #969696; cursor: pointer;}
+.canvas_main .canvas_body .canvas_op .tools > li.tool.on {border-color: #fe315d;}
+.canvas_main .canvas_body .canvas_op .tools > li.pencil {background: url("../img/canvas_tool.png") -4px -5px no-repeat;}
+.canvas_main .canvas_body .canvas_op .tools > li.line {background: url("../img/canvas_tool.png") -56px -5px no-repeat;}
+.canvas_main .canvas_body .canvas_op .tools > li.input {background: url("../img/canvas_tool.png") -160px -5px no-repeat;}
+.canvas_main .canvas_body .canvas_op .tools > li.eraser {background: url("../img/canvas_tool.png") -212px -5px no-repeat;}
+.canvas_main .canvas_body .canvas_op .tools > li.clear {background: url("../img/canvas_tool.png") -264px -5px no-repeat;}
+.canvas_main .canvas_body .canvas_op .tools > li.splitor {background: url("../img/canvas_tool.png") -315px -5px no-repeat; width: 10px;}
+.canvas_main .canvas_body .canvas_op .tools > li.alpha {background: url("../img/canvas_tool.png") -442px -3px no-repeat; width: 95px;}
+.canvas_main .canvas_body .canvas_op .tools > li.alpha .slider {position: relative; top: 3px; left: 30%; height: 26px; width: 6px; border: 2px solid #818181; border-radius: 6px; background: url("../img/canvas_tool.png") -453px -49px no-repeat;}
+.canvas_main .canvas_body .canvas_op .tools > li.photo {background: url("../img/canvas_tool.png") -547px -5px no-repeat;}
+.canvas_main .canvas_body .canvas_op .tools > li.camera {background: url("../img/canvas_tool.png") -582px -4px no-repeat;}
+.canvas_main .canvas_body .canvas_op .tools > li.camera.on {background: url("../img/canvas_tool.png") -583px -46px no-repeat;}
+
+/* 形状 */
+.canvas_main .canvas_body .canvas_op .tools > li.shape, 
+.canvas_main .canvas_body .canvas_op .tools > li.shape.rectangle {background: url("../img/canvas_tool.png") -107px -5px no-repeat;}
+.canvas_main .canvas_body .canvas_op .tools > li.shape.square {background: url("../img/canvas_tool.png") -108px -42px no-repeat;}
+.canvas_main .canvas_body .canvas_op .tools > li.shape.circle {background: url("../img/canvas_tool.png") -108px -83px no-repeat;}
+.canvas_main .canvas_body .canvas_op .tools > li.shape.ellipse {background: url("../img/canvas_tool.png") -108px -121px no-repeat;}
+.canvas_main .canvas_body .canvas_op .tools > li.shape.parallelogram {background: url("../img/canvas_tool.png") -110px -163px no-repeat;}
+
+/* 工具选择框 */
+.canvas_main .canvas_body .canvas_op .tools > li .tool_detail {display: none; position: relative; height: 36px; width: 158px; padding: 5px; box-sizing: border-box; top: -40px; background-color: #969696; border: 1px solid #969696; z-index: 3;}
+.canvas_main .canvas_body .canvas_op .tools > li.on .tool_detail {display: block;}
+.canvas_main .canvas_body .canvas_op .tools > li .tool_detail li {width: 23px; height: 23px; display: inline-block; border: 1px solid #969696;}
+.canvas_main .canvas_body .canvas_op .tools > li .tool_detail li:not(:last-child) {margin-right: 5px;}
+.canvas_main .canvas_body .canvas_op .tools > li .tool_detail li.on {border-color: khaki;}
+
+/* 形状选择框 */
+.canvas_main .canvas_body .canvas_op .tools > li.shape .tool_detail .rectangle {background: url("../img/canvas_tool.png") -115px -203px no-repeat; }
+.canvas_main .canvas_body .canvas_op .tools > li.shape .tool_detail .square {background: url("../img/canvas_tool.png") -114px -234px no-repeat; }
+.canvas_main .canvas_body .canvas_op .tools > li.shape .tool_detail .circle {background: url("../img/canvas_tool.png") -114px -267px no-repeat; }
+.canvas_main .canvas_body .canvas_op .tools > li.shape .tool_detail .ellipse {background: url("../img/canvas_tool.png") -115px -296px no-repeat; }
+.canvas_main .canvas_body .canvas_op .tools > li.shape .tool_detail .parallelogram {background: url("../img/canvas_tool.png") -114px -324px no-repeat; }
+
+/* 笔刷颜色 */
+.canvas_main .canvas_body .canvas_op .tools > li.color {margin:8px; width: 24px; height: 24px;}
+.canvas_main .canvas_body .canvas_op .tools > li.color .tool_detail {top: -46px; width: 218px;}
+
+.canvas_main .canvas_body .canvas_op .tools li.black {background-color: black;}
+.canvas_main .canvas_body .canvas_op .tools li.red {background-color: red;}
+.canvas_main .canvas_body .canvas_op .tools li.yellow {background-color: yellow;}
+.canvas_main .canvas_body .canvas_op .tools li.lightblue {background-color: lightblue;}
+.canvas_main .canvas_body .canvas_op .tools li.green {background-color: green;}
+.canvas_main .canvas_body .canvas_op .tools li.blue {background-color: blue;}
+.canvas_main .canvas_body .canvas_op .tools li.white {background-color: white;}
+
+/* 笔刷大小 */
+.canvas_main .canvas_body .canvas_op .tools > li.weight {background: url("../img/canvas_tool.png") -392px -5px no-repeat;}
+.canvas_main .canvas_body .canvas_op .tools > li.weight.w1 {background: url("../img/canvas_tool.png") -392px -40px no-repeat;}
+.canvas_main .canvas_body .canvas_op .tools > li.weight.w3 {background: url("../img/canvas_tool.png") -392px -65px no-repeat;}
+.canvas_main .canvas_body .canvas_op .tools > li.weight.w5 {background: url("../img/canvas_tool.png") -391px -92px no-repeat;}
+.canvas_main .canvas_body .canvas_op .tools > li.weight.w7 {background: url("../img/canvas_tool.png") -392px -116px no-repeat;}
+.canvas_main .canvas_body .canvas_op .tools > li.weight.w9 {background: url("../img/canvas_tool.png") -391px -148px no-repeat;}
+
+.canvas_main .canvas_body .canvas_op .tools > li.weight .tool_detail li div {background-color: white;}
+.canvas_main .canvas_body .canvas_op .tools > li.weight .tool_detail .w1 div {margin: 11px 2px; height: 1px;}
+.canvas_main .canvas_body .canvas_op .tools > li.weight .tool_detail .w3 div {margin: 10px 2px; height: 3px;}
+.canvas_main .canvas_body .canvas_op .tools > li.weight .tool_detail .w5 div {margin: 9px 2px; height: 5px;}
+.canvas_main .canvas_body .canvas_op .tools > li.weight .tool_detail .w7 div {margin: 8px 2px; height: 7px;}
+.canvas_main .canvas_body .canvas_op .tools > li.weight .tool_detail .w9 div {margin: 7px 2px; height: 9px;}
+
+/* 按钮 */
+.canvas_main .canvas_body .canvas_op .op_btn {float: right; padding: 6px;}
+.canvas_main .canvas_body .canvas_op .op_btn button {
+    padding: 5px 16px;
+    border: 1px solid #f9f9f9;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+.canvas_main .canvas_body .canvas_op .op_btn button:not(:first-child) {
+    margin-left: 10px;
+}
+
+    /* 右侧区域 */
+.canvas_main .canvas_right {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 60px;
+    overflow: auto;
+    height: 100%;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-left: 0;
+    box-sizing: border-box;
+    background-color: #ececec;
+}
+.canvas_main .canvas_right li {
+    margin-top: 10px;
+    width: 100%;
+    height: 22px;
+    border: 1px solid #ececec;
+    background-color: white;
+    cursor: pointer
+}
+.canvas_main ul.canvas_right li.add {
+    margin-top: 0px;
+    background: white url('../img/canvas_tool.png') -3px -182px no-repeat;
+}
+.canvas_main ul.canvas_right li.on {
+    border-color: #ecb77d;
+}
+.canvas_main ul.canvas_right li:not(.add) img {
+    width: 100%;
+    max-width: 100%!important;
+    height: 100%;
+}
+.canvas_main ul.canvas_right li:not(.add) div {float: right; height: 0px;}
+.canvas_main ul.canvas_right li:not(.add) div .canvas_del_btn {
+    position: relative;
+    right : -5px;
+    top: -7px;
+    width: 16px;
+    height: 16px;
+    background: url('../img/canvas_tool.png') -15px -215px no-repeat;
+}
+
+.canvas_main.tool_top .canvas_body .canvas_area{padding-bottom: 0px; padding-top: 42px;}
+.canvas_main.tool_top .canvas_body .canvas_area canvas.drawing_track {top: 1px; top: 43px;}
+.canvas_main.tool_top .canvas_body .canvas_op {position: absolute; top: 0px; padding-right: 60px;}
+.canvas_main.tool_top .canvas_body .canvas_op .tools > li .tool_detail {top: 40px;}
+.canvas_main.tool_top .canvas_body img.background_img {margin-top: 42px;max-width: 100%!important;}
+
+.canvas_main.single .canvas_body {margin-right: 0px;}
+.canvas_main.tool_top.single .canvas_body .canvas_op {padding-right: 0px;}
+
+
+/** 批阅插件 */
+.canvas_main .mark_module {position: absolute; top: 6px; right: 80px; height: 40px; z-index: 3; padding: 5px; overflow: hidden;}
+.canvas_main .mark_module input {float: left; width: 60px; height: 30px; line-height: 30px; padding: 2px 4px; font-size: 20px; background: rgba(255, 255, 255, 0.8); border: 1px solid #ccc;}
+.canvas_main .mark_module .canvas_mark_btn {float: left; zoom: 1.3; margin-top: 2px; margin-left: 4px;}
+.canvas_main .mark_module .canvas_mark_btn i {width: 22px; height: 22px; display: inline-block; margin-left: 4px; cursor: pointer; background-image: url("../img/canvas_tool.png");}
+.canvas_main .mark_module .canvas_mark_btn i.right {background-position: -14px -249px;}
+.canvas_main .mark_module .canvas_mark_btn i.right.h {background-position: -44px -250px;}
+.canvas_main .mark_module .canvas_mark_btn i.wrong {background-position: -14px -280px;}
+.canvas_main .mark_module .canvas_mark_btn i.wrong.h {background-position: -44px -280px;}
+
+.canvas_main.tool_top .mark_module {top: 48px;}
+.canvas_main.single .mark_module {right: 20px;}

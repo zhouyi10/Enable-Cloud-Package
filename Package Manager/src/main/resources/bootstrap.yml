@@ -1,0 +1,42 @@
+logging:
+  config: classpath:logback.xml
+eureka:
+  instance:
+    ip-address: localhost
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: package-microservice-zy
+  cloud:
+    nacos:
+      config:
+        server-addr: 192.168.116.15:8848
+        name: package-microservice-zy
+        file-extension: yaml
+        group: DEFAULT_GROUP
+        sharedConfigs[0]:
+          data-id: comm.yaml
+          group: COMMON_GROUP
+          refresh: true
+        sharedConfigs[1]:
+          data-id: activemq.yaml
+          group: COMMON_GROUP
+          refresh: true
+        sharedConfigs[2]:
+          data-id: enable-serviceadmin-client.yaml
+          group: COMMON_GROUP
+          refresh: true
+        sharedConfigs[3]:
+          data-id: sso.yaml
+          group: COMMON_GROUP
+          refresh: true
+        sharedConfigs[4]:
+          data-id: redis.yaml
+          group: COMMON_GROUP
+          refresh: true
+        sharedConfigs[5]:
+          data-id: eureka.yaml
+          group: COMMON_GROUP
+          refresh: true
+

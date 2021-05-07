@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <meta content="telephone=yes" name="format-detection" />
+    <meta content="email=yes" name="format-detection" />
+    <title>ETS-School</title>
+    <link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/comm/plugins/Swiper/swiper-4.4.6.min.css(v=${_v})}"/>
+    <link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/comm/plugins/Font-Awesome-4.7.0/css/font-awesome.min.css(v=${_v})}"/>
+    <link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/custom/package/ppr/css/exam/answer/testQuestion.min.css(v=${_v})}"/>
+    <link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/custom/package/ppr/css/jizhi.css(v=${_v})}"/>
+    <link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/custom/package/ppr/css/exam/answer/base.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/custom/package/ppr/css/exam/answer/onLine.css}"/>
+
+    <style type="text/css">
+        .child_question {margin-top: 10px; padding-left: 6px;}
+        .img_all { overflow: hidden;}
+        .img_all:before, .img_all:after {content: ''; clear: both;}
+        .Container .mainContent .test_box .test_cont .swiper-container .swiper-wrapper .swiper-slide img {max-width: 100%;}
+        .Container .mainContent .test_box .test_cont .text_answer .text_answer_input {display: block;}
+        .Container .mainContent .test_box .test_cont .text_answer .text_answer_input:not(:first-child) {margin-top: 8px;}
+        .Container .mainContent .test_box .test_cont .selectBox > li{ cursor: pointer;}
+        .Container .mainContent .test_box .test_cont .canvas_area > div:first-child { float: right; height: 0px;}
+        .Container .mainContent .test_box .test_cont .canvas_area > div:first-child > i {position: relative; top: -32px; margin-right: 6px;font-size: 24px; cursor: pointer;}
+        .Container .footer .footer_cont > a:last-child {border: 1px solid #42a3f5;}
+        .Container .footer .footer_cont > a[class^='test'].swiper-button-disabled {border-color: #e1e1e1; pointer-events: none;}
+        .Container .footer .footer_cont > a[class^='test']:not(.swiper-button-disabled) {background: #42a3f5; color: white; border: 0px;}
+        .answer_list {
+            list-style: none;
+        }
+        .remove-btn {
+            margin-right: 650px;
+            float: right;
+            background: #42a3f5;
+            color: white;
+            width: 40px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .answer_list > li{
+            margin-top: 10px;
+        }
+        .collectline .show{
+            z-index: 1;
+        }
+        .operation div:nth-child(2){opacity:0; }
+        .webuploader-pick{
+            background: #42a3f5;
+            width: 75px;
+            text-align: center;
+            color: white;
+        }
+        .operation {
+            margin-top: 5px;
+        }
+        .Container .mainContent .test_box .test_cont .question_area .question_blank_image_option {
+            margin-top: 25px !important;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/custom/package/ppr/js/canvas/css/canvas_tool.css(v=${_v})}" />
+    <!-- This style is for the web, please do not move the position to avoid style problems -->
+    <link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/custom/package/ppr/css/exam/answer/question-web.css(v=${_v})}"/>
+    <script type="text/javascript" data-th-src="${_contextPath} + @{/comm/plugins/jQuery/jquery-3.0.0.min.js(v=${_v})}"></script>
+    <script type="text/javascript" data-th-src="${_contextPath} + @{/comm/plugins/Swiper/swiper-4.4.6.min.js(v=${_v})}"></script>
+    <script type="text/javascript" data-th-src="${_contextPath} + @{/comm/plugins/layer/layer.js(v=${_v})}"></script>
+    <script type="text/javascript" data-th-src="${_contextPath} + @{/comm/plugins/jplayer/jquery.jplayer.js(v=${_v})}"></script>
+    <script type="text/javascript" data-th-src="${_contextPath} + @{/comm/plugins/webUploader/webuploader.min.js(v=${_v})}"></script>
+    <script type="text/javascript" data-th-src="${_contextPath} + @{/comm/plugins/webUploader/UploadFileUtils.js(v=${_v})}"></script>
+    <script type="text/javascript" data-th-src="${_contextPath} + @{/comm/plugins/html2canvas/html2canvas.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/fragments/fragments.js(v=${_v})}"></script>
+    <script type="text/javascript" data-th-src="${_contextPath} + @{/custom/package/ppr/js/CommUtils.js(v=${_v})}"></script>
+    <script type="text/javascript" data-th-src="${_contextPath} + @{/custom/package/ppr/js/exam/answer/questionPanel.js(v=${_v})}"></script>
+    <script type="text/javascript" data-th-src="${_contextPath} + @{/custom/package/ppr/js/exam/answer/mobileAnswerQuestion.js(v=${_v})}"></script>
+    <script type="text/javascript" data-th-src="${_contextPath} + @{/custom/package/ppr/js/exam/answer/AnswerQuestionTimer.js(v=${_v})}"></script>
+    <script type="text/javascript" data-th-src="${_contextPath} + @{/custom/package/ppr/js/canvas/CanvasUtils.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} +@{/custom/package/ppr/js/exam/answer/connectLineQuestion.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} +@{/custom/package/ppr/js/exam/answer/questionDragDrop.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} +@{/custom/package/ppr/js/exam/answer/operationQuestion.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/js/BaseUtils.js(v=${_v})}"></script>
+    <script type="text/javascript" data-th-inline="javascript">
+        window.i18n = {
+            "confirm" : [[#{UI_70_00_008}]],
+            "cancel" : [[#{UI_70_00_009}]],
+            "confirm_return_without_submit" : [[#{MSG_70_01_01_001}]],
+            "confirm_submit" : [[#{MSG_70_01_01_002}]],
+            "submit_success" : [[#{MSG_70_01_01_004}]],
+            "submit_failed" : [[#{MSG_70_01_01_003}]],
+            "cancle" : [[#{UI_70_00_013}]],
+            'alert_title' : [[#{MSG_70_00_008}]],
+            'submit_last_minute_tip': [[#{MSG_70_01_01_005}]],
+            'auto_submit_last_second_tip': [[#{MSG_70_01_01_006}]],
+            'delay_submit': [[#{UI_70_01_01_010}]],
+            'immediately_hand_paper' : [[#{UI_70_01_01_011}]],
+            'delete' : [[#{UI_70_00_007}]],
+            'uploaded' : [[#{UI_70_01_01_014}]]
+        };
+        var jPlayerSWFPath = [[${_contextPath} + @{'/comm/plugins/jplayer'}]]; // jplayer 插件地址
+        CanvasUtils.global({
+            'uploadUrl' : [[${_contextPath} + @{'/file/upload'}]],
+            'plugins': ['background']
+        });
+        $(document).ready(function() {
+
+            $.extend(AnswerQuestion, [[${condition}]]); //condition中字段 userId/testId/examId/isMobile/answerType
+            AnswerQuestion.getExamUrl = [[${_contextPath} + @{'/ppr/exam/get'}]];
+            AnswerQuestion.saveUrl = [[${_contextPath} + @{'/ppr/exam/submit'}]];
+            AnswerQuestion.waitUrl = [[${_contextPath} + @{'/ppr/exam/wait'}]];
+            AnswerQuestion.getTimeUrl = [[${_contextPath} + @{'/ppr/exam/time'}]];
+            AnswerQuestion.tactivityId = [[${tactivityId}]];
+            AnswerQuestion.testInfo = JSON.parse([[${testInfo}]]);
+            AnswerQuestion.startTestTime = [[${startTestTime}]];
+            AnswerQuestion.condition = [[${condition}]];
+            AnswerQuestion.uploader_swf_url = [[${_contextPath} + @{'/js/webuploader/Uploader.swf'}]];
+            AnswerQuestion.check_file_exist_url = [[${_contextPath} + @{/file/exists}]];
+            AnswerQuestion.fileUploadUrl = [[${uploadFileUrl}]];
+            AnswerQuestion.fileTokenUrl = [[${_contextPath} + @{'/file/request'}]];
+            AnswerQuestion.collectLineQuestionType = "40";
+            AnswerQuestion.init();
+         });
+
+    </script>
+</head>
+<body>
+<div class="Container">
+    <div class="header">
+        <div class="header_cont">
+            <a class="backBtn" href="javascript:;"><i></i></a>
+            <span class="header_title" id="title"></span>
+            <span class="timer_area">
+				</span>
+            <!-- 注意该id必须不为空必须为这个 -->
+            <span id="jp_container_1" class="audio_area" style="display: none;">
+					<span id="audio"></span>
+					<div class="jp-gui jp-interface">
+						<div class="jp-controls">
+							<div class="jp-play fa fa-play-circle-o"></div>
+							<div class="jp-pause fa fa-stop-circle-o"></div>
+						</div>
+						<div class="jp-progress">
+							<div class="jp-seek-bar" style="width: 100%;">
+								<div class="jp-play-bar" style="width: 0%;"></div>
+							</div>
+							<div>
+								<span class="jp-current-time" role="timer" aria-label="time">00:00</span>
+								<span class="jp-duration" role="timer" aria-label="duration">00:00</span>
+							</div>
+						</div>
+					</div>
+				</span>
+        </div>
+    </div>
+    <div class="mainContent">
+        <div class="test_box">
+            <div class="test_tips">
+                <span class="test_number" th:utext="#{UI_70_01_01_002('0')}">第<b>0</b>题</span>
+                <span class="test_total" th:utext="#{UI_70_01_01_003('0')}">共<b>0</b>题</span>
+                <span class="screen_splitor"><b></b></span>
+            </div>
+            <div class="test_cont" id="swiperList">
+                <div class="swiper-container">
+                    <div class="swiper-wrapper" id="questionSwiper">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="footer_cont">
+            <a class="test_prev" href="javascript:;" th:text="#{UI_70_01_01_004}">上一题</a>
+            <a href="javascript:;" onclick="AnswerQuestion.savePaper();" th:text="#{UI_70_01_01_005}">交卷</a>
+            <a class="test_next" href="javascript:;" th:text="#{UI_70_01_01_006}">下一题</a>
+        </div>
+    </div>
+    <div class="testCardLists">
+        <div class="testCardLists_cont">
+            <p class="testCardLists_title" th:text="#{UI_70_01_01_001}">答题卡</p>
+            <ul class="testCardLists_list" id="testCard">
+            </ul>
+            <div class="testCardLists_sure">
+                <a class="testSureBtn" href="javascript:;" onclick="AnswerQuestion.savePaper();" th:text="#{UI_70_01_01_005}">交卷</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="display:none">
+    <div id="judgementAnswerTemplate">
+        <ul class="selectBox answer judge" data-key="{questionId}">
+            <li name="op{questionId}" data-value="T" th:text="#{UI_70_01_01_007}">对</li>
+            <li name="op{questionId}" data-value="F" th:text="#{UI_70_01_01_008}">错</li>
+        </ul>
+    </div>
+    <div id="textAreaTemplate">
+        <p class="textareabox answer default" data-key="{questionId}">
+            <textarea id='ta{questionId}' name='ta{questionId}'></textarea>
+        </p>
+    </div>
+    <div id="blankAnswerTemplate">
+        <input th:placeholder="#{UI_70_01_01_009}" class="text_answer_input" type="text" name="blank_{questionId}" />
+    </div>
+    <div id="operationAnswerTemplate">
+        <div class="operation answer" data-key="{questionId}" id="upload_file_{questionId}" th:text="#{UI_70_01_01_015}" title="">上传文件</div>
+        <div class="answer_list"></div>
+
+    </div>
+    <div id="collectLineQuestionTemplate">
+        <div class="demo pt10 collectline answer" data-key="{questionId}">
+            <div class="show cb">
+                <div class="tools">
+                    <!--<div class="savePair">savePair</div>-->
+                    <!--<div class="getPair">getPair</div>-->
+                    <div class="goBackBtn" th:text="#{UI_70_01_01_012}">回退</div>
+                    <div class="resetCanvasBtn" th:text="#{UI_70_01_01_013}">重置</div>
+                </div>
+                <div class="showleft"><!--左侧-->
+
+                </div>
+                <div class="showright"><!--右侧-->
+
+                </div>
+                <!-- -->
+                <canvas class="canvas"></canvas>
+                <canvas class="backcanvas"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

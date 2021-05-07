@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enableets.edu.pakage.framework.ppr.test.dao.TestInfoDAO">
+
+	<select id="get" parameterType="java.lang.String" resultType="com.enableets.edu.pakage.framework.ppr.test.po.TestInfoPO">
+		select
+			t1.test_id as testId,
+			t1.activity_id as activityId,
+		    t1.activity_type as activityType,
+			t1.school_id as schoolId,
+			t1.term_id as termId,
+			t1.grade_code as gradeCode,
+			t1.grade_name as gradeName,
+			t1.subject_code as subjectCode,
+			t1.subject_name as subjectName,
+			t1.test_name as testName,
+			t1.exam_id as examId,
+			t1.file_id as fileId,
+			t1.mark_type as markType,
+			t1.test_publish_time as testPublishTime,
+			t1.test_time as testTime,
+			t1.start_time as startTime,
+			t1.end_time as endTime,
+			t1.start_submit_time as startSubmitTime,
+			t1.end_submit_time as endSubmitTime,
+			t1.sender as sender,
+			t1.sender_name as senderName,
+			t1.creator as creator,
+			t1.create_time as createTime,
+			t1.updator as updator,
+			t1.update_time as updateTime,
+			t1.del_status as delStatus,
+			t2.exam_name as examName,
+			t1.test_cost_time as testCostTime,
+			t1.app_id as appId,
+			t1.delay_submit AS delaySubmit,
+			t1.resubmit,
+			t2.score
+		from test_info t1 inner join exam_info t2 on t1.exam_id = t2.exam_id
+		<where>
+			<if test="testId != null and testId != ''">
+				t1.test_id = #{testId}
+			</if>
+			<if test="activityId != null and activityId != ''">
+				AND t1.activity_id = #{activityId}
+			</if>
+			<if test="fileId != null and fileId != ''">
+				AND t1.file_id = #{fileId}
+			</if>
+			<if test="examId != null and examId != ''">
+				AND t1.exam_id = #{examId}
+			</if>
+		</where>
+		limit 1
+	</select>
+
+	<select id="getByActivityId" parameterType="java.lang.String" resultType="com.enableets.edu.pakage.framework.ppr.test.po.TestInfoPO">
+		select
+			t1.test_id as testId,
+			t1.activity_id as activityId,
+			t1.school_id as schoolId,
+			t1.term_id as termId,
+			t1.grade_code as gradeCode,
+			t1.grade_name as gradeName,
+			t1.subject_code as subjectCode,
+			t1.subject_name as subjectName,
+			t1.test_name as testName,
+			t1.exam_id as examId,
+			t1.file_id as fileId,
+			t1.mark_type as markType,
+			t1.test_type as testType,
+			t1.test_publish_type as testPublishType,
+			t1.test_publish_time as testPublishTime,
+			t1.test_time as testTime,
+			t1.start_time as startTime,
+			t1.end_time as endTime,
+			t1.start_submit_time as startSubmitTime,
+			t1.end_submit_time as endSubmitTime,
+			t1.sender as sender,
+			t1.sender_name as senderName,
+			t1.creator as creator,
+			t1.create_time as createTime,
+			t1.updator as updator,
+			t1.update_time as updateTime,
+			t1.del_status as delStatus,
+			t2.exam_name as examName,
+			t1.test_cost_time as testCostTime,
+			t1.app_id as appId,
+			t1.delay_submit AS delaySubmit,
+			t1.resubmit,
+			t1.`from`,
+			t2.score
+		from test_info t1 inner join exam_info t2 on t1.exam_id = t2.exam_id
+		where
+			t1.activity_id = #{activityId}
+	</select>
+</mapper>

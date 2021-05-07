@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="enable-package" />
+        <module name="package-framework" />
+        <module name="enable-package-ppr" />
+        <module name="sdk-ppr-core" />
+        <module name="ppr-paper-adapter" />
+        <module name="enable-package-etm" />
+        <module name="sdk-package-core-adapters" />
+        <module name="enable-package-card" />
+        <module name="package-service" />
+        <module name="sdk-package" />
+        <module name="sdk-ppr-core-adapters" />
+        <module name="enable-package-book" />
+        <module name="enable-package-service" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="enable-package" target="1.8" />
+      <module name="enable-package-book" target="1.8" />
+      <module name="enable-package-card" target="1.8" />
+      <module name="enable-package-etm" target="1.8" />
+      <module name="enable-package-ppr" target="1.8" />
+      <module name="enable-package-service" target="1.8" />
+      <module name="package-framework" target="1.8" />
+      <module name="package-modules" target="1.8" />
+      <module name="package-service" target="1.8" />
+      <module name="ppr-paper-adapter" target="1.8" />
+      <module name="sdk-package" target="1.8" />
+      <module name="sdk-package-core-adapters" target="1.8" />
+      <module name="sdk-ppr-core" target="1.8" />
+      <module name="sdk-ppr-core-adapters" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="enable-package-service" options="-parameters" />
+      <module name="package-framework" options="-parameters" />
+      <module name="package-service" options="-parameters" />
+      <module name="ppr-paper-adapter" options="-parameters" />
+      <module name="sdk-package" options="-parameters" />
+    </option>
+  </component>
+</project>

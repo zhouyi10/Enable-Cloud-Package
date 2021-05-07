@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/" xmlns:v-on="http://www.w3.org/1999/xhtml"
+      xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <title>ETS-School</title>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+    <meta content="telephone=yes" name="format-detection"/>
+    <meta content="email=yes" name="format-detection"/>
+    <link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/custom/package/ppr/css/global2.css(v=${_v})}" />
+    <link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/custom/package/ppr/css/paper/baseStyle.css(v=${_v})}"/>
+    <link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/custom/package/ppr/css/paper/style20190606.css(v=${_v})}"/>
+    <link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/custom/package/ppr/css/paper/iconfont/iconfont.css(v=${_v})}"/>
+    <link rel="stylesheet" th:href="${_contextPath} + @{/comm/plugins/ztree/css/zTreeStyle/zTreeStyle.css(v=${_v})}" />
+    <link rel="stylesheet" th:href="${_contextPath} + @{/custom/package/ppr/css/jizhi.css(v=${_v})}" />
+    <style type="text/css">
+        .hidden{
+            display: none;
+        }
+        .long_work{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .paper-table tr td.paper-l .lt_ .p_t tr td{
+            border: 0px;
+        }
+        .p_t img{
+            max-width: 50%;
+        }
+        .topic-page .asider-left .asider-head .select_c .l_02{
+            line-height: 60px;
+        }
+        .topic-page .asider-left .asider-head:hover .condition-list {
+            z-index: 5000 !important
+        }
+        .topic-page .asider-left {
+            z-index: 5000 !important
+        }
+        [v-cloak] {
+            display: none!important;
+        }
+        .layui-layer-tips .layui-layer-content{
+            background-color: #1b92e2!important;
+        }
+        .layui-layer-tips i.layui-layer-TipsB{
+            border-right-color: #1b92e2!important;
+        }
+        .paper-table.paper-l01 tr td.teaching_assistant{
+            border-left: 1px solid #e1e1e1!important;
+        }
+        .file-list{
+            margin-top: 10px;
+        }
+        .file-list li:first-child{
+            border-top: 1px dashed #e1e1e1;
+            padding-top: 10px;
+        }
+        .file-list li{
+            margin: 10px 34px 10px 0px;
+            overflow: hidden;
+            line-height: 26px;
+        }
+        .file-list li:last-child{
+            margin-bottom: 0;
+        }
+        .file-list li:hover{
+            text-decoration: underline;
+            color: #1b92e2;
+        }
+        .file-list li img{
+            float: left;
+            margin-right: 5px;
+            height: 23px;
+        }
+        .topic-page .asider-left .asider-head .condition-list {overflow-y: auto;}
+        .topic-page .asider-left .asider-head .condition-list .c-box02 {min-height: 50px;}
+        p .stem.question_blank_image_area {
+            margin: 0px 5px -5px 2px !important;
+        }
+    </style>
+    <script th:src="${_contextPath} + @{/comm/plugins/jQuery/jquery-3.0.0.min.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/layer/layer.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/js/BaseUtils.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/vue-2.5.21/vue.min.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/ztree/js/jquery.ztree.core.min.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/paging/page.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{|/comm/plugins/paging/lang/${_locale}.js|(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/custom/package/ppr/js/Constants.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/custom/package/ppr/js/CommUtils.js(v=${_v})}"></script>
+</head>
+<body class="bgC_">
+<div class="topic-page" id="teaching_assistant_list" v-cloak="">
+    <div class="head_02">
+        <div class="h_tp">
+            <a class="c_" v-for="providerItem in providers" v-bind:class="providerCode == providerItem.code ? 'active' : ''" href="javascript:;" v-bind:code="providerItem.code" v-on:click="changeProvider">{{providerItem.name}}</a>
+            <div class="paper-cart afterClearfix">
+                <span class="cart-total-num" v-text="questionCount"></span>
+                <div class="cart-total" th:inline="text">
+                    <span class="cart-icon" id="shop-cart"><i class="cart_"></i></span>
+                    <span class="cart-total-num2">[[#{UI_70_01_02_060}]]<b v-text="questionCount"></b>[[#{UI_70_01_02_061}]]</span>
+
+                    <div class="cart-list">
+                        <p v-if="questionCount == 0" class="tips_" th:text="#{MSG_70_01_02_022}">暂无试题，去加入试题吧！</p> <!--如果没有试题则显示此提示-->
+                        <p v-for="selectQuestion in selectQuestions" v-if="selectQuestion.questions.length > 0" class="c_l">{{selectQuestion.typeName}}: <b>{{selectQuestion.questions.length}}</b>题<i class="i_remove" v-on:click="emptyQuestionMarket(selectQuestion.typeCode)"></i></p>
+                        <span class="empty_btn" v-on:click="emptyQuestionMarket('')" th:text="#{UI_70_01_02_071}">清空全部</span>
+                    </div>
+                </div>
+                <span class="btn-sure" th:text="#{UI_70_00_008}" v-on:click="completeChooseQuestion">确 定</span>
+            </div>
+        </div>
+        <div class="h_bt" th:inline="text">
+            <div class="search-box"><input type="search" th:placeholder="#{UI_70_01_02_038}" v-model="keyword" v-on:keydown="clickEnterQuery" /><span class="search-btn" v-on:click="doQuery(1)"></span></div>
+            <span class="tips_">[[#{UI_70_01_02_060}]]<b v-text="count">0</b>[[#{UI_70_01_02_039}]] </span>
+            <span class="tips_" th:text="#{MSG_70_01_02_010}">提示：点击教辅进入教辅试卷列表页选题</span>
+        </div>
+    </div>
+    <div class="asider-left">
+        <div class="asider-head">
+            <!--此处选择完以后以此形式安放条件：一年级、品德与生活（社会） 即年级和学科-->
+            <span class="select_c">
+						<p class="l_01" v-show="selectedConditions.length == 0" th:text="#{MSG_70_01_02_019}">请选择筛选条件</p><!--未选择之前展示-->
+						<p class="l_02" v-show="selectedConditions.length > 0" v-text="selectedConditions.join('')"></p>
+					</span><i class="arrow_right"></i>
+            <ul class="condition-list" v-if="providerCode != 'R04'">
+                <li class="c-box02"><label class="c_l" th:text="#{UI_70_00_001}">学段</label>
+                    <b class="c_btn" code="" v-bind:class="stageCode == null || stageCode == '' ? 'active' : ''" v-on:click="changeStage" th:text="#{UI_70_00_004}">不限</b>
+                    <b v-for="stage in stageGradeSubjects.stages" v-bind:code="stage.stageCode" class="c_btn" v-text="stage.stageName" v-bind:class="stage.stageCode == stageCode ? 'active' : ''" v-on:click="changeStage">幼儿园</b>
+                </li>
+                <li class="c-box02"><label class="c_l" th:text="#{UI_70_00_002}">年级</label>
+                    <b class="c_btn" code="" v-bind:class="gradeCode == null || gradeCode == '' ? 'active' : ''" v-on:click="changeGrade" th:text="#{UI_70_00_004}">不限</b>
+                    <b class="c_btn" v-for="grade in filterGradeList" v-bind:code="grade.gradeCode" v-bind:class="grade.gradeCode == gradeCode ? 'active' : ''" v-text="grade.gradeName" v-on:click="changeGrade">七年级</b>
+                </li>
+                <li class="c-box02"><label class="c_l" th:text="#{UI_70_00_003}">学科</label>
+                    <b class="c_btn" code="" v-bind:class="subjectCode == null || subjectCode == '' ? 'active' : ''" v-on:click="changeSubject" th:text="#{UI_70_00_004}">不限</b>
+                    <b class="c_btn" v-for="subject in filterSubjectList" v-bind:code="subject.subjectCode" v-bind:class="subject.subjectCode == subjectCode ? 'active' : ''" v-text="subject.subjectName" v-on:click="changeSubject">语文</b>
+                </li>
+                <li class="c-box02"><label class="c_l" th:text="#{UI_70_00_011}">教材版本</label>
+                    <b class="c_btn" code="" v-bind:class="materialVersion == null || materialVersion == ''? 'active' : ''" v-on:click="changeMaterialVersion" th:text="#{UI_70_00_004}">不限</b>
+                    <b class="c_btn" v-if="materialVersions != null" v-for="mv in materialVersions" v-bind:class="materialVersion == mv.code ? 'active' : ''" v-bind:code="mv.code" v-text="mv.name" v-on:click="changeMaterialVersion">人教版</b>
+                </li>
+            </ul>
+        </div>
+        <div class="asider-scroll">
+            <div class="box_auto">
+                <div class="textCenter" v-show="isShowNoTree">
+                    <img th:if="${_locale} != 'zh_TW'" th:src="${_contextPath} + @{/custom/package/ppr/css/paper/img/nodata_tips.png}"/>
+                    <img th:if="${_locale} == 'zh_TW'" th:src="${_contextPath} + @{/custom/package/ppr/css/paper/img/nodata_tips_tw.png}"/>
+                </div>
+                <div class="title_" >
+                    <i class="mulv"></i><b v-text="materialVersionName" th:text="#{UI_70_01_02_026}">请选择教材版本</b>
+                </div>
+                <div class="w01_">
+                    <ul id='knowledgeTree' class='ztree'></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content_">
+        <table class="paper-table paper-l01" id="paper-topic">
+            <tr v-if="teachingAssistantList.length &gt; 0" v-for="content in teachingAssistantList" v-bind:id="content.contentId">
+                <td width="0px" class="hidden"></td>
+                <td class="teaching_assistant"><p class="title_03" v-text="content.contentName" v-on:click="fileShow"></p>
+                    <ul class="tag_01" th:inline="text" v-on:click="fileShow">
+                        <li class="l_">[[#{UI_70_00_001}]]：{{content.stageName}}</li><li class="l_">[[#{UI_70_00_002}]]：{{content.gradeName}}</li><li class="l_">[[#{UI_70_00_003}]]：{{content.subjectName}}</li>
+                        <li class="l_">[[#{UI_70_01_02_065}]]：{{content.creatorName}}</li><li class="l_">[[#{UI_70_01_02_066}]]：{{content.createTime | formatDate}}</li>
+                    </ul>
+                    <ul class="file-list hidden" v-if="content.fileList.length &gt; 0">
+                        <li v-for="file in content.fileList" v-if="file.fileExt == 'paper' || file.fileExt == '.paper'" v-bind:id="file.fileId" v-on:click="viewPaper">
+                            <img th:if="${_locale} != 'zh_TW'" th:src="${_contextPath} + @{/custom/package/ppr/css/paper/img/paper1.png}"/>
+                            <img th:if="${_locale} == 'zh_TW'" th:src="${_contextPath} + @{/custom/package/ppr/css/paper/img/paper1_tw.png}"/>
+                            <span v-text="file.fileName"></span>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr v-cloak="" v-if="teachingAssistantList.length == 0">
+                <td width="0px" class="hidden"></td>
+                <td><p class="title_03" style="text-align: center; color: red;" th:text="#{MSG_70_01_02_011}">未查询到试卷信息!</p> </td>
+            </tr>
+
+        </table>
+        <!--分页-->
+        <div class="page_box">
+            <ul class="pageOne" maxshowpageitem="5" pagelistcount="10" id="pageOne">
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<div id="teaching_assistant_papers"></div>
+
+<div id="paper_questions" class="hidden">
+
+</div>
+
+<script type="text/javascript" th:inline="javascript">
+    //<![CDATA[
+    if (window.i18n == undefined){
+        window.i18n = {};
+    }
+
+    function resizeConditionAreaHeight() {
+        $('.topic-page .asider-left .asider-head .condition-list').css('max-height',  $('.topic-page .asider-left').height() + 'px');
+    }
+
+    $.extend(window.i18n, {
+        "add_to_paper" : [[#{UI_70_01_02_020}]],
+        "remove_from_paper" : [[#{UI_70_01_02_023}]],
+        "all_has_added_to_paper" : [[#{MSG_70_01_02_008}]],
+        "analyze_paper" : [[#{UI_70_01_02_074}]], // 解析试卷中...
+        "please_choose_material_version" : [[#{UI_70_01_02_026}]]
+    });
+    let TeachingAssistantVue = null;
+    $(function(){
+        let TeachingAssistantList = {
+            providers : [{"code": "R00", "name" : [[#{UI_70_01_02_034}]]}, {"code": "R02", "name": [[#{UI_70_01_02_035}]]}, {"code": "R01", "name" : [[#{UI_70_01_02_036}]]}],
+            providerCode : 'R00',
+            questionCount : 0,
+            selectQuestions : parent.getPaperQuestions(),
+            pageNo : 1,
+            rows : 10,
+            keyword : '',
+            count : 0, //教辅总数
+            selectedConditions : [],
+            stageCode : '',
+            gradeCode : '',
+            subjectCode : '',
+            materialVersion : '',
+            materialVersionName : i18n['please_choose_material_version'],
+            searchCode : '',
+            isShowNoTree : true,
+            stageGradeSubjects : [[${stageGradeSubjects}]],
+            materialVersions : {},
+            teachingAssistantList : [],  //教辅列表数据
+            queryMaterialVersionsUrl : [[${_contextPath} + @{/condition/materialversion/query}]],
+            queryKnowledgeTreeUrl : [[${_contextPath} + @{/condition/knowledge/query}]],
+            queryTeachingAssistantListUrl : [[${_contextPath} + @{/ppr/content/query}]],
+            countTeachingAssistantUrl : [[${_contextPath} + @{/ppr/content/count}]],
+            viewPaperUrl : [[${_contextPath} + @{/ppr/question/view}]],
+            userId : [[${condition.userId}]]
+        };
+        let knowledgeSetting = {
+            edit: {
+                enable: false,
+                drag: {
+                    prev: true,
+                    next: true,
+                    inner: false
+                }
+            },
+            data: {
+                key: {
+                    name : "knowledgeName"
+                },
+                simpleData: {
+                    enable: true,
+                    idKey: "knowledgeId",
+                    pIdKey: "parentId",
+                    rootPId: null,
+                    searchCode: "searchCode",
+                    outlineId: "outlineSearchCode"
+                }
+            },
+            check: {
+                enable: false
+            },
+            view : {
+                expandSpeed:"fast",
+                selectedMulti: false,
+                showTitle : true,
+                showLine : false
+            },
+            callback: {
+                beforeClick: null,
+                beforeExpand: null,
+                onClick: function(event, treeId, treeNode) {//点击后选择题目
+                    //获取一些基础数据
+                    //注：检索条件的修改，如果有outlineId就使用知识点和教纲一起匹配
+                    TeachingAssistantList.searchCode = treeNode.searchCode;
+                }
+            }
+        };
+        TeachingAssistantVue = new Vue({
+            el : "#teaching_assistant_list",
+            data: TeachingAssistantList,
+            created: function () {
+                this.doQuery();
+                if (!this.isEmpty(this.gradeCode) && !this.isEmpty(this.subjectCode)){
+                    this.loadMaterialVersion();
+                }
+            },
+            filters: {
+                formatDate: function(time) {
+                    if(time!=null&&time!="")
+                    {
+                        let date = new Date(time);
+                        let fmt = "yyyy-MM-dd"
+                        if (/(y+)/.test(fmt)) {
+                            fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length));
+                        }
+                        let o = {
+                            'M+': date.getMonth() + 1,
+                            'd+': date.getDate(),
+                            'h+': date.getHours(),
+                            'm+': date.getMinutes(),
+                            's+': date.getSeconds()
+                        };
+                        for (let k in o) {
+                            if (new RegExp(`(${k})`).test(fmt)) {
+                                let str = o[k] + '';
+                                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? str : ('00' + str).substr(str.length));
+                            }
+                        }
+                        return fmt;
+                    }else{
+                        return "";
+                    }
+                }
+            },
+            mounted() {
+                this.initQuestionMarket();
+                resizeConditionAreaHeight();
+                $(window).on('resize', resizeConditionAreaHeight);
+            },
+            computed : {
+                filterGradeList : function(){
+                    return this.filterCondition(this.stageGradeSubjects.grades, this.stageCode);
+                },
+                filterSubjectList : function(){
+                    return this.filterCondition(this.stageGradeSubjects.subjects, this.gradeCode);
+                },
+                filterSelectedCondition : function(){
+                    if (this.selectedConditions.length == 0) return null;
+                    else{
+                        return this.selectedConditions.join("");
+                    }
+                }
+            },
+            methods : {
+                filterCondition : function(obj, code){
+                    let _this = this;
+                    if (this.isEmpty(code)) {
+                        return [];
+                    }
+                    let result = [];
+                    $.each(obj, function(index, obj){
+                        if (!_this.isEmpty(obj.stageCode) && obj.stageCode == code) {
+                            result.push(obj);
+                        }
+                        if (!_this.isEmpty(obj.gradeCode) && obj.gradeCode == code) {
+                            result.push(obj);
+                        }
+                    });
+                    return result;
+                },
+                isEmpty : function(str){
+                    return str == undefined || str == null || str.trim() == '';
+                },
+                initQuestionMarket: function () {
+                    let _this = this;
+                    _this.questionCount = 0;
+                    if (this.selectQuestions == null) return;
+                    $.each(_this.selectQuestions, function (index, obj) {
+                        _this.questionCount += obj.questions.length;
+                    });
+                },
+                changeProvider : function(event){
+                    let $this = $(event.target);
+                    this.providerCode = $this.attr("code");
+                    this.doQuery();
+                },
+                changeStage : function(event){
+                    let $this = $(event.target);
+                    if (this.stageCode == $this.attr("code")) return;
+                    this.emptyConditions();
+                    this.stageCode = $this.attr("code");
+                    if (!this.isEmpty(this.stageCode))
+                        this.selectedConditions[0] = $this.text();
+                    this.pageNo = 1;
+                    this.doQuery();
+                },
+                changeGrade : function(event){
+                    let $this = $(event.target);
+                    if (this.gradeCode == $this.attr("code")) return;
+                    this.gradeCode =  $this.attr("code");
+                    this.selectedConditions[2] = this.subjectCode = '';
+                    this.selectedConditions[3] = this.materialVersion = '';
+                    this.materialVersions = {};
+                    this.emptyKnowledgeTree();
+                    this.selectedConditions[1]= this.isEmpty(this.gradeCode) ? null : $this.text();
+                    this.pageNo = 1;
+                    this.doQuery();
+                },
+                changeSubject : function(event){
+                    let $this = $(event.target);
+                    if (this.subjectCode == $this.attr("code")) return;
+                    this.subjectCode =  $this.attr("code");
+                    this.selectedConditions[3] = this.materialVersion = '';
+                    this.materialVersions = {};
+                    this.emptyKnowledgeTree();
+                    if (!this.isEmpty(this.subjectCode)) {
+                        this.loadMaterialVersion();
+                    }
+                    this.selectedConditions[2]= this.isEmpty(this.subjectCode) ? null : $this.text();
+                    this.pageNo = 1;
+                    this.doQuery();
+                },
+                loadMaterialVersion : function(){
+                    let _this = this;
+                    $.post(_this.queryMaterialVersionsUrl,{gradeCode : _this.gradeCode, subjectCode : _this.subjectCode} , function(data){
+                        _this.materialVersions = data.data;
+                    });
+                },
+                changeMaterialVersion : function(event){
+                    let $this = $(event.target);
+                    this.materialVersion = $this.attr("code");
+                    this.materialVersionName = this.isEmpty(this.materialVersion) ? i18n['please_choose_material_version'] : $this.text();
+                    this.searchCode = '';
+                    $("#knowledgeTree").empty();
+                    if (!this.isEmpty(this.materialVersion)){
+                        this.loadKnowledgeTree();
+                    }else{
+                        this.isShowNoTree = true;
+                    }
+                    this.pageNo = 1;
+                    this.doQuery();
+                },
+                loadKnowledgeTree : function(){
+                    let _this = this;
+                    $.post(_this.queryKnowledgeTreeUrl, {gradeCode : _this.gradeCode, subjectCode : _this.subjectCode, materialVersion : _this.materialVersion}, function(data){
+                        if (data != null && data != []){
+                            _this.isShowNoTree = false;
+                            $.fn.zTree.init($("#knowledgeTree"), knowledgeSetting, data.data);
+                        }
+                    })
+                },
+                emptyQuestionMarket : function(type){
+                    this.selectQuestions.forEach(function(item, i){
+                        if (type == "" || item.typeCode == type) item.questions = [];
+                    });
+                    this.initQuestionMarket();
+                },
+                emptyConditions : function(){
+                    this.stageCode = '';
+                    this.gradeCode = '';
+                    this.subjectCode = '';
+                    this.materialVersion = '';
+                    this.materialVersionName = i18n['please_choose_material_version'];
+                    this.materialVersions = {};
+                    this.selectedConditions = [];
+                    this.emptyKnowledgeTree();
+                },
+                emptyKnowledgeTree : function(){
+                    this.isShowNoTree = true;
+                    this.searchCode = '';
+                    $("#knowledgeTree").empty();
+                },
+                doQuery : function(pageNo){
+                    if (!CommUtils.isEmpty(pageNo)) this.pageNo = pageNo;
+                    let _this = this;
+                    let param = {
+                        "providerCode" : this.providerCode,
+                        "stageCode" : this.stageCode,
+                        "gradeCode" : this.gradeCode,
+                        "subjectCode" : this.subjectCode,
+                        "materialVersion" : this.materialVersion,
+                        "searchCode" : this.searchCode,
+                        "keyword" : this.keyword,
+                        "offset" : (this.pageNo - 1) * this.rows,
+                        "rows" : this.rows,
+                        "userId" : this.userId
+                    }
+                    let index = layer.load(3, {
+                        shade: [0.2,'#000'], //0.1透明度的白色背景
+                        zIndex:30
+                    });
+                    this.turnPage(param);
+                    $.post(this.queryTeachingAssistantListUrl, param, function(data){
+                        if (data != null && data.status == '1'){
+                            _this.teachingAssistantList = data.data;
+                        }
+                    }, "json").done(function () {
+                        layer.close(index);
+                    }).fail(function () {
+                        layer.close(index);
+                    });
+                },
+                turnPage : function(param){   //翻页
+                    let _this = this;
+                    $.post(_this.countTeachingAssistantUrl, param, function(data){
+                        _this.count = data.data;
+                        $("#pageOne").initPage(_this.count, _this.pageNo, function(pageNum) {//1、所有数据条数（自动每页十条）2、初次加载显示的页数 3、所执行函数
+                            _this.pageNo = pageNum;
+                            _this.doQuery();
+                        });
+                    });
+                },
+                fileShow : function(event){
+                    let $this = $(event.target).closest("td");
+                    if ($this.find("ul.file-list").find("li").length == 0) return;
+                    if ($this.find("ul.file-list").hasClass("hidden")){
+                        $this.find("ul.file-list").removeClass("hidden");
+                    }else{
+                        $this.find("ul.file-list").addClass("hidden");
+                    }
+                },
+                clickEnterQuery : function(event){
+                    if(event.keyCode==13){
+                        this.doQuery(1);
+                    }
+                },
+                viewPaper : function(event){
+                    let _this = this;
+                    let $this = $(event.target).closest("li");
+                    let fileId = $this.attr("id");
+                    $("#teaching_assistant_list").addClass("hidden");
+                    let index = CommUtils.showLoad(i18n['analyze_paper']);
+                    $("#paper_questions").empty().removeClass("hidden").load(_this.viewPaperUrl+"?fileId=" + fileId, function(){
+                        layer.close(index);
+                    });
+                },
+                completeChooseQuestion : function(){
+                    parent.postMessage({"type" : "chooseQuestion", "data" : this.selectQuestions}, "*");
+                    let index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                }
+            },
+            watch:{
+                keyword : function(newK, oldK){
+                    if (this.isEmpty(newK)){
+                        this.pageNo = 1;
+                        this.doQuery();
+                    }
+                },
+                searchCode : function(newK, oldK){
+                    this.pageNo = 1;
+                    this.doQuery();
+                }
+            }
+        });
+    })
+
+
+    //]]>
+</script>
+</body>
+</html>

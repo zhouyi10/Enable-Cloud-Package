@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.enableets.edu.package</groupId>
+    <artifactId>package-framework</artifactId>
+    <version>0.0.1</version>
+    <packaging>jar</packaging>
+
+    <name>Package Framework</name>
+
+    <parent>
+        <groupId>com.enableets.edu.framework</groupId>
+        <artifactId>enableets-service-parent</artifactId>
+        <version>1.0.0.RELEASE</version>
+    </parent>
+
+    <properties>
+        <lombok.version>1.16.18</lombok.version>
+        <sdk.ppr.core.version>0.0.1</sdk.ppr.core.version>
+        <jsoup.version>1.11.3</jsoup.version>
+        <sdk.paper.util.version>1.0.0.RELEASE</sdk.paper.util.version>
+        <sdk.paper.version>1.0.0.RELEASE</sdk.paper.version>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.enableets.edu.ppr</groupId>
+            <artifactId>ppr-paper-adapter</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+
+        <!--&lt;!&ndash; Base Depends &ndash;&gt;-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-activemq</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.enableets.edu.sdk</groupId>
+            <artifactId>sdk-activity-v2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.enableets.edu.sdk</groupId>
+            <artifactId>sdk-content</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.enableets.edu.sdk</groupId>
+            <artifactId>sdk-school3-v2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.enableets.edu.sdk</groupId>
+            <artifactId>sdk-school3</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.enableets.edu.sdk</groupId>
+            <artifactId>sdk-file-storage-v2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${jsoup.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.enableets.edu.paper</groupId>
+            <artifactId>sdk-paper-util</artifactId>
+            <version>${sdk.paper.util.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.enableets.edu.sdk</groupId>
+            <artifactId>sdk-paper</artifactId>
+            <version>${sdk.paper.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.4.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.enableets.edu.package</groupId>
+            <artifactId>enable-package-ppr</artifactId>
+            <version>1.0.0.release</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-spring</artifactId>
+            <version>6.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.enableets.edu.package</groupId>
+            <artifactId>enable-package-etm</artifactId>
+            <version>1.0.0.release</version>
+        </dependency>
+        <dependency>
+            <groupId>com.enableets.edu.package</groupId>
+            <artifactId>enable-package-book</artifactId>
+            <version>1.0.0.release</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.enableets.edu.sdk</groupId>
+            <artifactId>sdk-actionflow</artifactId>
+            <version>1.0.0.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>com.enableets.edu.sdk</groupId>
+            <artifactId>sdk-teaching-assistant</artifactId>
+            <version>1.0.0.RELEASE</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

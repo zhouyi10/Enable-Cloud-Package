@@ -1,0 +1,12 @@
+com\enableets\edu\ppr\adapter\po\ExamQuestionChildPO.class
+com\enableets\edu\ppr\adapter\bo\SaveExamBO.class
+com\enableets\edu\ppr\adapter\dao\ExamQuestionTypeDAO.class
+com\enableets\edu\ppr\adapter\dao\ExamDAO.class
+com\enableets\edu\ppr\adapter\service\SavePaperAdapterService.class
+com\enableets\edu\ppr\adapter\dao\ExamQuestionDAO.class
+com\enableets\edu\ppr\adapter\dao\ExamKindDAO.class
+com\enableets\edu\ppr\adapter\dao\ExamQuestionChildDAO.class
+com\enableets\edu\ppr\adapter\po\ExamQuestionTypePO.class
+com\enableets\edu\ppr\adapter\po\ExamKindPO.class
+com\enableets\edu\ppr\adapter\po\ExamPO.class
+com\enableets\edu\ppr\adapter\po\ExamQuestionPO.class

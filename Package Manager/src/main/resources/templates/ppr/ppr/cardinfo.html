@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/" xmlns:v-on="http://www.w3.org/1999/xhtml"
+      xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8" />
+    <title>card info</title>
+    <link rel="stylesheet" th:href="${_contextPath} + @{/comm/plugins/bootstrap/bootstrap.min.css(v=${_v})}" />
+    <style type="text/css">
+        .container {padding: 20px 40px;}
+        label {text-align: left; font-weight: normal;}
+        .row-block {border-bottom: 1px solid #CCCCCC;}
+        .row-block label {padding-top: 7px;}
+        .row { margin-bottom: 20px;}
+        .btn { min-width: 80px; border-radius: 0;}
+        .btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus {outline: 0;}
+        .btn-toggle { color: #1c63d0; border-color: #1c63d0; background-color: #fff;}
+        .btn-toggle:hover, .btn-toggle.active, .btn-toggle.active:focus, .btn-toggle.active:hover { color: #fff; border-color: #1c63d0; background-color: #1c63d0;}
+        /*.btn-toggle:focus, .btn-toggle:active, .btn-toggle:active:focus, .btn-toggle:active:hover {color: }*/
+        .btn-custom { color: #fff; background-color: #1C63D0;}
+        .btn-custom:hover { color: #fff; background-color: #1C63D0;}
+        .btn-custom:active, .btn-custom:focus {color: #fff; background-color: #1c63d0;}
+        .btn + .btn {margin-left: 20px;}
+        .question-type-item {margin-bottom: 10px;}
+        .question-type-item label {height: 34px; line-height: 34px; margin-right: 40px; text-align: center; width: 85px;}
+        .question-type-item .btn {width: 34px; min-width: 34px; margin: 0px 10px;}
+        .question-type-item .form-control {width: 60px; border-radius: 0; box-shadow: none; border-color: #D0D0D0; text-align: center;}
+    </style>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/jQuery/jquery-3.0.0.min.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/js/BaseUtils.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/custom/package/ppr/js/CommUtils.js(v=${_v})}"></script>
+    <script type="text/javascript">
+        /* <![CDATA[ */
+        CommUtils.onMessage(function(e) {
+            var data = e.data;
+            $.each(data, function(t, ty) {
+                $(".question-type-item[data-type='"+ty.type+"']").find("input.question").val(ty.count);
+            });
+        });
+        $(function() {
+            $('.input-group .btn-default').on('click', function() {
+                var $input = $(this).parent().find('input');
+                var val = $input.val() || '0';
+                val = parseInt(val);
+                val = $(this).index() == 0 ? Math.max(val - 1, 0) : Math.min(val + 1, 999);
+                $input.val(val);
+            })
+            $('.input-group input').on('focus', function() {
+                if ($(this).attr('focus')) {
+                    return;
+                }
+                if (typeof window._drop_input_func == 'undefined') {
+                    window._drop_input_func = function() {
+                        $('.btn-group input[focus]').next().hide();
+                        $('.btn-group input[focus]').removeAttr('focus');
+                    }
+                }
+                window._drop_input_func();
+                $(this).attr('focus', 'true');
+                $(this).next('.dropdown-menu').show();
+                $(window).one('click', function() {
+                    window._drop_input_func();
+                });
+            }).on('click', function(e) {
+                e.stopPropagation();
+            }).on('input', function() {
+                var val = $(this).val();
+                if (val.length > 3 || val.length > 0 && !(/^[0-9]*$/.test(val))){
+                    $(this).val($(this).attr('old-value') || '');
+                    return;
+                }
+                $(this).attr('old-value', val);
+            });
+            $('.dropdown-menu li').on('click', function() {
+                $(this).parent().prev('input').val($(this).attr('data-key'));
+            });
+            $('#fast-select button').on('click', function() {
+                if ($(this).hasClass('active')) return;
+                $(this).addClass('active').siblings().removeClass('active');
+                $(".question-type-item input.question").val(0);
+                var types = $(this).attr('data-key').split('&');
+                $.each(types, function(index, obj){
+                    var type = obj.split("=");
+                    $(".question-type-item[data-type='"+type[1]+"']").find("input.question").val(type[0]);
+                });
+            })
+            $('#close').on('click', function() {
+                window.parent.postMessage({
+                    type: 'close'
+                }, '*');
+            });
+            $('#ok').on("click", function(){
+                var cardInfo = [];
+                $(".question-type-item input.question").each(function(){
+                    if (CommUtils.isNotEmpty($(this).val()) && parseInt($(this).val()) > 0){
+                        var $type = $(this).closest(".question-type-item");
+                        var type = $type.attr("data-type"), typeName= $type.attr('data-type-name');
+                        cardInfo.push({'type' : type, 'typeName': typeName, 'count' : parseInt($(this).val())});
+                    }
+                })
+                window.parent.postMessage({'type' : 'editCardInfo', data : cardInfo}, "*");
+            });
+        })
+        /* ]]> */
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="row row-block">
+        <label class="col-xs-2">快速组卷</label>
+        <div class="col-xs-10">
+            <p id="fast-select">
+                <button type="button" class="btn btn-toggle" data-key="10=01&10=03&5=05">10单选10填空5简答</button>
+                <button type="button" class="btn btn-toggle" data-key="80=01&1=08">80选择1作文</button>
+                <button type="button" class="btn btn-toggle" data-key="6=01&10=03&5=04&1=08">6选择10填空5对错1作文</button>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <label class="col-xs-2">自定义</label>
+        <div class="col-xs-10" id="question-type-area">
+            <div class="row question-type-item" data-type="01" data-type-name="选择题">
+                <label class="pull-left type">选择题</label>
+                <div class="input-group pull-left">
+                    <span class="btn btn-default pull-left">-</span>
+                    <div class="btn-group pull-left">
+                        <input type="text" class="form-control question" />
+                        <ul class="dropdown-menu">
+                            <li data-key="5"><a href="javascript:;">5题</a></li>
+                            <li data-key="10"><a href="javascript:;">10题</a></li>
+                            <li data-key="12"><a href="javascript:;">12题</a></li>
+                            <li data-key="15"><a href="javascript:;">15题</a></li>
+                            <li data-key="20"><a href="javascript:;">20题</a></li>
+                        </ul>
+                    </div>
+                    <span class="btn btn-default pull-left">+</span>
+                </div>
+            </div>
+            <div class="row question-type-item" data-type="03" data-type-name="填空题">
+                <label class=" pull-left type">填空题</label>
+                <div class="input-group pull-left">
+                    <button class="btn btn-default pull-left">-</button>
+                    <div class="btn-group pull-left">
+                        <input type="text" class="form-control question" />
+                        <ul class="dropdown-menu">
+                            <li data-key="3"><a href="#">3题</a></li>
+                            <li data-key="5"><a href="#">5题</a></li>
+                            <li data-key="10"><a href="#">10题</a></li>
+                        </ul>
+                    </div>
+                    <span class="btn btn-default pull-left">+</span>
+                </div>
+            </div>
+            <div class="row question-type-item" data-type="04" data-type-name="判断题">
+                <label class=" pull-left type">判断题</label>
+                <div class="input-group pull-left">
+                    <button class="btn btn-default pull-left">-</button>
+                    <div class="btn-group pull-left">
+                        <input type="text" class="form-control question" />
+                        <ul class="dropdown-menu">
+                            <li data-key="3"><a href="#">3题</a></li>
+                            <li data-key="5"><a href="#">5题</a></li>
+                            <li data-key="10"><a href="#">10题</a></li>
+                        </ul>
+                    </div>
+                    <span class="btn btn-default pull-left">+</span>
+                </div>
+            </div>
+            <div class="row question-type-item" data-type="05" data-type-name="解答题">
+                <label class=" pull-left type">解答题</label>
+                <div class="input-group pull-left">
+                    <button class="btn btn-default pull-left">-</button>
+                    <div class="btn-group pull-left">
+                        <input type="text" class="form-control question" />
+                        <ul class="dropdown-menu">
+                            <li data-key="3"><a href="#">3题</a></li>
+                            <li data-key="5"><a href="#">5题</a></li>
+                            <li data-key="10"><a href="#">10题</a></li>
+                        </ul>
+                    </div>
+                    <span class="btn btn-default pull-left">+</span>
+                </div>
+            </div>
+            <div class="row question-type-item" data-type="08" data-type-name="作文题">
+                <label class=" pull-left type">作文题</label>
+                <div class="input-group pull-left">
+                    <button class="btn btn-default pull-left">-</button>
+                    <div class="btn-group pull-left">
+                        <input type="text" class="form-control question" />
+                        <ul class="dropdown-menu">
+                            <li data-key="1"><a href="#">1题</a></li>
+                        </ul>
+                    </div>
+                    <span class="btn btn-default pull-left">+</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-offset-2 col-xs-10">
+            <button type="button" class="btn btn-custom" id="ok">确定</button>
+            <button type="button" class="btn btn-custom" id="close">关闭</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>

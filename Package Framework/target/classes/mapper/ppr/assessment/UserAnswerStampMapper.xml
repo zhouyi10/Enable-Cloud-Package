@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enableets.edu.pakage.framework.ppr.test.dao.UserAnswerStampInfoDAO">
+
+	<select id="getUserAnswerStamps" parameterType="java.lang.String" resultType="com.enableets.edu.pakage.framework.ppr.test.po.TAsUserAnswerStampPO">
+		select
+			c.answer_stamp_id as answerStampId,
+			c.answer_id as answerId,
+			c.begin_time as beginTime,
+			c.end_time as endTime,
+			c.last_time as lastTime,
+			c.question_id as questionId,
+			c.test_id as testId,
+			c.exam_id as examId,
+			c.creator as creator
+		from user_answer_info a, user_answer_stamp_info c
+		where a.answer_id = c.answer_id
+		  and a.test_user_id = #{testUserId}
+		group by c.answer_stamp_id
+		order by c.begin_time asc
+	</select>
+
+</mapper>

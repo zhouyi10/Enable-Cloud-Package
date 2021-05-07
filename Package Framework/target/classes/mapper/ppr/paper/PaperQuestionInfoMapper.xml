@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enableets.edu.pakage.framework.ppr.paper.dao.PaperQuestionInfoDAO">
+
+    <delete id="batchDelete" parameterType="java.util.List">
+        DELETE t1, t2, t3, t4 from question_info t1
+        LEFT JOIN question_knowledge_info t2 ON t1.question_id = t2.question_id
+        LEFT JOIN question_option_info t3 ON t1.question_id = t3.question_id
+        LEFT JOIN question_axis_info t4 ON t1.question_id = t4.question_id
+        WHERE t1.question_id in
+        <foreach collection="questionIds" open="(" separator="," close=")" item="item">
+            #{item}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,169 @@
+.modal-dialog .modal-content, .modal-dialog .modal-content .modal-body { width: 100%;}
+
+/* 图片模块样式 start */
+.canvas_root_area .canvas_container[img-rotate='90'] img, .canvas_root_area .canvas_container[img-rotate='90'] canvas {
+    transform: rotate(90deg);
+    -ms-transform: rotate(90deg); /* IE 9 */
+    -moz-transform: rotate(90deg); /* Firefox */
+    -webkit-transform: rotate(90deg); /* Safari 和 Chrome */
+    -o-transform: rotate(90deg); /* Opera */
+}
+
+.canvas_root_area .canvas_container[img-rotate='180'] img, .canvas_root_area .canvas_container[img-rotate='180'] canvas {
+    transform: rotate(180deg);
+    -ms-transform: rotate(180deg); /* IE 9 */
+    -moz-transform: rotate(180deg); /* Firefox */
+    -webkit-transform: rotate(180deg); /* Safari 和 Chrome */
+    -o-transform: rotate(180deg); /* Opera */
+}
+
+.canvas_root_area .canvas_container[img-rotate='270'] img, .canvas_root_area .canvas_container[img-rotate='270'] canvas {
+    transform: rotate(270deg);
+    -ms-transform: rotate(270deg); /* IE 9 */
+    -moz-transform: rotate(270deg); /* Firefox */
+    -webkit-transform: rotate(270deg); /* Safari 和 Chrome */
+    -o-transform: rotate(270deg); /* Opera */
+}
+
+.canvas_root_area {
+    width: 100%;
+    height: 85%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.canvas_root_area img {
+    -webkit-user-drag: none;
+}
+
+.canvas_root_area .canvas_container {
+    height: 75%;
+    overflow: hidden;
+}
+
+.modal-dialog .modal-content .modal-body .left .canvas_container img.img_op_back_img {
+    margin: 0px;
+    display: block;
+    border: 1px solid white;
+    background-color: white;
+    position: relative;
+}
+
+.canvas_root_area .canvas_container .canvas_layer {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.canvas_container .canvas_layer .img_op_canvas, .canvas_container .canvas_layer .drawing_track {
+    position: absolute;
+    border: 1px solid white;
+    cursor: crosshair;
+}
+.canvas_root_area .canvas_container .input_area {
+    position: absolute;
+    padding: 2px;
+    width: 50px;
+    border : 1px solid #ccc;
+    resize: none;
+    z-index: 20;
+    overflow: hidden;
+}
+
+.modal-dialog .modal-content .modal-body .left .imgs {
+    margin-top: 0px;
+    width: 360px;
+}
+
+.modal-dialog .modal-content .modal-body .left ul.imgs li:last-child {
+    margin-right: 0px;
+}
+.modal-dialog .modal-content .modal-body .left ul.imgs li a {
+    display: block;
+    width: 84px;
+    height: 44px;
+    background-color: white;
+    border: 2px solid white;
+}
+.modal-dialog .modal-content .modal-body .left ul.imgs li a.select {
+    border-color: #246ac9;
+}
+.modal-dialog .modal-content .modal-body .left ul.imgs li a img {
+    border: 0;
+    margin: 0px auto;
+}
+
+.canvas_root_area .user_answer_canvas {
+    height: 60px;
+    padding-top: 10px;
+}
+
+.canvas_root_area .user_answer_canvas img {
+    max-height: 40px;
+    max-width: 80px;
+}
+.modal-dialog .modal-content .modal-body .left ul.colors {
+    display: none;
+    z-index: 8;
+}
+
+.modal-dialog .modal-content .modal-body .left ul.weights {
+    position: absolute;
+    left: 170px;
+    bottom: 180px;
+    z-index: 8;
+    height: 26px;
+    width: 180px;
+    background: #666;
+    overflow: hidden;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    padding-left: 8px;
+    display: none;
+}
+.modal-dialog .modal-content .modal-body .left ul.weights li {
+    height: 20px;
+    margin: 3px;
+    border-radius: 10px;
+    border: 1px solid #666;
+    padding: 0px 4px;
+    display: inline-block;
+    box-sizing: border-box;
+    color: white;
+    cursor: pointer;
+    font-size: 12px;
+    font-style: italic;
+}
+.modal-dialog .modal-content .modal-body .left ul.weights li.select {
+    font-weight: bolder;
+    font-style: normal;
+}
+
+/** start 颜色按钮修改 */
+.modal-dialog .modal-content .modal-body .left .tools ul.l li a.color {
+    padding: 10px;
+}
+
+.modal-dialog .modal-content .modal-body .left .tools ul.l li a.color em {
+    display: block;
+    width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    border: 1px solid #ccc;
+    background: red;
+}
+
+
+.modal-dialog .modal-content .modal-body .quetstion img {
+    margin: 0;
+    display: inline;
+}
+
+/** end */
+/* 图片模块样式 end */
+

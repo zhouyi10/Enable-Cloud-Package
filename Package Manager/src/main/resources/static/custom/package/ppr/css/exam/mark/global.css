@@ -1,0 +1,429 @@
+li {
+  list-style: none;
+}
+.clear {
+  clear: both;
+}
+h3,
+ul,
+p {
+  margin: 0;
+  padding: 0;
+}
+a,
+a:focus,
+a:hover {
+  text-decoration: none;
+  outline: none;
+}
+.red {
+  color: red;
+}
+.green {
+  color: #11bb00;
+}
+i {
+  margin-right: 10px;
+}
+i.clearR {
+  margin-right: 0;
+}
+button {
+  border: 0;
+  background: #246ac9;
+  border-radius: 3px;
+  color: #fff;
+  padding: 5px 10px;
+}
+.container {
+  margin-top: 15px;
+  width: 1200px;
+}
+.container .top {
+  border: 1px solid #ddd;
+  padding: 15px;
+  position: relative;
+}
+.container .top h3 {
+  font-size: 16px;
+  font-weight: 600;
+}
+.container .top ul {
+  margin-top: 10px;
+}
+.container .top ul li {
+  float: left;
+  margin-right: 50px;
+}
+.container .top button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+.container .content {
+  margin-top: 15px;
+}
+.container .content .l {
+  width: 78%;
+}
+.container .content .l .left {
+  position: relative;
+  min-height: 768px;
+  border: 1px solid #ddd;
+}
+.container .content .l .left .table-bordered > thead > tr > td,
+.container .content .l .left .table-bordered > thead > tr > th {
+  border-bottom-width: 0;
+}
+.container .content .l .left .table {
+  border: 0;
+}
+.container .content .l .left .table td:first-child {
+  border-left: 0;
+}
+.container .content .l .left .table thead i {
+  cursor: pointer;
+}
+.container .content .l .left .table tbody td {
+  line-height: 40px;
+}
+.container .content .l .left .table tbody td .names span {
+  margin: 2px;
+}
+.container .content .l .left .table tbody td img.data {
+  border: 1px solid #e8e8e8; float: left;
+  margin: 2px;
+  cursor: pointer;
+}
+.container .content .l .left .table tbody td img.video-wrapper {
+  /*margin: 2px; */
+  width: 80px; height: 40px; float: left; display: inline-block; text-align: center;
+  border: 1px solid #e8e8e8;
+  cursor: pointer;
+}
+.container .content .l .left .table tbody td input.score {
+  width: 100%;
+  height: 36px;
+}
+.container .content .l .left .table tbody td a.sign {
+  margin: 2px;
+}
+.container .content .r {
+  width: 22%;
+  padding-left: 0;
+}
+.container .content .r .right {
+  border: 1px solid #a7a7a7;
+  height: 100%;
+  min-height: 768px;
+}
+.container .content .r .right .row {
+  padding: 10px;
+  border-bottom: 1px solid #a7a7a7;
+  margin: 0;
+}
+.container .content .r .right .row .col-lg-6 {
+  text-align: center;
+}
+.container .content .r .right h3 {
+  border-bottom: 1px solid #a7a7a7;
+  padding: 15px;
+  background: #f8f8f8;
+  font-size: 16px;
+}
+.container .content .r .right h5 {
+  padding-left: 15px;
+  margin-top: 15px;
+}
+.container .content .r .right .squares {
+  width: 100%;
+}
+.container .content .r .right .squares td {
+  padding: 8px;
+}
+.container .content .r .right .squares .square {
+  border: 1px solid red;
+  border-radius: 30px;
+  cursor: pointer;
+  text-align: center;
+  width: 60px;
+  height: 60px;
+  padding-top: 10px;
+}
+.container .content .r .right .squares .square .col-lg-4 {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.container .content .r .right .squares .square b {
+  font-size: 16px;
+}
+.container .content .r .right .squares .over {
+  border-color: #11bb00;
+}
+.container .content .r .right .squares .ing {
+  background: #246ac9;
+  color: #fff;
+}
+.container .content .r .right .togglePaper {
+  float: right;
+}
+.container .content .r .right .togglePaper i {
+  margin-right: 0;
+}
+.quetstion {
+  position: absolute;
+  border-top: 1px solid #ddd;
+  padding: 10px;
+  left: 0;
+  bottom: 0;
+  z-index: 10;
+  width: 100%;
+  background: #fff;
+  max-height: 80%;
+  overflow: auto;
+}
+.quetstion .title {
+  line-height: 40px;
+  width: 820px;
+  height: 40px;
+  overflow: hidden;
+}
+.quetstion .title em {
+  font-style: normal;
+  background: red;
+  color: #fff;
+  border-radius: 3px;
+  padding: 2px;
+  margin-right: 10px;
+}
+.quetstion .h100 {
+  height: 100%;
+}
+
+.quetstion .h100 .question_content{
+  max-height: 450px;
+  overflow: auto;
+}
+
+.quetstion .toggle {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: 1px solid #246ac9;
+  padding: 5px;
+  border-radius: 5px;
+}
+.quetstion .toggle i {
+  margin: 0;
+}
+
+.quetstion p {
+  line-height: 24px;
+}
+.modal-dialog {
+  width: 1250px;
+}
+.modal-dialog .modal-content {
+  height: 768px;
+  border-radius: 0;
+  border: 1px solid #fff;
+}
+.modal-dialog .modal-content .modal-body {
+  padding: 0;
+  height: 100%;
+}
+.modal-dialog .modal-content .modal-body .left {
+  float: left;
+  width: 80%;
+  height: 100%;
+  background: #d7d7d7;
+  position: relative;
+}
+.modal-dialog .modal-content .modal-body .left img {
+  margin: 30px auto;
+  display: block;
+}
+.modal-dialog .modal-content .modal-body .left ul {
+  margin: 0 auto;
+  min-width: 80px;
+  width: 275px;
+}
+.modal-dialog .modal-content .modal-body .left ul li {
+  float: left;
+  margin-right: 10px;
+}
+.modal-dialog .modal-content .modal-body .left ul li a.select img {
+  border: 2px solid #246ac9;
+}
+.modal-dialog .modal-content .modal-body .left .imgs {
+  margin-top: -30px;
+}
+.modal-dialog .modal-content .modal-body .left ul.colors {
+  position: absolute;
+  left: 108px;
+  bottom: 180px;
+  background: #666;
+  z-index: 9;
+  width: 158px;
+}
+.modal-dialog .modal-content .modal-body .left ul.colors li {
+  float: left;
+  padding: 3px;
+  margin-right: 0;
+}
+.modal-dialog .modal-content .modal-body .left ul.colors li a {
+  width: 20px;
+  height: 20px;
+  display: block;
+  border-radius: 10px;
+}
+.modal-dialog .modal-content .modal-body .left ul.colors li .color1 {
+  background: black;
+}
+.modal-dialog .modal-content .modal-body .left ul.colors li .color2 {
+  background: red;
+}
+.modal-dialog .modal-content .modal-body .left ul.colors li .color3 {
+  background: yellow;
+}
+.modal-dialog .modal-content .modal-body .left ul.colors li .color4 {
+  background: #bcd7ed;
+}
+.modal-dialog .modal-content .modal-body .left ul.colors li .color5 {
+  background: blue;
+}
+.modal-dialog .modal-content .modal-body .left ul.colors li .color6 {
+  background: white;
+}
+.modal-dialog .modal-content .modal-body .left ul.colors li .select {
+  border: 1px solid #fff;
+}
+.modal-dialog .modal-content .modal-body .left .tools {
+  height: 55px;
+  background: #f3f3f3;
+  padding: 10px 15px;
+}
+.modal-dialog .modal-content .modal-body .left .tools ul {
+  width: auto;
+}
+.modal-dialog .modal-content .modal-body .left .tools ul li a {
+  width: 36px;
+  height: 36px;
+  background: #fff;
+  border-radius: 18px;
+  display: block;
+}
+.modal-dialog .modal-content .modal-body .left .tools ul li a img {
+  padding: 7px;
+  margin: 0;
+  border-radius: 20px;
+}
+.modal-dialog .modal-content .modal-body .left .tools .l {
+  float: left;
+}
+.modal-dialog .modal-content .modal-body .left .tools .r {
+  float: right;
+}
+.modal-dialog .modal-content .modal-body .right {
+  float: left;
+  width: 20%;
+  height: 100%;
+  border: 1px solid #d7d7d7;
+}
+.modal-dialog .modal-content .modal-body .right .row {
+  padding: 10px;
+  border-bottom: 1px solid #d7d7d7;
+  margin: 0;
+}
+.modal-dialog .modal-content .modal-body .right .row .col-lg-6 {
+  text-align: center;
+}
+.modal-dialog .modal-content .modal-body .right .row .col-lg-6 button {
+  padding: 5px 20px;
+}
+.modal-dialog .modal-content .modal-body .right .row .col-lg-6 button.closed {
+  background: #fff;
+  color: #246ac9;
+  border: 1px solid #246ac9;
+}
+.modal-dialog .modal-content .modal-body .right .row .col-lg-4 button {
+  padding: 8px 25px;
+  margin-left: -5px;
+}
+.modal-dialog .modal-content .modal-body .right .row .col-lg-4 button i {
+  margin: 0;
+}
+.modal-dialog .modal-content .modal-body .right .row .name {
+  padding: 0px 3px;
+  line-height: 36px;
+  text-align: center;
+  /*margin-right: -15px;*/
+}
+.modal-dialog .modal-content .modal-body .right .new {
+  border: none;
+  padding: 15px 25px 10px 25px;
+}
+.modal-dialog .modal-content .modal-body .right .new .nums {
+  border: 1px solid #999;
+  height: 40px;
+  border-radius: 3px;
+}
+.modal-dialog .modal-content .modal-body .right .new .nums .minus {
+  float: left;
+  width: 30%;
+  height: 100%;
+}
+.modal-dialog .modal-content .modal-body .right .new .nums .score {
+  float: left;
+  width: 40%;
+  height: 100%;
+}
+.modal-dialog .modal-content .modal-body .right .new .nums .score .form-control {
+  height: 38px;
+  border: 0;
+  border-left: 1px solid #999;
+  border-right: 1px solid #999;
+  border-radius: 0;
+}
+.modal-dialog .modal-content .modal-body .right .new .nums .plus {
+  float: left;
+  width: 30%;
+  height: 100%;
+}
+.modal-dialog .modal-content .modal-body .right .new .nums button {
+  background: none;
+  color: #000;
+  width: 100%;
+  height: 100%;
+  outline: none;
+}
+.modal-dialog .modal-content .modal-body .right .new .nums button i {
+  margin: 0;
+}
+.modal-dialog .modal-content .modal-body .right .scoreBg {
+  padding: 0 22px 15px 22px;
+  text-align: center;
+}
+.modal-dialog .modal-content .modal-body .right .scoreBg .scores {
+  width: 100%;
+  display: inline;
+}
+
+.modal-dialog .modal-content .modal-body .right .scoreBg .scores td a {
+  border: 1px solid #999;
+  color: #333;
+  width: 60px;
+  height: 36px;
+  line-height: 36px;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 3px;
+  display: block;
+}
+.modal-dialog .modal-content .modal-body .right h3 {
+  border-top: 1px solid #d7d7d7;
+  padding: 10px 15px;
+  background: #f5f5f5;
+  font-size: 14px;
+}
+/*# sourceMappingURL=global.css.map */

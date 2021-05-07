@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<mapper>
+	<sql id="queryExamById" targetTableName="exam_info">
+		select * from exam_info where exam_id = {examId}
+	</sql>
+	<sql id="queryExamKindByExamId" targetTableName="exam_kind_info">
+		select k.* from exam_kind_info k, exam_info e where k.exam_id = e.exam_id and e.exam_id = {examId}
+	</sql>
+	<sql id="queryExamQuestionTypeByExamId" targetTableName="exam_question_type_info">
+		select t.* from exam_question_type_info t, exam_kind_info k, exam_info e where t.exam_kind_id = k.exam_kind_id and k.exam_id = e.exam_id and e.exam_id = {examId}
+	</sql>
+	<sql id="queryExamQuestionByExamId" targetTableName="exam_question_info">
+		select q.* from exam_question_info q, exam_question_type_info t, exam_kind_info k, exam_info e where q.exam_question_type_id = t.exam_question_type_id and t.exam_kind_id = k.exam_kind_id and k.exam_id = e.exam_id and e.exam_id = {examId}
+	</sql>
+	<sql id="queryExamQuestionChildByExamId" targetTableName="exam_question_child_info">
+		select c.* from exam_question_child_info c, exam_question_info q, exam_question_type_info t, exam_kind_info k, exam_info e where c.exam_question_id = q.exam_question_id and q.exam_question_type_id = t.exam_question_type_id and t.exam_kind_id = k.exam_kind_id and k.exam_id = e.exam_id and e.exam_id = {examId}
+	</sql>
+	<sql id="queryQuestionByExamId" targetTableName="question_info">
+		select ques.* from question_info ques, exam_question_info q, exam_question_type_info t, exam_kind_info k, exam_info e where ques.question_id = q.question_id and q.exam_question_type_id = t.exam_question_type_id and t.exam_kind_id = k.exam_kind_id and k.exam_id = e.exam_id and e.exam_id = {examId}
+		UNION 
+		select ques.* from question_info ques, exam_question_child_info c, exam_question_info q, exam_question_type_info t, exam_kind_info k, exam_info e where ques.question_id = c.question_child_id and c.exam_question_id = q.exam_question_id and q.exam_question_type_id = t.exam_question_type_id and t.exam_kind_id = k.exam_kind_id and k.exam_id = e.exam_id and e.exam_id = {examId}
+	</sql>
+
+	<sql id="queryQuestionExamPointByExamId" targetTableName="question_knowledge_info">
+		select * from question_knowledge_info where question_id in (
+			select q.question_id from exam_question_info q, exam_question_type_info t, exam_kind_info k, exam_info e where q.exam_question_type_id = t.exam_question_type_id and t.exam_kind_id = k.exam_kind_id and k.exam_id = e.exam_id and e.exam_id = {examId}
+		)
+	</sql>
+	<sql id="queryQuestionOptionByExamId" targetTableName="question_option_info">
+		select qo.* from question_option_info qo, exam_question_info q, exam_question_type_info t, exam_kind_info k, exam_info e where qo.question_id = q.question_id and q.exam_question_type_id = t.exam_question_type_id and t.exam_kind_id = k.exam_kind_id and k.exam_id = e.exam_id and e.exam_id = {examId}
+		UNION
+		select qo.* from question_option_info qo,  exam_question_child_info c, exam_question_info q, exam_question_type_info t, exam_kind_info k, exam_info e where qo.question_id = c.question_child_id and c.exam_question_id = q.exam_question_id and q.exam_question_type_id = t.exam_question_type_id and t.exam_kind_id = k.exam_kind_id and k.exam_id = e.exam_id and e.exam_id = {examId}
+	</sql>
+	<sql id="queryQuestionAxisByExamId" targetTableName="question_axis_info">
+		select qo.* from question_axis_info qo, exam_question_info q, exam_question_type_info t, exam_kind_info k, exam_info e where qo.question_id = q.question_id and q.exam_question_type_id = t.exam_question_type_id and t.exam_kind_id = k.exam_kind_id and k.exam_id = e.exam_id and e.exam_id = {examId}
+		UNION
+		select qo.* from question_axis_info qo,  exam_question_child_info c, exam_question_info q, exam_question_type_info t, exam_kind_info k, exam_info e where qo.question_id = c.question_child_id and c.exam_question_id = q.exam_question_id and q.exam_question_type_id = t.exam_question_type_id and t.exam_kind_id = k.exam_kind_id and k.exam_id = e.exam_id and e.exam_id = {examId}
+	</sql>
+</mapper>

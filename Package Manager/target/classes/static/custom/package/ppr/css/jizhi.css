@@ -1,0 +1,27 @@
+.exer_content {
+    line-height: 24px;
+}
+
+.exerimg, .exerconnectionimg {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.qjdQuickAnswer {
+    display: none;
+    color: red;
+}
+
+.answer_div{
+    width: 4%;
+    float: left;
+}
+.analysis_div{
+    width: 96%;
+    float: left;
+}
+.answerTips{
+    overflow: hidden;
+    padding: 3px 0px;
+}
+

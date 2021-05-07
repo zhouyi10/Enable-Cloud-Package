@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../Enable Package/enable-package.iml" filepath="$PROJECT_DIR$/../Enable Package/enable-package.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Enable Package Book/enable-package-book.iml" filepath="$PROJECT_DIR$/../Enable Package Book/enable-package-book.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Enable Package Card/enable-package-card.iml" filepath="$PROJECT_DIR$/../Enable Package Card/enable-package-card.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Enable Package ETM/enable-package-etm.iml" filepath="$PROJECT_DIR$/../Enable Package ETM/enable-package-etm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Enable Package PPR/enable-package-ppr.iml" filepath="$PROJECT_DIR$/../Enable Package PPR/enable-package-ppr.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Package Manager/enable-package-service.iml" filepath="$PROJECT_DIR$/../Package Manager/enable-package-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Package Framework/package-framework.iml" filepath="$PROJECT_DIR$/../Package Framework/package-framework.iml" />
+      <module fileurl="file://$PROJECT_DIR$/package-modules.iml" filepath="$PROJECT_DIR$/package-modules.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Package Service/package-service.iml" filepath="$PROJECT_DIR$/../Package Service/package-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../PPR Paper Adapter/ppr-paper-adapter.iml" filepath="$PROJECT_DIR$/../PPR Paper Adapter/ppr-paper-adapter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../SDK Package Micro Service/sdk-package.iml" filepath="$PROJECT_DIR$/../SDK Package Micro Service/sdk-package.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../SDK Package Core Adapters/sdk-package-core-adapters.iml" filepath="$PROJECT_DIR$/../SDK Package Core Adapters/sdk-package-core-adapters.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../SDK PPR Core/sdk-ppr-core.iml" filepath="$PROJECT_DIR$/../SDK PPR Core/sdk-ppr-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../SDK PPR Core Adapters/sdk-ppr-core-adapters.iml" filepath="$PROJECT_DIR$/../SDK PPR Core Adapters/sdk-ppr-core-adapters.iml" />
+    </modules>
+  </component>
+</project>

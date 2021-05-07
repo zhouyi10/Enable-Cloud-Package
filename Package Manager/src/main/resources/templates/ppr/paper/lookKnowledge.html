@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/" xmlns:v-on="http://www.w3.org/1999/xhtml"
+      xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <title>ETS-School</title>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+    <meta content="telephone=yes" name="format-detection"/>
+    <meta content="email=yes" name="format-detection"/>
+    <link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/custom/package/ppr/css/paper/baseStyle.css(v=${_v})}"/>
+    <link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/custom/package/ppr/css/paper/style20190606.css(v=${_v})}"/>
+    <style>
+        .hidden{display: none!important;}
+    </style>
+    <script th:src="${_contextPath} + @{/comm/plugins/jQuery/jquery-3.0.0.min.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/vue-2.5.21/vue.min.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/jqueryfly/jquery.fly.min.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/echarts4.2.1/echarts.min.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/jqueryfly/requestAnimationFrame.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/html2canvas/html2canvas.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/Swiper/swiper-4.4.6.min.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/js/BaseUtils.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/custom/package/ppr/js/CommUtils.js(v=${_v})}"></script>
+</head>
+<body class="bgC_">
+<div class="knowledge-page">
+    <ul class="tab-head">
+        <li class="h_b active" th:text="#{UI_70_01_02_002}">题型分布</li>
+        <li class="h_b hidden" th:text="#{UI_70_01_02_003}">知识点/章节分布</li>
+        <li class="h_b" th:text="#{UI_70_01_02_004}">表格统计</li>
+        <li class="h_b" th:text="#{UI_70_01_02_005}">总体分析</li>
+    </ul>
+    <ul class="tab-cont">
+        <li class="c_b active"><div id="myChart1" class="myChart"></div></li>
+        <li class="c_b">2</li>
+        <li class="c_b" id="questionList">
+            <table class="table_01">
+                <tr><th width="10%" th:text="#{UI_70_01_02_075}">题号</th><th width="25%" th:text="#{UI_70_01_02_077}">题型</th><th width="65%" th:text="#{UI_70_00_012}">知识点</th></tr>
+                <tr v-if="questionListStatistics.length &gt; 0" v-for="question in questionListStatistics">
+                    <td v-text="question.no"></td>
+                    <td v-text="question.typeName"></td>
+                    <td style="text-align: left" v-text="question.knowledges"></td>
+                </tr>
+            </table>
+        </li>
+        <li class="c_b" id="statistics" th:inline="text">
+            <table class="table_01">
+                <tr><th width="50%" colspan="3">[[#{UI_70_01_02_006}]]（<span>[[#{UI_70_01_02_007}]]<span v-text="questionCount">0</span></span>）</th></tr>
+                <tr v-if="questionTypeStatistics.length > 0" v-for="type in questionTypeStatistics"><td v-text="type.name"></td><td><span v-text="type.count">0</span>[[#{UI_70_01_02_061}]]</td><td v-text="type.ratio">13.6%</td></tr>
+            </table>
+            <table class="table_01">
+                <tr><th width="50%" colspan="3" th:text="#{UI_70_01_02_008}">难易度统计</th></tr>
+                <tr v-if="difficultyStatistics.length > 0" v-for="difficulty in difficultyStatistics"><td v-text="difficulty.name"></td><td><span v-text="difficulty.count">0</span>[[#{UI_70_01_02_061}]]</td><td v-text="difficulty.ratio">13.6%</td></tr>
+            </table>
+            <table class="table_01 table_02">
+                <caption>[[#{UI_70_01_02_009}]]（<span>[[#{UI_70_01_02_010}]]<span v-text="knowledgeStatistics.length">0</span>[[#{UI_70_01_02_011}]]</span>）</caption>
+                <tr><th th:text="#{UI_70_00_012}">知识点</th><th th:text="#{UI_70_01_02_012}">试题数量</th><th th:text="#{UI_70_01_02_013}">试题数量比</th><th th:text="#{UI_70_01_02_045}">分数</th><th th:text="#{UI_70_01_02_014}">分数占比</th></tr>
+                <tr v-if="knowledgeStatistics.length > 0" v-for="knowledge in knowledgeStatistics">
+                    <td v-text="knowledge.name"></td>
+                    <td v-text="knowledge.count"></td>
+                    <td v-text="knowledge.rate"></td>
+                    <td v-text="knowledge.score"></td>
+                    <td v-text="knowledge.ratio"></td>
+                </tr>
+            </table>
+        </li>
+    </ul>
+    <div class="fixed_box">
+        <span class="btn_01 bg3" id="close_win" th:text="#{UI_70_00_013}">关闭</span>
+    </div>
+</div>
+
+<script type="text/javascript" th:inline="javascript">
+    //<![CDATA[
+    $(function(){
+        LookKnowledge.selectQuestions = parent.getPaperQuestions();
+        LookKnowledge.paper = parent.getPaperInfo();
+        LookKnowledge.difficulties = [[${difficultys}]];
+        LookKnowledge.teacherMaterials = [[${materials}]];
+        LookKnowledge.init();
+        let data = {
+            selectQuestions : LookKnowledge.selectQuestions,
+            questionCount : LookKnowledge.questionCount,
+            difficultyCoefficient : "",     //难度系数
+            questionTypeStatistics : LookKnowledge.questionTypeStatistics,    //题型统计
+            difficultyStatistics : LookKnowledge.difficultyStatistics,        //难易度统计
+            knowledgeStatistics : LookKnowledge.knowledgeStatistics          //知识点统计
+        };
+        let QuestionList = new Vue({
+            el : "#questionList",
+            data : {"questionListStatistics" : LookKnowledge.questionListStatistics},
+            methods : {
+
+            }
+        });
+        let LookKnowledgeVue = new Vue({
+            el : "#statistics",
+            data : data,
+            methods : {
+
+            }
+        });
+
+        $(".knowledge-page .tab-head .h_b").click(function(){
+            if ($(this).hasClass("active")) return null;
+            var $index = $(this).index();
+            $(this).addClass('active').siblings().removeClass('active');
+            $(".knowledge-page .tab-cont .c_b").eq($index).addClass('active');
+            $(".knowledge-page .tab-cont .c_b").eq($index).siblings().removeClass('active');
+        });
+    });
+
+    ;(function($){
+        let LookKnowledge = window.LookKnowledge = {
+             questionCount : 0,
+             questionTypeStatistics : [],
+             difficultyCoefficient : 0,
+             difficultyStatistics : [],
+             knowledgeStatistics : [],
+             questionListStatistics : [],
+             init : function(){
+                 this.initEvent();
+                 this.markMyChart();
+                 this.paperQuestionStatistics();
+                 this.statistics();
+             },
+             initEvent : function(){
+                $("#close_win").on("click", function(){
+                    let index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                });
+             },
+             markMyChart : function(){  //题型分布
+                 let _this = this;
+                 if (this.selectQuestions == null || this.selectQuestions.length == 0) return;
+                 let typeNames = new Array();
+                 let data = new Array();
+                 this.selectQuestions.forEach(function(item, i){
+                      if (item.questions.length > 0){
+                          typeNames.push(item.typeName);
+                          data.push({"value" : item.questions.length, "name" : item.typeName});
+                      }
+                 });
+                 var myChart1 = echarts.init(document.getElementById('myChart1'));
+                 myChart1.setOption(_this.initCharOption(typeNames, data));
+             },
+             initCharOption : function(typeNames, data){
+                 return {
+                     title : {
+                         show:false,
+                         text: '',
+                         subtext: '',
+                         x:'center'
+                     },
+                     tooltip : {
+                         trigger: 'item',
+                         formatter: "{b} : {c} ({d}%)"
+                     },
+                     legend: {
+                         orient: 'vertical',
+                         left: 'left',
+                         data: typeNames
+                     },
+                     series : [
+                         {
+                             name: '',
+                             type: 'pie',
+                             radius : '80%',
+                             center: ['50%', '50%'],
+                             data: data,
+                             label: {
+                                 formatter: '{b}:{c}({d}%)'
+                             },
+                             itemStyle: {
+                                 emphasis: {
+                                     shadowBlur: 10,
+                                     shadowOffsetX: 0,
+                                     shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                 }
+                             }
+                         }
+                     ]
+                 }
+             },
+            paperQuestionStatistics : function(){
+                let _this = this;
+                if (this.paper.nodes.length == 0) return;
+                this.paper.nodes.forEach(function(item, i){
+                    if (item.children.length > 0) {
+                        item.children.forEach(function(item1, j){
+                            if (item1.children.length > 0){
+                                item1.children.forEach(function(item2, k){
+                                    if (item2.question != null){
+                                        let knowledges = '';
+                                        if (item2.question.knowledges.length > 0){
+                                            item2.question.knowledges.forEach(function(item3, x){
+                                                if (_this.chargeKnowledgeIsTeacherMaterial(item3.knowledgeId)) {
+                                                    knowledges = CommUtils.isEmpty(knowledges) ? item3.knowledgeName : knowledges + ", " + item3.knowledgeName;
+                                                }
+                                            });
+                                        }
+                                        _this.questionListStatistics.push({
+                                            "no" : item2.externalNo,
+                                            "typeName" : item2.question.type.name,
+                                            "knowledges" : knowledges
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            },
+            statistics : function(){  //总体分析
+                 let _this = this;
+                 this.selectQuestions.forEach(function(item, i){  //计算总数
+                     _this.questionCount += item.questions.length;
+                 });
+                 this.selectQuestions.forEach(function(item, i){  //题型系数
+                     if (item.questions.length > 0){
+                        _this.questionTypeStatistics.push({
+                            "code" : item.typeCode,
+                            "name" : item.typeName,
+                            "count" : item.questions.length,
+                            "ratio" : _this.getRatio(item.questions.length, _this.questionCount)
+                        });
+                     }
+                 });
+                 let otherCount = _this.questionCount;
+                 this.difficulties.forEach(function(item, i){  //难度系数
+                     let count = 0;
+                     _this.selectQuestions.forEach(function(item2, j){
+                         if (item2.questions.length > 0){
+                             item2.questions.forEach(function(item3, k){
+                                 if (item3.difficulty != null && !CommUtils.isEmpty(item3.difficulty.code) && item3.difficulty.code == item.code){
+                                     count++;
+                                 }
+                             });
+                         }
+                     });
+                     item.count = count;
+                     item.ratio = _this.getRatio(count, _this.questionCount);
+                     otherCount -= count;
+                     _this.difficultyStatistics.push(item);
+                 });
+                 if (otherCount > 0){
+                     _this.difficultyStatistics.push({
+                         "code" : "",
+                         "name" : "其它",
+                         "count" : otherCount,
+                         "ratio" : _this.getRatio(otherCount, _this.questionCount)
+                     });
+                 }
+                 let knowledgeMap = new Map();
+                 this.selectQuestions.forEach(function(item, i){   //知识点统计
+                      if (item.questions.length > 0){
+                          item.questions.forEach(function(item1, j){
+                              if (item1.knowledges != undefined && item1.knowledges != null){
+                                  item1.knowledges.forEach(function(item2, k){
+                                        if (_this.chargeKnowledgeIsTeacherMaterial(item2.knowledgeId)){
+                                            let key = item2.knowledgeId + "==" + item2.knowledgeName;
+                                            if (knowledgeMap.get(key) == undefined){
+                                                knowledgeMap.set(key, {"count" : 1, "score" : item1.points});
+                                            }else{
+                                                let obj = knowledgeMap.get(key);
+                                                knowledgeMap.set(key, {"count" : obj.count+1, "score" : obj.score + item1.points});
+                                            }
+                                        }
+                                  });
+                              }
+                          });
+                      }
+                 });
+                 if (knowledgeMap.size > 0){
+                     knowledgeMap.forEach(function (item, key, obj) {
+                         _this.knowledgeStatistics.push({
+                             "id" : key.split("==")[0],
+                             "name" : key.split("==")[1],
+                             "count" : item.count,
+                             "rate" : item.count + "/" + _this.questionCount,
+                             "score" : item.score,
+                             "ratio" : _this.getRatio(item.score, _this.paper.totalPoints)
+                         });
+                     });
+                 }
+             },
+             chargeKnowledgeIsTeacherMaterial : function(knowledgeId){
+                    var _this = this;
+                    var ret = false;
+                    if (_this.teacherMaterials == null) return true;
+                    $.each(_this.teacherMaterials, function(index, value){
+                         if (knowledgeId.indexOf(value.code) > -1) {
+                             ret = true;
+                             return false;
+                         }
+                    });
+                    return ret;
+             },
+             getRatio : function(num, total){
+                 if (total == 0 || num == 0) return "0.0%";
+                 else{
+                     let ratio = num * 100/total;
+                     return ratio.toFixed(1) + "%";
+                 }
+             }
+        };
+
+    })(jQuery);
+
+    //]]>
+</script>
+</body>
+</html>

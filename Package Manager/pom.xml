@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.enableets.edu.package</groupId>
+    <artifactId>enable-package-service</artifactId>
+    <version>0.0.1</version>
+
+    <name>Package Manager</name>
+
+    <parent>
+        <groupId>com.enableets.edu.framework</groupId>
+        <artifactId>enableets-service-parent</artifactId>
+        <version>1.0.0.RELEASE</version>
+    </parent>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <sdk.file.storage.v2.version>1.0.0.RELEASE</sdk.file.storage.v2.version>
+        <sdk.paper.version>1.0.0.RELEASE</sdk.paper.version>
+        <sdk.ppr.core.version>0.0.1</sdk.ppr.core.version>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.enableets.edu.package</groupId>
+            <artifactId>package-service</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>nz.net.ultraq.thymeleaf</groupId>
+            <artifactId>thymeleaf-layout-dialect</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-activemq</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.enableets.edu.sdk</groupId>
+            <artifactId>sdk-package</artifactId>
+            <version>0.0.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.enableets.edu.sdk</groupId>
+            <artifactId>sdk-activity-v2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.enableets.edu.sdk</groupId>
+            <artifactId>sdk-content</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.enableets.edu.sdk</groupId>
+            <artifactId>sdk-school3-v2</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.enableets.edu.sdk</groupId>
+            <artifactId>sdk-school3</artifactId>
+            <version>1.0.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.enableets.edu.sdk</groupId>
+            <artifactId>sdk-file-storage-v2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.enableets.edu.package</groupId>
+            <artifactId>enable-package-ppr</artifactId>
+            <version>1.0.0.release</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.enableets.edu.sdk.catalog</groupId>
+            <artifactId>sdk-catalog-v2</artifactId>
+            <version>1.0.0.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.enableets.edu.package</groupId>
+            <artifactId>enable-package-etm</artifactId>
+            <version>1.0.0.release</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.enableets.edu.sdk</groupId>
+            <artifactId>sdk-teaching-assistant</artifactId>
+            <version>1.0.0.RELEASE</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

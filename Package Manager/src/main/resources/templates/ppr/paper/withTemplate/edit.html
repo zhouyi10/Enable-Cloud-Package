@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/" xmlns:v-on="http://www.w3.org/1999/xhtml"
+      xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title></title>
+    <link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/custom/ppr/paper/paperV3/css/baseStyle.css(v=${_v})}"/>
+    <link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/custom/ppr/paper/paperV3/css/style20190606.min.css(v=${_v})}"/>
+    <link rel="stylesheet" th:href="${_contextPath} + @{/comm/plugins/jsTree/themes/default/style.min.css(v=${_v})}"/>
+    <link rel="stylesheet" th:href="${_contextPath} + @{/custom/ppr/paper/paperV3/iconfont/iconfont.css(v=${_v})}"/>
+    <style type="text/css">
+        *[v-cloak] {
+            display: none;
+        }
+
+        .fixed-tree-box {
+            z-index: 101;
+        }
+
+        .template_20190620.edit_ .bt_ .bt_rt .tab-cont .l_ .question_ .q_:first-child .l_6 .b_:first-child {
+            display: none;
+        }
+
+        .template_20190620.edit_ .bt_ .bt_rt .tab-cont .l_ .question_ .q_:first-child .l_6 .b_:nth-child(2) {
+            margin-left: 32px;
+        }
+
+        .template_20190620.edit_ .bt_ .bt_rt .tab-cont .l_ .question_ .q_ .l_3 .tag_list {
+            height: 32px;
+            overflow: auto;
+        }
+
+        .template_20190620.edit_ .bt_ .bt_lt .w_2 .question-types {
+            margin-top: 22px;
+        }
+        .template_20190620.edit_ .bt_ .bt_lt .w_2 .question-types .f_1 {
+            text-align: center;
+        }
+        p .stem.question_blank_image_area {
+            margin: 0px 5px -5px 2px !important;
+        }
+    </style>
+
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/jQuery/jquery-3.0.0.min.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/jsTree/jstree.min.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/layer/layer.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/vue-2.5.21/vue.min.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/js/BaseUtils.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/custom/ppr/js/Constants.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/custom/ppr/js/CommUtils.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/custom/ppr/paper/paperV3/js/edit.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/custom/ppr/paper/paperV3/js/editTemplate.js(v=${_v})}"></script>
+    <script th:inline="javascript">
+        //<![CDATA[
+        $(function () {
+            if (window.i18n == undefined) {
+                window.i18n = {};
+            }
+            $.extend(i18n, {
+                'kind_0': [[#{UI_70_01_01_031}]],  //第{0}卷
+                'input_points_error': [[#{MSG_38_06_008}]],
+                'ques_count_only_number': [[#{MSG_38_07_003}]], // 只能输入数字
+                'kind_max_four': [[#{MSG_38_07_002}]], // 最多只能添加四个卷
+                'confirm': [[#{UI_70_00_008}]],
+                'cancel': [[#{UI_70_00_009}]],
+                'prompt': [[#{UI_38_07_010}]],
+                'change_material_version_clear_knowledge': [[#{MSG_38_07_004}]], // 切换版本后将清空知识点，是否继续？
+                'query_question_count_error': [[#{MSG_38_07_001}]], // 题目信息查询失败
+                'R00': [[#{UI_70_01_02_001}]], // 个人题库
+                'R01': [[#{UI_70_01_02_002}]], // 区域题库
+                'R02': [[#{UI_70_01_02_003}]], // 校本题库
+                'R03': [[#{UI_70_01_02_027}]], // 三三云题库
+                'choose_question_source' : [[#{UI_38_07_008}]], // 选择题源
+                'query_question' : [[#{UI_38_07_009}]], // 查询题目信息中...
+                'question_not_empty' : [[#{MSG_38_07_005}]], // 模板题目不能为空
+                'resource_not_questions' : [[#{MSG_38_07_006}]], // 当前题库无资源, 请更换题库后搜索!
+                'paper_template_save_success' : [[#{MSG_38_07_007}]], // 模板保存成功!
+                'paper_template_save_error' : [[#{MSG_38_07_008}]], // 模板保存失败!
+                'paper_template_save_exception' : [[#{MSG_38_07_009}]], // 模板保存异常!
+                'message' : [[#{MSG_70_00_008}]],
+                'save_other_paper_template' : [[#{UI_38_07_004}]], // 另存模板
+                'questionTypes_empty' : [[#{UI_38_07_016}]]
+            });
+            EditPaperTemplatePage.questionTypes = [[${questionTypes}]];
+            EditPaperTemplatePage.difficulties = [[${difficulties}]];
+            EditPaperTemplatePage.queryKnowledgeTreeUrl = [[${_contextPath} + @{'/condition/knowledge/query'}]]; // 知识点查询url
+            EditPaperTemplatePage.countQuestionAllResourceUrl = [[${_contextPath} + @{'/question/all/resource/count'}]]; // 题目总数查询url
+            EditPaperTemplatePage.queryQuestionRecommendationUrl = [[${_contextPath} + @{'/question/recommendation'}]]; // 题目总数查询url
+            EditPaperTemplatePage.questionResourceTypePrefixUrl = [[${_contextPath} + @{'/custom/ppr/paper/paperV3/img/p_q'}]]; // 题库图片前缀
+            EditPaperTemplatePage.addPaperTemplateUrl = [[${_contextPath} + @{'/v3/template/add'}]]; // 试卷模板添加url
+            EditPaperTemplatePage.init();
+        });
+        //]]>
+    </script>
+</head>
+<body class="bgC_" style="position: relative;">
+<template v-cloak="" id="question-add-area" >
+    <ul class="w_2" id="paperNum">
+        <li class="question-types" v-for="(type, index) in types" v-bind:data-key="type.code" >
+            <!-- 动态设置行高 -->
+            <b class="f_1" v-text="type.name" v-bind:style="{'line-height': ((type.name.length/3) > 1 ? 16 : 32)  + 'px'}">单选题</b>
+            <span class="f_2">
+                <em class="f_2_1 reduce_" v-on:click="reduceQuestionCount(type)">
+                    <i class="iconfont icon-jianhao"></i>
+                </em>
+                <input class="f_2_2" v-model="type.count"
+                    v-on:input="inputCount(type, $event)"
+                    v-on:blur="inputCount(type, $event)"
+                    maxlength="3" value="0"/>
+                <em class="f_2_1 add_" v-on:click="plusQuestionCount(type)">
+                    <i class="iconfont icon-jiahao"></i>
+                </em>
+            </span>
+            <b class="f_3"
+                v-bind:class="{ active: vilidCount(type.count) }"
+                v-on:click="addQuestion(type, $event)" th:text="#{UI_38_08_027}">添加</b>
+        </li>
+    </ul>
+</template>
+<div class="template_20190620 edit_" v-cloak="" id="paperTemplate">
+    <div class="tp_">
+        <span class="paper-title" v-text="paper.sgsTitle"></span>
+        <div class="select_box">
+            <label th:text="#{UI_70_00_011}">教材版本</label>
+            <div class="select_">
+                <select v-model.once="paper.materialVersion" name="materialVersion" v-on:change="changeMeterialVersion">
+                    <option th:each="version : ${meterialVersions}" th:attr="data-aaa=${version.code}"
+                            th:value="${version.code}" th:text="${version.name}">版本1
+                    </option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="bt_">
+        <div class="bt_lt">
+            <!--<h3 class="title_">添加题型</h3>-->
+            <div class="box-scroll">
+                <div class="box_auto">
+                    <div is="question-add-area" v-bind:question-types="questionTypes"
+                         v-on:add-question="addQuestion"></div>
+                </div>
+            </div>
+        </div>
+        <div class="bt_rt" id="tab-box02">
+            <div class="tab-head">
+                <ul class="cont_">
+                    <li class="l_" v-for="(kNode, kIndex) in paper.nodes"
+                        v-bind:class="{active : kNode.nodeSearchCode == curKindNodeSearchCode}"
+                        v-on:click="curKindNodeSearchCode = kNode.nodeSearchCode"><b
+                            th:text="'{{kNode.name}} (' + #{UI_70_00_021} + '{{kNode.points}}' + #{UI_70_00_023} + ')	'"></b><i class="iconfont icon-shanchu"
+                                                   v-on:click.stop="removeTemplateKind(paper.nodes, kIndex)"></i></li>
+                    <li class="l_ add_btn" v-on:click="addTemplateKind"><b th:inline="text">+ [[#{UI_70_01_01_027}]]</b></li>
+                </ul>
+            </div>
+            <ul class="tab-cont" >
+                <li  class='l_' v-for="(kNode, kIndex) in paper.nodes" v-bind:key="kNode.nodeSearchCode"
+                    v-show="kNode.nodeSearchCode == curKindNodeSearchCode" v-if="kNode.children">
+                    <dl class='question_' v-for="tNode in kNode.children" v-bind:key="tNode.nodeSearchCode">
+                        <dt class="type_"><span
+                                th:text="'{{tNode.name}} ({{tNode.children.length}}' + #{UI_38_07_001} + '{{tNode.points}}' + #{UI_70_00_023} + ')	'">单选题 (5题 共10分)</span><i
+                                class="iconfont icon-xialajiantou zhankai_" v-bind:class="{active : tNode.isUnFold}"
+                                v-on:click="tNode.isUnFold = !tNode.isUnFold"></i></dt>
+                        <dd is="transition" name="fade">
+                        <dd class='q_list' v-show="tNode.isUnFold" v-if="tNode.children.length > 0">
+                            <div class='q_' v-for="(qNode, qIndex) in tNode.children" v-bind:key="qNode.nodeSearchCode">
+                                <b class='l_1' v-text="qNode.externalNo">1</b><b class="l_2" th:text="#{UI_70_00_012}">知识点</b>
+                                <div class='l_3'>
+                                    <div class="tag_list">
+                                        <b class="tag_" v-for="(knowledge, knowledgeIndex) in qNode.knowledges"
+                                           v-bind:key="knowledge.knowledgeId"><em v-text="knowledge.knowledgeName">生活中的科学</em><i
+                                                class="iconfont icon-shanchu"
+                                                v-on:click="knowledgeSplice(qNode.knowledges, knowledgeIndex)"></i></b>
+                                    </div>
+                                    <span class="r_i" v-on:click="chooseKnowledge(qNode, $event.target)"><i
+                                            class="iconfont icon-tianjiatimu"></i></span>
+                                </div>
+                                <span class="ll_ l_4">
+                                                <em th:text="#{UI_70_01_01_017}">分数</em>
+                                                <div class="r_02">
+                                                    <input v-edit:points.score="qNode" type="text" maxlength="6"/>
+                                                </div>
+                                            </span>
+                                <span class="ll_ l_4 l_5">
+												<em th:text="#{UI_70_01_02_010}">难易度</em>
+												<div class="r_02 select_">
+													<select v-model="qNode.difficulty.code"
+                                                            v-on:input="changeDifficulty($event.target.value, qNode.difficulty)">
+														<option th:each="difficulty : ${difficulties}"
+                                                                th:value="${difficulty.code}"
+                                                                th:text="${difficulty.name}">高</option>
+													</select>
+												</div>
+											</span>
+                                <div class="ll_ l_6">
+                                    <span class="b_" th:title="#{UI_38_07_002}"
+                                          v-on:click="copyQuestionCondition(kNode, tNode, tNode.children, qIndex)"><i
+                                            class="iconfont icon-tongshang"></i></span>
+                                    <span class="b_" th:title="#{UI_38_07_003}"
+                                          v-on:click="copyQuestion(kNode, tNode, tNode.children, qIndex)"><i
+                                            class="iconfont icon-fuzhi"></i></span>
+                                    <span class="b_" th:title="#{UI_70_00_007}"
+                                          v-on:click="removeQuestion(kNode, tNode, tNode.children, qIndex)"><i
+                                            class="iconfont icon-shanchu2"></i></span>
+                                </div>
+                            </div>
+                        </dd>
+                        </dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="fixed_box">
+        <div class="hidden_">
+            <span class="btn_01" v-on:click="selectQuestion()" th:text="#{UI_38_07_005}">确定下一步</span>
+            <span class="btn_01" v-on:click="saveAsPaperTemplate()" th:text="#{UI_38_07_004}">另存模板</span>
+            <span class="btn_01 bg3" onclick="CommUtils.closeLayer(this)" th:text="#{UI_70_00_009}">取消</span>
+        </div>
+    </div>
+    <div id="otherSaveTemplate" style="display: none">
+        <ul class="form-box201906 otherSave">
+            <li class="li_">
+                <label class="lt_" th:text="#{UI_38_07_006}">模板名称</label>
+                <div class="rt_">
+                    <input class="input_" type="text" th:placeholder="#{UI_38_07_007}" v-model="paper.name"/>
+                </div>
+            </li>
+        </ul>
+        <div class="textCenter">
+            <div class="hidden_">
+                <span class="btn_01" th:text="#{UI_70_00_008}" v-on:click="addPaperTemplate(event)">确定</span>
+                <span class="btn_01 bg3" v-on:click="layer.close(layerIndex)" th:text="#{UI_70_00_009}">取消</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="selectQuestionTemplate" style="display: none">
+        <ul class="selectqustion">
+            <li class="l_" v-for="(questionResourceType, index) in questionResourceTypes"
+                v-bind:class="{active: questionResourceType.providerCode === curChooseQuestionResourceParam.providerCode}"
+                v-on:click="changeQuestionResource(questionResourceType.providerCode)"
+            >
+                <span class="on_" v-show="questionResourceType.providerCode === curChooseQuestionResourceParam.providerCode">
+                    <i class="iconfont icon-htmal5icon22"></i>
+                </span>
+                <img v-bind:src="questionResourceType.url"/>
+                <p>{{questionResourceType.name}}</p>
+                <span th:text="'{{questionResourceType.count}}' + #{UI_70_01_02_016}">2653道题</span>
+            </li>
+        </ul>
+        <div class="textCenter" v-show="questionResourceTypes.length > 0">
+            <div class="hidden_">
+                <span class="btn_01" v-on:click="searchQuestion()" th:text="#{UI_70_00_008}">确定</span>
+                <span class="btn_01 bg3" v-on:click="layer.close(layerIndex)" th:text="#{UI_70_00_009}">取消</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="fixed-tree-box" id="fixed-tree-box">
+    <i class="jiantou_"></i>
+    <span class="close_"><i class="iconfont icon-shanchu"></i></span>
+    <div class="scroll-box">
+        <div class="box_auto">
+            <ul class="tree-cont ztree" id="knowledgeTree">
+
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

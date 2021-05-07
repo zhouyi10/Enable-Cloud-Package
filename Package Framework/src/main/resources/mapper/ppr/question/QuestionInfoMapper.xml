@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.enableets.edu.pakage.framework.ppr.question.dao.QuestionInfoDAO">
+
+    <select id="queryByIds" parameterType="java.util.List" resultMap="questionInfo">
+        SELECT
+            t1.question_id AS questionId,
+            t1.parent_id AS parentId,
+            t1.score AS score,
+            t1.question_type_id AS questionTypeId,
+            t1.subject_id AS subjectId,
+            t1.ability_id AS abilityId,
+            t1.question_difficulty AS questionDifficulty,
+            t1.child_count AS childCount,
+            t1.question_content AS questionContent,
+            t1.question_content_no_html AS questionContentNoHtml,
+            t1.answer AS answer,
+            t1.answer_content AS answerContent,
+            t1.answer_analyse AS answerAnalyse,
+            t1.listen,
+            t1.affix_id AS affixId,
+            t1.question_no AS questionNo,
+            t1.content_id AS contentId,
+            t2.option_id as optionId,
+            t2.option_content as optionContent,
+            t2.option_order as optionOrder,
+            t2.option_score as optionScore,
+            t2.option_title as optionTitle
+        FROM
+            t_as_question t1
+        left join t_as_question_option t2 on t2.question_id = t1.question_id
+        <where>
+            <!-- del_status = "0" -->
+            <if test="list != null and list.size() > 0">
+                AND t1.question_id in
+                <foreach collection="list" open="(" separator="," close=")" index="index" item="item">
+                    "${item}"
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+
+    <select id="queryByParentIds" parameterType="java.util.List" resultMap="questionInfo">
+        SELECT
+            t1.question_id AS questionId,
+            t1.parent_id AS parentId,
+            t1.score AS score,
+            t1.question_type_id AS questionTypeId,
+            t1.subject_id AS subjectId,
+            t1.ability_id AS abilityId,
+            t1.question_difficulty AS questionDifficulty,
+            t1.child_count AS childCount,
+            t1.question_content AS questionContent,
+            t1.question_content_no_html AS questionContentNoHtml,
+            t1.answer AS answer,
+            t1.answer_content AS answerContent,
+            t1.answer_analyse AS answerAnalyse,
+            t1.question_child_order AS questionChildOrder,
+            t1.listen,
+            t1.affix_id AS affixId,
+            t1.question_no AS questionNo,
+            t2.option_id as optionId,
+            t2.option_content as optionContent,
+            t2.option_order as optionOrder,
+            t2.option_score as optionScore,
+            t2.option_title as optionTitle
+        FROM
+            t_as_question t1
+        left join t_as_question_option t2 on t2.question_id = t1.question_id
+        <where>
+            <if test="list != null and list.size() > 0">
+                t1.parent_id in
+                <foreach collection="list" open="(" separator="," close=")" index="index" item="item">
+                    "${item}"
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <resultMap type="com.enableets.edu.pakage.framework.ppr.question.po.QuestionInfoPO" id="questionInfo">
+        <id column="questionId" property="questionId"/>
+        <result column="parentId" property="parentId"/>
+        <result column="score" property="score"/>
+        <result column="questionTypeId" property="questionTypeId"/>
+        <result column="subjectId" property="subjectId"/>
+        <result column="abilityId" property="abilityId"/>
+        <result column="gradeId" property="gradeId"/>
+        <result column="questionDifficulty" property="questionDifficulty"/>
+        <result column="childCount" property="childCount"/>
+        <result column="questionContent" property="questionContent"/>
+        <result column="questionContentNoHtml" property="questionContentNoHtml"/>
+        <result column="answer" property="answer"/>
+        <result column="answerContent" property="answerContent"/>
+        <result column="answerAnalyse" property="answerAnalyse"/>
+        <result column="listen" property="listen"/>
+        <result column="affixId" property="affixId" />
+        <result column="contentId" property="contentId"/>
+        <result column="questionNo" property="questionNo"></result>
+        <collection property="options" ofType="com.enableets.edu.pakage.framework.ppr.question.po.QuestionOptionInfoPO">
+            <id column="optionId" property="optionId"/>
+            <result column="optionContent" property="optionContent"/>
+            <result column="optionOrder" property="optionOrder"/>
+            <result column="optionScore" property="optionScore"/>
+            <result column="optionTitle" property="optionTitle"/>
+        </collection>
+    </resultMap>
+
+</mapper>
