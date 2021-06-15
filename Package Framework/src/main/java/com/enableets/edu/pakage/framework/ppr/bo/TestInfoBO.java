@@ -2,15 +2,19 @@ package com.enableets.edu.pakage.framework.ppr.bo;
 
 import java.util.List;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * @author walle_yu@enable-ets.com
  * @since 2020/07/31
  **/
 @Data
+@Accessors(chain = true)
 public class TestInfoBO {
 
     private String testId;
+
+    private String stepId;
 
     private String activityId;
 
@@ -79,4 +83,6 @@ public class TestInfoBO {
     private String examName;
 
     private List<TestRecipientInfoBO> recipients;
+
+    private String processInstanceId;
 }

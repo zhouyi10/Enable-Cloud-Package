@@ -1,15 +1,14 @@
 package com.enableets.edu.pakage.microservice.ppr.vo;
 
-import org.dozer.Mapping;
-
+import com.enableets.edu.module.service.core.BaseVO;
 import com.enableets.edu.module.service.core.MicroServiceException;
 import com.enableets.edu.pakage.framework.bo.IdNameMapBO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.List;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @author walle_yu

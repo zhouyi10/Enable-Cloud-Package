@@ -1,5 +1,6 @@
 package com.enableets.edu.pakage.microservice.ppr.vo;
 
+import com.enableets.edu.module.service.core.BaseVO;
 import com.enableets.edu.module.service.core.MicroServiceException;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -15,15 +16,15 @@ import lombok.Data;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @ApiModel(value="EditCanvasInfoVO", description="Edit canvasVO")
-public class EditCanvasInfoVO extends BaseVO{
+public class EditCanvasInfoVO extends BaseVO {
 	
 	@Override
 	public void validate() throws MicroServiceException {
-		this.validate(getCanvasId(), "canvasId");
+		this.notBlank(getCanvasId(), "canvasId");
 		//this.validate(getContentId(), "contentId");
-		this.validate(getFileId(), "fileId");
-		this.validate(getFileName(), "fileName");
-		this.validate(getUserId(), "userId");
+		this.notBlank(getFileId(), "fileId");
+		this.notBlank(getFileName(), "fileName");
+		this.notBlank(getUserId(), "userId");
 	}
 	
 	/** Primary key*/

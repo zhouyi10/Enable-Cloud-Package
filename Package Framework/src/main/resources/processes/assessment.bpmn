@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/test" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1615773452870" name="" targetNamespace="http://www.activiti.org/test" typeLanguage="http://www.w3.org/2001/XMLSchema">
   <process id="process_assessment" isClosed="false" isExecutable="true" processType="None">
-    <startEvent id="start_1" name="StartEvent">	
-	<extensionElements>
-      <activiti:executionListener event="start" class="com.enableets.edu.pakage.framework.actionflow.listener.MyExecutionListener"></activiti:executionListener>
-      <activiti:executionListener event="end" class="com.enableets.edu.pakage.framework.actionflow.listener.MyExecutionListener"></activiti:executionListener>
-    </extensionElements>
-	</startEvent>
+    <startEvent id="start_1" name="StartEvent">
+      <extensionElements>
+        <activiti:executionListener class="com.enableets.edu.pakage.framework.actionflow.listener.MyExecutionListener" event="start"/>
+        <activiti:executionListener class="com.enableets.edu.pakage.framework.actionflow.listener.MyExecutionListener" event="end"/>
+      </extensionElements>
+    </startEvent>
     <userTask activiti:exclusive="true" id="send_2" name="派卷"/>
     <userTask activiti:assignee="${userId}" activiti:exclusive="true" id="answer_3" name="答卷">
-	  <extensionElements>
-        <activiti:taskListener event="all" class="com.enableets.edu.pakage.framework.actionflow.listener.MyTaskListener"></activiti:taskListener>
+      <extensionElements>
+        <activiti:taskListener class="com.enableets.edu.pakage.framework.actionflow.listener.MyTaskListener" event="all"/>
       </extensionElements>
       <multiInstanceLoopCharacteristics activiti:collection="${recipientList}" activiti:elementVariable="userId" isSequential="false">
         <completionCondition><![CDATA[${nrOfCompletedInstances/nrOfInstances ==1 }]]></completionCondition>

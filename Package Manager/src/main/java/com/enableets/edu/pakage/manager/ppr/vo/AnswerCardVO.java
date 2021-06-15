@@ -20,6 +20,8 @@ public class AnswerCardVO implements java.io.Serializable{
 
     private String stepId;
 
+    private String fileId;
+
     private String userId;
 
     private String startTime;

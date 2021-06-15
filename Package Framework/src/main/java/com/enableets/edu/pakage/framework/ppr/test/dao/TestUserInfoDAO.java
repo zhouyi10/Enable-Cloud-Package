@@ -18,9 +18,13 @@ public interface TestUserInfoDAO extends BaseDao<TestUserInfoPO> {
 
     public List<TestUserInfoPO> getByTestId(@Param("testId") String testId);
 
+    public List<TestUserInfoPO> selectByIds(List<String> list);
+
     public void completeMark(List<String> list);
 
     public void completeMark2(@Param("testId") String testId, @Param("userId") String userId);
 
     public void recalculateTotalScore(List<String> list);
+
+    public void removePrevSubmit(String testId, String userId);
 }

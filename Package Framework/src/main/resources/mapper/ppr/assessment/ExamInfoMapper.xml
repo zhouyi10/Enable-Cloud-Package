@@ -43,11 +43,11 @@
 		t5.question_child_no as examQuestionChildNo,
 		t5.score as examQuestionChildScore,
 		t5.question_child_id as questionChildId
-		FROM ppr_microservice.exam_info t1
-		LEFT JOIN ppr_microservice.exam_kind_info t2 ON t1.exam_id = t2.exam_id
-		LEFT JOIN ppr_microservice.exam_question_type_info t3 ON t2.exam_kind_id = t3.exam_kind_id
-		LEFT JOIN ppr_microservice.exam_question_info t4 ON t3.exam_question_type_id = t4.exam_question_type_id
-		LEFT JOIN ppr_microservice.exam_question_child_info t5 ON t4.exam_question_id = t5.exam_question_id
+		FROM exam_info t1
+		LEFT JOIN exam_kind_info t2 ON t1.exam_id = t2.exam_id
+		LEFT JOIN exam_question_type_info t3 ON t2.exam_kind_id = t3.exam_kind_id
+		LEFT JOIN exam_question_info t4 ON t3.exam_question_type_id = t4.exam_question_type_id
+		LEFT JOIN exam_question_child_info t5 ON t4.exam_question_id = t5.exam_question_id
 		<where>
 			<if test="examId != null and examId != ''">
 				and t1.exam_id = #{examId}
@@ -156,9 +156,9 @@
 	<!-- 根据试卷标识查询所有题目信息 -->
 	<select id="getExamQuestions" parameterType="java.lang.String" resultMap="questionInfo">
 		<include refid="select_question_clause"/>
-		FROM ppr_microservice.exam_info t1,ppr_microservice.exam_kind_info t2,ppr_microservice.exam_question_type_info t3,ppr_microservice.exam_question_info t4,ppr_microservice.question_info q
-		left join ppr_microservice.question_knowledge_info tak ON q.question_id = tak.question_id
-		left join ppr_microservice.question_option_info t7 ON q.question_id = t7.question_id
+		FROM exam_info t1,exam_kind_info t2,exam_question_type_info t3,exam_question_info t4,question_info q
+		left join question_knowledge_info tak ON q.question_id = tak.question_id
+		left join question_option_info t7 ON q.question_id = t7.question_id
 		where t1.exam_id = t2.exam_id and t2.exam_kind_id = t3.exam_kind_id and t3.exam_question_type_id = t4.exam_question_type_id and t4.question_id = q.question_id
 		<if test="examId != null and examId != ''">
 			and t1.exam_id = #{examId}
@@ -169,10 +169,10 @@
 		</if>
 		union all
 		<include refid="select_question_clause"/>
-		FROM ppr_microservice.exam_info t1,ppr_microservice.exam_kind_info t2,ppr_microservice.exam_question_type_info t3,ppr_microservice.exam_question_info t4,ppr_microservice.exam_question_child_info t5,ppr_microservice.question_info q
-		left join ppr_microservice.question_knowledge_info tak ON q.question_id = tak.question_id
+		FROM exam_info t1,exam_kind_info t2,exam_question_type_info t3,exam_question_info t4,exam_question_child_info t5,question_info q
+		left join question_knowledge_info tak ON q.question_id = tak.question_id
 		left join question_option_info t6 on q.question_id = t6.question_id
-		left join ppr_microservice.question_option_info t7 ON q.question_id = t7.question_id
+		left join question_option_info t7 ON q.question_id = t7.question_id
 		where t1.exam_id = t2.exam_id and t2.exam_kind_id = t3.exam_kind_id and t3.exam_question_type_id = t4.exam_question_type_id and t4.exam_question_id = t5.exam_question_id and t5.question_child_id = q.question_id
 		<if test="examId != null and examId != ''">
 			and t1.exam_id = #{examId}

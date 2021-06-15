@@ -18,7 +18,7 @@ import java.io.IOException;
  * @author tony_liu@enable-ets.com
  * @since 2021/2/26
  */
-@Configuration
+//@Configuration
 public class ActivitiConfig {
     /*
      * 配置分为以下几步骤
@@ -33,7 +33,7 @@ public class ActivitiConfig {
     private final PlatformTransactionManager platformTransactionManager;
 
     @Autowired
-    public ActivitiConfig(@Qualifier("pprDataSource") DataSource dataSource, @Qualifier("pprTransactionManager") PlatformTransactionManager platformTransactionManager) {
+    public ActivitiConfig(@Qualifier("packageDataSource") DataSource dataSource, @Qualifier("packageTransactionManager") PlatformTransactionManager platformTransactionManager) {
         this.dataSource = dataSource;
         this.platformTransactionManager = platformTransactionManager;
     }
@@ -47,6 +47,7 @@ public class ActivitiConfig {
         SpringProcessEngineConfiguration spec = new SpringProcessEngineConfiguration();
         spec.setDataSource(dataSource);
         spec.setTransactionManager(platformTransactionManager);
+        spec.setAsyncExecutorActivate(Boolean.TRUE);
         spec.setDatabaseSchemaUpdate(ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE);
         Resource[] resources = null;
         // 启动自动部署流程

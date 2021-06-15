@@ -24,7 +24,7 @@ public class HttpClientFactory {
         try{
             return httpClientConstructor.newInstance(configuration);
         }catch (Throwable t){
-            throw new PakcageHttpClientException("Error creating HttpClient, Cause: " + t, t);
+            throw new packageHttpClientException("Error creating HttpClient, Cause: " + t, t);
         }
     }
 
@@ -52,7 +52,7 @@ public class HttpClientFactory {
             IHttpClient httpClient = candidate.newInstance(new Configuration());
             httpClientConstructor = candidate;
         } catch (Throwable t){
-            throw new PakcageHttpClientException("Error setting HttpClient implementation.  Cause: " + t, t);
+            throw new packageHttpClientException("Error setting HttpClient implementation.  Cause: " + t, t);
         }
 
     }

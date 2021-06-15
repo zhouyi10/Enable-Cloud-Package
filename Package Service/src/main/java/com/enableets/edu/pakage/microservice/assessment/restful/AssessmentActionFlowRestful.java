@@ -1,21 +1,23 @@
 package com.enableets.edu.pakage.microservice.assessment.restful;
 
+import com.enableets.edu.framework.core.controller.OperationResult;
 import com.enableets.edu.module.service.controller.ServiceControllerAdapter;
 import com.enableets.edu.module.service.core.Response;
 import com.enableets.edu.pakage.core.utils.BeanUtils;
-import com.enableets.edu.pakage.framework.assessment.service.AssessmentActionFlowService;
-import com.enableets.edu.pakage.framework.assessment.bo.AssessmentActionFlowBO;
-import com.enableets.edu.pakage.microservice.assessment.vo.AssessmentActionFlowVO;
-import com.enableets.edu.pakage.microservice.assessment.vo.AssessmentMarkStatusVO;
-import com.enableets.edu.pakage.microservice.assessment.vo.AssessmentSubmitVO;
-import com.enableets.edu.pakage.microservice.assessment.vo.QueryAssessmentActionFlowVO;
+import com.enableets.edu.pakage.framework.ppr.bo.TestInfoBO;
+import com.enableets.edu.pakage.framework.ppr.bo.UserAnswerInfoBO;
+import com.enableets.edu.pakage.framework.ppr.test.service.TestInfoService;
+import com.enableets.edu.pakage.framework.ppr.test.service.TestUserInfoService;
+import com.enableets.edu.pakage.framework.ppr.test.service.submitV2.SubmitAnswerV2Service;
+import com.enableets.edu.pakage.microservice.ppr.vo.AddTestInfoVO;
+import com.enableets.edu.pakage.microservice.ppr.vo.AnswerCardSubmitInfoVO;
+import com.enableets.edu.pakage.microservice.ppr.vo.MarkInfoVO;
+import com.enableets.edu.pakage.microservice.ppr.vo.QueryTestInfoResultVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @Api(value = "Assessment Action Flow API", tags = "Assessment Action Flow API")
@@ -24,76 +26,43 @@ import java.util.List;
 public class AssessmentActionFlowRestful extends ServiceControllerAdapter<String> {
 
     @Autowired
-    private AssessmentActionFlowService assessmentActionFlowService;
+    private TestInfoService testInfoService;
 
-    @ApiOperation(value = "assessment publish", notes = "assessment publish")
-    @RequestMapping(value = "/publish", method = RequestMethod.POST)
-    public Response<QueryAssessmentActionFlowVO> publish(
-            @ApiParam(value = "Assessment Action Flow Info", required = true) @RequestBody AssessmentActionFlowVO assessmentActionFlowVO) {
-        AssessmentActionFlowBO bo = assessmentActionFlowService.publish(BeanUtils.convert(assessmentActionFlowVO, AssessmentActionFlowBO.class));
-        return responseTemplate.format(BeanUtils.convert(bo,QueryAssessmentActionFlowVO.class));
-    }
+    @Autowired
+    private SubmitAnswerV2Service submitAnswerV2Service;
 
-    @ApiOperation(value = "query assessment publish", notes = "query assessment publish")
-    @RequestMapping(value = "/publish", method = RequestMethod.GET)
-    public Response<List<QueryAssessmentActionFlowVO>> queryPublishList(
-            @ApiParam(value = "teacherId", required = true) @RequestParam(value = "teacherId", required = true) String teacherId){
-        List<AssessmentActionFlowBO> list = assessmentActionFlowService.queryPublishList(teacherId);
-        return responseTemplate.format(BeanUtils.convert(list,QueryAssessmentActionFlowVO.class));
-    }
+    @Autowired
+    private TestUserInfoService testUserInfoService;
 
-    @ApiOperation(value = "query test", notes = "query test")
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public Response<List<QueryAssessmentActionFlowVO>> queryTest(
-            @ApiParam(value = "studentId", required = true) @RequestParam(value = "studentId", required = true) String studentId){
-
-        List<AssessmentActionFlowBO> bos = assessmentActionFlowService.queryTestList(studentId);
-        return responseTemplate.format(BeanUtils.convert(bos,QueryAssessmentActionFlowVO.class));
+    @ApiOperation(value = "Assessment publish", notes = "Assessment publish")
+    @PostMapping(value="/publish")
+    public Response<QueryTestInfoResultVO> publish(
+            @ApiParam(value = "Add Test Param", required = true) @RequestBody AddTestInfoVO addTestInfoVO) {
+        TestInfoBO test = testInfoService.add(BeanUtils.convert(addTestInfoVO, TestInfoBO.class));
+        return responseTemplate.format(BeanUtils.convert(test, QueryTestInfoResultVO.class));
     }
 
 
-    @ApiOperation(value = "test submit", notes = "test submit")
+    @ApiOperation(value = "Query Publish Assessment", notes = "Query User Publish Assessment")
+    @GetMapping(value = "/{businessId}")
+    public Response<QueryTestInfoResultVO> queryTest(
+            @ApiParam(value = "businessId", required = true) @PathVariable("businessId") String businessId){
+        TestInfoBO testInfoBO = testInfoService.get(businessId);
+        return responseTemplate.format(BeanUtils.convert(testInfoBO, QueryTestInfoResultVO.class));
+    }
+
+    @ApiOperation(value = "Assessment Answer", notes = "Assessment Recipient Submit AnswerCard")
     @RequestMapping(value = "/test/submit", method = RequestMethod.POST)
-    public Response<QueryAssessmentActionFlowVO> submitAnswer(@ApiParam(value = "Assessment Submit VO", required = true)@RequestBody AssessmentSubmitVO assessmentSubmitVO){
-        AssessmentActionFlowBO bo = assessmentActionFlowService.submitAnswer(assessmentSubmitVO.getProcessInstanceId(), assessmentSubmitVO.getUserId());
-        return responseTemplate.format(BeanUtils.convert(bo,QueryAssessmentActionFlowVO.class));
+    public Response<String> submitAnswer(@ApiParam(value = "Assessment Submit VO", required = true)@RequestBody AnswerCardSubmitInfoVO answerCardInfoVO){
+        OperationResult result = submitAnswerV2Service.save(answerCardInfoVO.getEnableCardXml());
+        if (result.isSuccess()) return responseTemplate.format(result.getData().toString());
+        return responseTemplate.format(null);
     }
-
-    @ApiOperation(value = "query mark", notes = "query mark")
-    @RequestMapping(value = "/mark", method = RequestMethod.GET)
-    public Response<List<AssessmentMarkStatusVO>> queryMyMark(
-            @ApiParam(value = "teacherId", required = true) @RequestParam(value = "teacherId", required = true) String teacherId,
-            @ApiParam(value = "offset", required = true) @RequestParam(value = "offset", required = true) int offset,
-            @ApiParam(value = "rows", required = true) @RequestParam(value = "rows", required = true) int rows
-    ){
-        List<AssessmentActionFlowBO> list = assessmentActionFlowService.queryMarkList(teacherId, offset, rows);
-        return responseTemplate.format(BeanUtils.convert(list, AssessmentMarkStatusVO.class));
-    }
-
 
     @ApiOperation(value = "mark", notes = "mark")
-    @RequestMapping(value = "/mark", method = RequestMethod.POST)
-    public Response<QueryAssessmentActionFlowVO> submitMark(
-            @ApiParam(value = "Assessment Submit VO", required = true)@RequestBody AssessmentSubmitVO assessmentSubmitVO
-            ){
-        AssessmentActionFlowBO bo = assessmentActionFlowService.markAnswer(assessmentSubmitVO.getProcessInstanceId(), assessmentSubmitVO.getUserId());
-        return responseTemplate.format(BeanUtils.convert(bo,QueryAssessmentActionFlowVO.class));
-    }
-
-
-    @ApiOperation(value = "query report", notes = "query report")
-    @RequestMapping(value = "/report", method = RequestMethod.GET)
-    public Response<List<QueryAssessmentActionFlowVO>> queryReprot(
-            @ApiParam(value = "studentId", required = true) @RequestParam(value = "studentId", required = true) String studentId){
-        List<AssessmentActionFlowBO> bos = assessmentActionFlowService.queryReportList(studentId);
-        return responseTemplate.format(BeanUtils.convert(bos,QueryAssessmentActionFlowVO.class));
-    }
-
-    @ApiOperation(value = "student report", notes = "student report")
-    @RequestMapping(value = "/report", method = RequestMethod.POST)
-    public Response<QueryAssessmentActionFlowVO> studentReprot(
-            @ApiParam(value = "Assessment Submit VO", required = true)@RequestBody AssessmentSubmitVO assessmentSubmitVO){
-        AssessmentActionFlowBO bo = assessmentActionFlowService.studentReport(assessmentSubmitVO.getProcessInstanceId(), assessmentSubmitVO.getUserId());
-        return responseTemplate.format(BeanUtils.convert(bo,QueryAssessmentActionFlowVO.class));
+    @PostMapping(value = "/mark")
+    public Response<Boolean> mark(@ApiParam(value = "Mark Info", required = true) @RequestBody MarkInfoVO markInfoVO) {
+        testUserInfoService.mark(markInfoVO.getTestId(), markInfoVO.getType(), com.enableets.edu.framework.core.util.BeanUtils.convert(markInfoVO.getAnswers(), UserAnswerInfoBO.class));
+        return responseTemplate.format(Boolean.TRUE);
     }
 }

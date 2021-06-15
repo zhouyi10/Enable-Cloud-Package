@@ -80,6 +80,21 @@
 		.right-asider .box_auto .list_ .l_ .b_ .question_{
 			width : 30px;
 		}
+		.bottomline {
+			width: 50px;
+			border-top:1px #ffffff solid;
+			border-left:1px #ffffff solid;
+			border-right:1px #ffffff solid;
+		}
+        .testInfo {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom:1px #ffffff solid;
+            border-top:1px #ffffff solid;
+            border-left:1px #ffffff solid;
+            border-right:1px #ffffff solid;
+        }
     </style>
 
 	<script th:src="${_contextPath} + @{/comm/plugins/jQuery/jquery-3.0.0.min.js(v=${_v})}"></script>
@@ -99,6 +114,7 @@
 		$.extend(i18n,{
 			'kind_0': [[#{UI_70_01_02_043}]],
 			'paper_info' : [[#{UI_70_01_02_044}]],
+			'paper_top' : [[#{UI_70_01_02_099}]],
 			'paper' : [[#{UI_70_01_02_054}]],
 			'confirm' : [[#{UI_70_00_008}]],
 			'save_paper_success' : [[#{MSG_70_01_02_001}]],
@@ -106,7 +122,7 @@
 			'answer_card' : [[#{UI_70_01_02_047}]],
 			'view_knowledge_statistics' : [[#{UI_70_01_02_021}]],
 			'save_paper_first' : [[#{MSG_70_01_02_003}]],
-			'preview' : [[#{UI_70_01_01_007}]],
+			'preview' : [[#{UI_70_01_03_045}]],
 			'choose_question_with_knowledge' : [[#{UI_70_01_02_016}]],
 			'choose_question_with_chapter' : [[#{UI_70_01_02_017}]],
 			'choose_question_with_paper' : [[#{UI_70_01_02_018}]],
@@ -134,6 +150,7 @@
 			'question_point_not_matching_error' : [[#{MSG_70_01_02_018}]]
 		});
 		EditPaperPage.paper = [[${paper}]];
+		EditPaperPage.examStypeinfoPO = [[${examStypeinfoPO}]];
 		EditPaperPage.teacherBaseInfoStr = [[${session['_TEACHER_SGS_BASE_INFO']}]];
 		EditPaperPage.questionTypes = [[${questionTypes}]] || [];
 		EditPaperPage.editBaseInfoUrl = [[${_contextPath} + @{'/ppr/baseinfo/preedit'}]];
@@ -147,14 +164,17 @@
 		EditPaperPage.preEditQuestionUrl = [[${_contextPath} + @{'/question/preadd'}]];
 		EditPaperPage.viewKnowledgeStatisticsUrl = [[${_contextPath} + @{'/ppr/knowledge/look'}]];
 		// EditPaperPage.viewAnswerCardUrl = [[${_contextPath} + @{'/answerCard?examId={0}'}]];
-		EditPaperPage.viewAnswerCardUrl = [[${_contextPath} + @{'/v3/answercard/preedit?paperId={0}'}]];
-		EditPaperPage.viewPaperUrl = [[${_contextPath} + @{'/preview/{0}'}]];
+		EditPaperPage.viewAnswerCardUrl = [[${_contextPath} + @{'/ppr/answercard/preedit'}]];
+		EditPaperPage.viewPaperUrl = [[${_contextPath} + @{'/ppr/preview/{0}'}]];
+		EditPaperPage.previewPaperUrl = [[${_contextPath} + @{'/ppr/previewPaper'}]];
 		EditPaperPage.savePaperUrl = [[${#strings.isEmpty(paper.paperId)} ? ${_contextPath} + @{'/ppr/add'} : ${_contextPath} + @{'/ppr/edit'}]];
 		EditPaperPage.getContentJsonUrl = [[${_contextPath} + @{'/ppr/content/json'}]];
 		EditPaperPage.increaseUsedNumberUrl = [[${_contextPath} + @{'/ppr/used/times/increase'}]];
 		EditPaperPage.listUrl = [[${contentManagerUrl}]] + '/myindex';
 		EditPaperPage.editType = [[${editType} ?: '_DEFAULT']];
 		EditPaperPage.isCertify = [[${isCertify}]];
+		EditPaperPage.paperTopEdit = [[${_contextPath} + @{'/ppr/paperTopEdit'}]];
+		EditPaperPage._contextPathprr = [[${_contextPath} + @{'/ppr'}]];
 
 		// Set global layer title internationalization
 		layer.config({
@@ -166,19 +186,93 @@
 			}
 			EditPaperPage.init();
 		})
+        $(function () {
+            var examStypeinfoPO = [[${examStypeinfoPO}]];
+            if (examStypeinfoPO.recordScoreColumn == 1){
+                var bigtopic = examStypeinfoPO.sumBigtopic;
+                var table = document.getElementById("rscTable");
+                var len=table.rows.length;
+                for(var i=0;i<len;i++){
+                    table.deleteRow(0);//也可以写成table.deleteRow(0);
+                }
+                var titlerow = document.createElement("tr");
+                titlerow.height = "40px";
+                var td = document.createElement("td");
+                td.width = "60px";
+                td.innerHTML = "题号";
+                titlerow.appendChild(td);
+                var scrow = document.createElement("tr");
+                var td1 = document.createElement("td");
+                td1.innerHTML = "得分";
+                scrow.appendChild(td1);
+                for (var i = 1; i <= bigtopic; i++) {
+                    var td0 = document.createElement("td");
+                    td0.width = "60px";
+                    switch(i) {
+                        case 1:
+                            td0.innerHTML = "一";
+                            break;
+                        case 2:
+                            td0.innerHTML = "二";
+                            break;
+                        case 3:
+                            td0.innerHTML = "三";
+                            break;
+                        case 4:
+                            td0.innerHTML = "四";
+                            break;
+                        case 5:
+                            td0.innerHTML = "五";
+                            break;
+                        case 6:
+                            td0.innerHTML = "六";
+                            break;
+                        case 7:
+                            td0.innerHTML = "七";
+                            break;
+                        case 8:
+                            td0.innerHTML = "八";
+                            break;
+                        case 9:
+                            td0.innerHTML = "九";
+                            break;
+                        default:
+                            td0.innerHTML = "...";
+                    }
+                    titlerow.appendChild(td0);
+                    scrow.appendChild(document.createElement("td"));
+                }
+                var td3 = document.createElement("td");
+                td3.innerHTML = "总分";
+                td3.width = "80px";
+                titlerow.appendChild(td3);
+                var td4 = document.createElement("td");
+                scrow.appendChild(td4);
+                table.appendChild(titlerow);
+                table.appendChild(scrow);
+            }
+        });
+	/*	*/
 	</script>
 </head>
 <body>
 <div class="ContainerWarp20190606" v-cloak="" id="paper">
-	<div class="fixed_header">
-		<div class="cont_ maxw">
-			<span class="lt_1" v-on:click="editBaseInfo"><b th:text="|#{UI_70_01_02_015}：|">手动组卷：</b><b class="select_" >{{ifEmpty(paper.name)}}</b><i class="i_edit" id="editPaperInfo"></i></span>
-			<ul class="rt_1" v-if="'_DEFAULT' == editType">
+	<div class="fixed_header" style="height: auto;width: auto" >
+		<div class="cont_ maxw" ><!--style="display: flex;width: 100%;margin-left: 18%;align-items: center"-->
+			<span class="lt_1" v-on:click="editBaseInfo"><b >试卷信息：</b><b class="select_" >{{ifEmpty(paper.name)}}</b><i class="i_edit" id="editPaperInfo"></i></span>
+			<span style="margin-left: 20px" class="lt_1" v-on:click="editBasetop"><b>试卷样式：</b><i class="i_edit" id="editPapertop"></i></span>
+	<!--		<input style="margin-left: 10px" checked="checked" id="secrecySymbolBox" type="checkbox" onclick="secrecySymbolHander(this)"></input><label>保密标记</label>
+			<input style="margin-left: 10px" checked="checked" id="subtitleBox" type="checkbox" onclick="subtitleHander(this)"></input><label>副标题</label>
+			<input style="margin-left: 10px" checked="checked" id="testInfoBox" type="checkbox" onclick="testInfoHander(this)"></input><label>试卷信息</label>
+			<input style="margin-left: 10px" checked="checked" id="stuInfoColumnBox" type="checkbox" onclick="stuInfoColumnHander(this)"></input><label>考生输入栏</label>
+			<input style="margin-left: 10px" checked="checked" id="recordScoreColumnBox" type="checkbox" onclick="recordScoreHander(this)"></input><label>誉分栏</label>
+			<input style="margin-left: 10px" checked="checked" id="mattersAttentionBox" type="checkbox" onclick="mattersAttentionHander(this)"></input><label>注意事项</label>-->
+			<ul class="rt_1" v-if="'_DEFAULT' == editType" style="float: right">
 				<li class="btn_" th:if="${chooseQuestionWithKnowledge != false}"  v-on:click="chooseQuestionWithKnowledge"><i class="i_1"></i><b th:text="#{UI_70_01_02_016}">知识点选题</b></li>
 				<li class="btn_" v-on:click="chooseQuestionWithChapter"><i class="i_2"></i><b th:text="#{UI_70_01_02_017}">章节选题</b></li>
 				<li class="btn_" v-on:click="chooseQuestionWithPaper"><i class="i_3"></i><b th:text="#{UI_70_01_02_018}">试卷选题</b></li>
 				<li class="btn_" th:if="${chooseQuestionWithTeachingAssistant != false}" v-on:click="chooseQuestionWithTeachingAssistant"><i class="i_7"></i><b th:text="#{UI_70_01_02_033}">教辅选题</b></li>
-				<!--<li class="btn_" v-on:click="chooseQuestionWithCollection"><i class="i_4"></i><b th:text="#{UI_70_01_02_019}">收藏选题</b></li>-->
+				<!--<li claddass="btn_" v-on:click="chooseQuestionWithCollection"><i class="i_4"></i><b th:text="#{UI_70_01_02_019}">收藏选题</b></li>-->
 
 			</ul>
 			<ul class="rt_1" v-else-if="'_PROFESSIONAL' == editType">
@@ -188,11 +282,70 @@
 		</div>
 	</div>
 	<div class="mainContent afterClearfix maxw paperPage">
-		<div class="contentCenter">
-			<div class="cont_">
+		<div class="contentCenter"  style="float: top">
+			<div class="cont_"questionTypes >
+				<div id="secrecySymbolDiv" class="secrecySymbolDiv" th:if="${examStypeinfoPO.secrecySymbol} eq 1 or ${examStypeinfoPO.secrecySymbol} == null">
+					<span style="float: left;margin-left: 20%" >
+                         <b  value="1" th:text="'绝密'+'★'+'启用前'">  </b>
+                         <b id="secrecySymbol" class="secrecySymbol"  th:text="1" hidden></b>
+                    </span><br />
+				</div>
 				<div class="top_">
 					<a v-bind:id="paper.paperId" class="virtual_anchor"></a>
-					<h2 class="title_1" v-on:input="inputPaperName" contenteditable="true" v-bind:edit-text="paper.name"></h2><br />
+					<h2 class="title_1" v-on:input="inputPaperName" contenteditable="true" v-bind:edit-text="paper.name" ></h2><br />
+				</div>
+				<div id="subtitleDiv" class="subtitleDiv">
+					<div>
+						<h3  id="subtitle" class="subtitle" contenteditable="true" align="center" th:text="${examStypeinfoPO.subtitle} eq null?'请编辑考试副标题':${examStypeinfoPO.subtitle} "></h3><br />
+					</div>
+					<!--<div th:unless="${examStypeinfoPO.subtitle}" style="text-align: center">
+						<h3   class="subtitle" contenteditable="true" align="center" th:text="'请编辑考试副标题'"></h3><br />
+					</div>-->
+				</div>
+				<div id="testInfoDiv" class="testInfoDiv">
+				<div>
+					<span style="text-align: center;display:block;"><b id="testInfo" class="testInfo"  contenteditable="true" th:text="${examStypeinfoPO.testInfo} eq null?'考试范围：；考试时间：  分钟；命题人：  ':${examStypeinfoPO.testInfo} "></b></span><br />
+				</div>
+                <!--<div th:unless="${examStypeinfoPO.testInfo}" style="text-align: center">
+                    <span style="text-align: center;display:block;"><b   class="testInfo"  contenteditable="true" th:text="'考试范围：；考试时间：  分钟；命题人：  '"></b></span><br />
+                </div>-->
+				</div>
+
+				<div id="stuInfoColumnDiv" class="stuInfoColumnDiv" th:if="${examStypeinfoPO.stuInfoColumn} eq 1 or ${examStypeinfoPO.stuInfoColumn} == null ">
+					<span style="text-align: center;display:block;" >
+                         <b id="stuInfoColumn" class="stuInfoColumn"  th:text="1" hidden></b>
+						学校：<input name="textfield" type="text" class="bottomline" size="50" maxlength="50"/>
+						姓名：<input name="textfield" type="text" class="bottomline" size="50" maxlength="50"/>
+						班级：<input name="textfield" type="text" class="bottomline" size="50" maxlength="50"/>
+						考号：<input name="textfield" type="text" class="bottomline" size="50" maxlength="50"/>
+					</span><br />
+				</div>
+
+				<div id="recordScoreColumnDiv" class="recordScoreColumnDiv" th:if="${examStypeinfoPO.recordScoreColumn} eq 1 or ${examStypeinfoPO.recordScoreColumn} == null">
+					<span style="text-align: center;display:block;height: auto">
+                        <!--<b th:text="得分栏"></b>-->
+                            <table id="rscTable" class="rscTable" border="1" style="border-collapse:collapse;width: auto;height: auto" align="center">
+                                <tr>
+                                     <td style="width: 60px">题号</td>
+
+                                     <td style="width: 80px">总分</td>
+                                </tr>
+                                <tr>
+                                     <td >得分</td>
+
+                                     <td></td>
+                                </tr>
+                            </table>
+                        <b id="recordScoreColumn" class="recordScoreColumn"  th:text="1" hidden></b>
+                    </span><br />
+				</div>
+				<div id="mattersAttentionDiv" class="mattersAttentionDiv">
+					<div >
+						<span contenteditable="true" style="float: left;margin-left: 20%" ><b  id="mattersAttention" class="mattersAttention"  th:text="${examStypeinfoPO.mattersAttention} eq null?'注意事项:请输入':${examStypeinfoPO.mattersAttention}"></b></span><br />
+					</div>
+					<!--<div th:unless="${examStypeinfoPO.mattersAttention}" style="text-align: center">
+						<span contenteditable="true" style="float: left;margin-left: 20%" ><b   class="mattersAttention"  th:text="'注意事项:请输入'"></b></span><br />
+					</div>-->
 				</div>
 				<div class="test-paper" v-for="(kNode, kIndex) in paper.nodes">
 					<a v-bind:id="kNode.nodeSearchCode" class="virtual_anchor"></a>
@@ -273,13 +426,14 @@
 		<div class="cont_ maxw">
 			<span class="lt_1" th:utext="${#messages.msg('UI_70_01_02_023', '&lt;em&gt;{{questionCount}}&lt;/em&gt;')} + '&lt;em&gt;{{paper.totalPoints}}&lt;/em&gt;' + #{UI_70_01_02_046}">共<em>{{questionCount}}</em>道题<em>{{paper.totalPoints}}</em>分</span>
 			<div class="btn_box">
+				<span class="btn_01" v-on:click="previewPaper(event)" >预览试卷</span>
 				<span class="btn_01" v-bind:class="questionCount==0 ? 'bg3' : ''" v-on:click="viewKnowledgeStatistics" th:text="#{UI_70_01_02_021}">查看知识点</span>
 				<span class="btn_01" th:if="${answerCard != false}" v-bind:class="paper.isSaved ? '' : 'bg3'" v-on:click="viewAnswerCard" th:text="#{UI_70_01_02_047}">答题卡</span>
 				<span class="btn_01" v-bind:class="paper.isSaved ? '' : 'bg3'" v-on:click="viewPaper" th:text="#{UI_70_01_02_022}">下载试卷</span>
 				<span class="btn_01" v-bind:class="!paper.isSaved ? 'bg2' : 'bg3'" v-on:click="savePaper(event)" th:text="#{UI_70_01_02_048}">保存试卷</span>
-				<th:block th:if="${paper.paperId != null}">
+				<!--<th:block th:if="${paper.paperId != null}">
 					<span class="btn_01" v-if="!EditPaperPage.isCertify" v-bind:class="!paper.isSaved ? 'bg2' : 'bg3'" v-on:click="savePaper(event,'1')" th:text="#{UI_70_01_02_065}">另存</span>
-				</th:block>
+				</th:block>-->
 			</div>
 		</div>
 	</div>

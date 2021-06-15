@@ -1,5 +1,7 @@
 package com.enableets.edu.pakage.manager.ppr.controller;
 
+import com.enableets.edu.pakage.manager.ppr.bo.*;
+import com.enableets.edu.pakage.manager.ppr.core.PPRConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,9 +19,6 @@ import com.enableets.edu.pakage.framework.ppr.bo.AnswerCardBO;
 import com.enableets.edu.pakage.framework.ppr.core.PPRConfigReader;
 import com.enableets.edu.pakage.manager.core.Constants;
 import com.enableets.edu.pakage.manager.core.PackageConfigReader;
-import com.enableets.edu.pakage.manager.ppr.bo.MarkActionInfoBO;
-import com.enableets.edu.pakage.manager.ppr.bo.PaperInfoBO;
-import com.enableets.edu.pakage.manager.ppr.bo.UserAnswerCanvasInfoBO;
 import com.enableets.edu.pakage.manager.ppr.service.AnswerInfoService;
 import com.enableets.edu.pakage.manager.ppr.service.PPRInfoService;
 import com.enableets.edu.pakage.manager.ppr.vo.AnswerCardVO;
@@ -57,6 +56,13 @@ public class AnswerInfoController {
     @Autowired
     private PPRInfoService pprInfoService;
 
+    @RequestMapping(value = "/video/answer")
+    public String video(@ModelAttribute("condition") BeginExamVO beginExamVO, Model model){
+        PaperInfoBO paperInfoBO = pprInfoService.get(beginExamVO.getExamId());
+        model.addAttribute("paperInfo", BeanUtils.convert(paperInfoBO, PaperInfoVO.class));
+        return "ppr/answer/video/answer";
+    }
+
     /**
      * Begin To Answer Paper
      * @param beginExamVO
@@ -70,16 +76,23 @@ public class AnswerInfoController {
             model.addAttribute("message", "Exam information does not exist!");
             return "ppr/answer/error";
         }
-        beginExamVO.setStepId(testInfo.getActivityId());
+        beginExamVO.setStepId(testInfo.getStepId());
         beginExamVO.setExamId(testInfo.getExamId());
         beginExamVO.setTestId(testInfo.getTestId());
-        beginExamVO.setExamId(testInfo.getExamId());
+        beginExamVO.setFileId(testInfo.getFileId());
         model.addAttribute("testInfo", JsonUtils.convert(BeanUtils.convert(testInfo, TestInfoResultVO.class)));
         model.addAttribute("uploadFileUrl", packageConfigReader.getUploadFileUrl());
+        model.addAttribute("fileView", packageConfigReader.getPreviewFileSrc());
         PaperInfoBO paperInfoBO = pprInfoService.get(testInfo.getExamId());
-        if (StringUtils.isNotBlank(paperInfoBO.getPaperType()) && paperInfoBO.getPaperType().equals("4")) {   //4: PPR picture
-            model.addAttribute("paperInfo", BeanUtils.convert(paperInfoBO, PaperInfoVO.class));
+        model.addAttribute("paperInfo", BeanUtils.convert(paperInfoBO, PaperInfoVO.class));
+        if (StringUtils.isNotBlank(paperInfoBO.getPaperType()) && paperInfoBO.getPaperType().equals(PPRConstants.PPR_BOX_QUESTION_PAPER_TYPE)) {   //4: PPR picture
             return "ppr/answer/ppr/answer";
+        }
+        if (StringUtils.isNotBlank(paperInfoBO.getPaperType()) && paperInfoBO.getPaperType().equals(PPRConstants.PPR_MICRO_COURSE_TIME_SHARING_PAPER)) {
+            return "ppr/answer/video/answer";
+        }
+        if (StringUtils.isNotBlank(paperInfoBO.getPaperType()) && paperInfoBO.getPaperType().equals(PPRConstants.PPR_FILE_QUESTION_PAPER_TYPE)) {   //1: PPR file
+            return "ppr/answer/file/answer";
         }
         return "ppr/answer/answer";
     }
@@ -104,8 +117,8 @@ public class AnswerInfoController {
     @ResponseBody
     @RequestMapping(value = "/submit")
     public OperationResult submit(@RequestBody AnswerCardVO answerCardVO){
-        answerInfoService.submit2(BeanUtils.convert(answerCardVO, AnswerCardBO.class));
-        return new OperationResult(Boolean.TRUE);
+        SubmitResultBO submitResult = answerInfoService.submit2(BeanUtils.convert(answerCardVO, AnswerCardBO.class));
+        return new OperationResult(submitResult);
     }
 
     /**
@@ -114,7 +127,7 @@ public class AnswerInfoController {
      */
     @RequestMapping(value = "/mark")
     public String mark(@ModelAttribute("condition") MarkInfoVO markInfoVO, Model model){
-        QueryTestInfoResultDTO test = pprTestInfoServiceSDK.get(markInfoVO.getTestId(), markInfoVO.getStepId(), null, markInfoVO.getPaperId());
+        QueryTestInfoResultDTO test = pprTestInfoServiceSDK.get(markInfoVO.getTestId(), markInfoVO.getStepId(), markInfoVO.getFileId(), "");
         PaperInfoBO paper = answerInfoService.get(test.getExamId());
         MarkActionInfoBO markAnswerInfo = answerInfoService.queryAnswer(test.getTestId(), markInfoVO.getUserId(), markInfoVO.getGroupIds());
         model.addAttribute("test", markAnswerInfo);
@@ -129,8 +142,8 @@ public class AnswerInfoController {
     @RequestMapping(value = "/mark/save")
     @ResponseBody
     public OperationResult doMark(@RequestBody MarkActionInfoBO markInfo, Model model){
-        answerInfoService.mark(markInfo);
-        return new OperationResult(Boolean.TRUE);
+        TestMarkResultInfoBO markResult = answerInfoService.mark(markInfo);
+        return new OperationResult(markResult);
     }
 
     @ResponseBody

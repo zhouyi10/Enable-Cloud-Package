@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <meta content="telephone=yes" name="format-detection" />
+    <meta content="email=yes" name="format-detection" />
+    <title>ETS-School</title>
+    <style type="text/css">
+
+    </style>
+</head>
+<body>
+    <div class="row switch">
+        <div class="col-lg-6">
+            <button class="pre_student answerSwitch" th:text="#{UI_70_03_01_011}">上一人</button>
+        </div>
+        <div class="col-lg-6">
+            <button class="next_student answerSwitch" th:text="#{UI_70_03_01_012}">下一人</button>
+        </div>
+    </div>
+    <!-- 打分板 +/- 分-->
+    <div class="row nums">
+        <div class="col-lg-3 minus">
+            <button><i class="fa fa-minus" aria-hidden="true"></i></button>
+        </div>
+        <div class="col-lg-6 score">
+            <input id="answerByScore" class="form-control" type="text" style="text-align: center"/></div>
+        <div class="col-lg-3 plus">
+            <button><i class="fa fa-plus" aria-hidden="true"></i></button>
+        </div>
+    </div>
+    <!-- 打分板 快捷分数 -->
+    <div class="row scoreBg">
+    </div>
+    <!-- 批阅进度 -->
+    <div class="markListTitle">
+        <h3></h3>
+    </div>
+    <div class="markListTableTitle">
+        <table class="table">
+            <thead>
+            <tr>
+                <td width="30%" class="markListRateName" data-th-text="|#{UI_70_03_01_013}|">姓名</td>
+                <td width="30%" class="markListRateScore" th:inline="text">
+                    <i class="fa fa-sort" data-asc="false"></i>[[#{UI_70_03_01_014}]]
+                </td>
+                <td width="40%" class="markListRateStatus" th:inline="text">
+                    <i class="fa fa-sort" data-asc="true"></i>[[#{UI_70_03_01_015}]]
+                </td>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="markListRateTableList">
+        <table class="markListRateTable table">
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

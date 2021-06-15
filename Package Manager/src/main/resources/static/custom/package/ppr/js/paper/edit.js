@@ -106,8 +106,122 @@ var VueConfig = {
                 this.tipBox(i18n['save_paper_first']);
                 return;
             }
-            var url = CommUtils.formatStr(EditPaperPage.viewAnswerCardUrl, this.paper.paperId);
+            var url = EditPaperPage._contextPathprr+'/answercard/preedit?paperId='+this.paper.paperId+'&userId='+ this.paper.userId;
             this.frame(i18n['answer_card'], url, '92%', '96%');
+
+        },
+        previewPaper : function(event,value) {
+           /* if (!CommUtils.tryLock(event.target)) {
+                return;
+            }*/
+            //console.log("进")
+            var _this = this;
+            /*if (_this.paper.isSaved && CommUtils.isEmpty(value)) {
+                _this.tipBox(i18n['repeat_save_paper']);
+                CommUtils.unLock(event.target);
+                return;
+            }*/
+            if (_this.editType == '_PROFESSIONAL'){
+                var isRight = true;
+                var errorQuestion = new Array();
+                $.each(_this.paper.nodes, function(index1, kNode){
+                    $.each(kNode.children, function(index2, tNode){
+                        $.each(tNode.children, function(index3, qNode){
+                            if (parseFloat(qNode.points) != parseFloat(qNode.question.points)){
+                                errorQuestion.push({"type": tNode.name, "qNo": qNode.externalNo});
+                                isRight = false;
+                                $("#" + qNode.nodeSearchCode).parent().css("border", "1px solid red");
+                            }
+                        });
+                    });
+                });
+                if (!isRight) {
+                    var tips = i18n['question_point_not_matching_error'];
+                    var error = '';
+                    $.each(errorQuestion, function(x, xobj){
+                        if (error.indexOf(xobj.type) > -1) return true;
+                        error += error == ''? xobj.type + "[": "," + xobj.type+ "["
+                        $.each(errorQuestion, function(y, yobj){
+                            error+= y == 0 ? yobj.qNo : ","+yobj.qNo;
+                        });
+                        error += "]";
+                    });
+                    layer.alert(tips.replace('{0}', error));
+                    CommUtils.unLock(event.target);
+                    return;
+                }
+            }
+            var canSave = _this.canSave(true);
+            /*if (!canSave) {
+                CommUtils.unLock(event.target);
+                return ;
+            }*/
+            var loading= layer.load(0, {shade: [0.5, '#000'], anim: -1});
+            var paper = JSON.parse(JSON.stringify(this.paper));
+            paper.nodes = _this.buildNodes(paper.nodes);
+
+            var nodeLength = paper.nodes.length;
+            var nodeLast = paper.nodes[nodeLength-1];
+            while (1) {
+                if (nodeLast.level === 3 && nodeLast.question && nodeLast.question.knowledgeList && nodeLast.question.knowledgeList.length > 0 && nodeLast.question.knowledgeList[0].materialVersion) {
+                    paper.materialVersion = nodeLast.question.knowledgeList[0].materialVersion;
+                    break;
+                } else if (nodeLength === 0) {
+                    break
+                } else {
+                    nodeLength = nodeLength-1;
+                    nodeLast = paper.nodes[nodeLength];
+                }
+            }
+            if(CommUtils.isNotEmpty(EditPaperPage.materialVersion)) {
+                paper.materialVersion = EditPaperPage.materialVersion;
+            }
+
+                //url = EditPaperPage.savePaperUrl+"?saveType="+value;
+
+            var paperNewQuestion = EditPaperPage.getPaperNewQuestion();
+            if (CommUtils.isNotEmpty(paperNewQuestion)){
+                $.post(EditPaperPage.increaseUsedNumberUrl, {"questionId" : paperNewQuestion}, function(){
+
+                });
+            }
+            var table=document.getElementById("rscTable");
+            var sumBigtopic = table.rows[0].cells.length-2;
+            var mattersAttention =  $(".mattersAttention").text();
+            var secrecySymbol =  $("#secrecySymbol").text();
+            var subtitle =  $(".subtitle").text();
+            var testInfo =  $(".testInfo").text();
+            var stuInfoColumn =  $(".stuInfoColumn").text();
+            var recordScoreColumn =  $(".recordScoreColumn").text();
+            var examStypeinfoPO = {};
+            examStypeinfoPO.mattersAttention=mattersAttention;
+            examStypeinfoPO.secrecySymbol=secrecySymbol;
+            examStypeinfoPO.subtitle=subtitle;
+            examStypeinfoPO.testInfo=testInfo;
+            examStypeinfoPO.stuInfoColumn=stuInfoColumn;
+            examStypeinfoPO.recordScoreColumn=recordScoreColumn;
+            paper.examStypeinfoPO=JSON.stringify(examStypeinfoPO);
+            paper.sumBigtopic=sumBigtopic;
+            //var url = CommUtils.formatStr(EditPaperPage.previewPaperUrl);
+            var jsonData = JSON.stringify(paper);
+            var paperStr = encodeURIComponent(jsonData);
+            var url = EditPaperPage._contextPathprr;
+            layer.open({
+                type: 2,//弹出框类型
+                title: i18n['preview'],
+                shadeClose: false, //点击遮罩关闭层
+                scrollbar: false,//屏蔽浏览器滚动条
+                area: ["96%", "92%"],
+                shift:0.6,
+                content: url+'/previewPaper?paperStr='+paperStr,
+                success: function(layero, index){
+                },
+                cancel: function(){
+                    layer.closeAll();
+                }
+
+            });
+           // this.frame(i18n['preview'], url+'/previewPaper?paperStr='+paperStr, '92%', '96%');
         },
         viewPaper : function() {
             if (!this.paper.isSaved) {
@@ -115,11 +229,14 @@ var VueConfig = {
                 return;
             }
             var url = CommUtils.formatStr(EditPaperPage.viewPaperUrl, this.paper.paperId);
+           // console.log(url);
             this.frame(i18n['preview'], url, '92%', '96%');
         },
         editBaseInfo : function(event) {
+
             var url = EditPaperPage.editBaseInfoUrl;
             var paper = JSON.parse(JSON.stringify(this.paper));
+            //console.log(paper.userId);
             if(CommUtils.isNotEmpty(paper.knowledges)) {
                 var knowledgeIds = [];
                 $.each(paper.knowledges,function (index, obj) {
@@ -127,14 +244,113 @@ var VueConfig = {
                 });
             }
             if(CommUtils.isNotEmpty(paper.paperId) && CommUtils.isEmpty(EditPaperPage.materialVersion)) {
+                //console.log(paper);
+                //console.log("stagecode"+this.paper.stageCode);
                 url += "?stageCode=" + this.ifEmpty(this.paper.stageCode) + "&gradeCode=" + this.ifEmpty(this.paper.gradeCode) + "&subjectCode=" + this.ifEmpty(this.paper.subjectCode) +
                     "&name=" + this.ifEmpty(this.paper.name) + "&materialVersion=" + this.ifEmpty(paper.materialVersion) + "&searchCodes=" + this.ifEmpty(knowledgeIds);
             } else {
                 url += "?stageCode=" + this.ifEmpty(this.paper.stageCode) + "&gradeCode=" + this.ifEmpty(this.paper.gradeCode) + "&subjectCode=" + this.ifEmpty(this.paper.subjectCode) +
                     "&name=" + this.ifEmpty(this.paper.name) + "&materialVersion=" + this.ifEmpty(EditPaperPage.materialVersion) + "&searchCodes=" + this.ifEmpty(knowledgeIds);
             }
+            //console.log(url);
             url += url.indexOf("?") > -1 ? '&userId=' + paper.userId : "?userId=" + paper.userId;
+            //console.log(url);
             this.frame(i18n['paper_info'], url, '600px', '550px');
+        },
+        editBasetop : function(event) {
+            var mattersAttention =  $(".mattersAttention").text();
+            var secrecySymbol =  $("#secrecySymbol").text();
+            var subtitle =  $(".subtitle").text();
+            var testInfo =  $(".testInfo").text();
+            var stuInfoColumn =  $(".stuInfoColumn").text();
+            var recordScoreColumn =  $(".recordScoreColumn").text();
+            var examStypeinfoPO = {};
+            examStypeinfoPO.mattersAttention=mattersAttention;
+            examStypeinfoPO.secrecySymbol=secrecySymbol;
+            examStypeinfoPO.subtitle=subtitle;
+            examStypeinfoPO.testInfo=testInfo;
+            examStypeinfoPO.stuInfoColumn=stuInfoColumn;
+            examStypeinfoPO.recordScoreColumn=recordScoreColumn;
+
+            var jsonData = JSON.stringify(examStypeinfoPO);
+            examStypeinfoPO = encodeURIComponent(jsonData);
+            var url = EditPaperPage._contextPathprr;
+            //console.log(url+'/paperTopEdit?examStypeinfoPO='+examStypeinfoPO);
+            layer.open({
+                type: 2,//弹出框类型
+                title: i18n['paper_top'],
+                shadeClose: false, //点击遮罩关闭层
+                scrollbar: false,//屏蔽浏览器滚动条
+                area: ['550px','200px'],
+                shift:0.6,
+                content: url+'/paperTopEdit?examStypeinfoPO='+examStypeinfoPO,//将结果页面放入layer弹出层
+                btn: ['确定', '取消'],
+                yes: function(index, layero){
+                    var body = layer.getChildFrame('body', index);
+                    body.html();
+                    var secrecySymbolBoxflag = body.find('#secrecySymbolBox').is(':checked');
+                    var subtitleBoxflag = body.find('#subtitleBox').is(':checked');
+                    var testInfoBoxflag = body.find('#testInfoBox').is(':checked');
+                    var stuInfoColumnBoxflag = body.find('#stuInfoColumnBox').is(':checked');
+                    var recordScoreColumnBoxflag = body.find('#recordScoreColumnBox').is(':checked');
+                    var mattersAttentionBoxflag = body.find('#mattersAttentionBox').is(':checked');
+                    if (secrecySymbolBoxflag == true){
+                        $("#secrecySymbol").text("1");
+                        document.getElementById("secrecySymbolDiv").style.display="";
+                    }else if (secrecySymbolBoxflag == false) {
+                        $("#secrecySymbol").text("0");
+                        document.getElementById("secrecySymbolDiv").style.display="none";
+                    }
+                    if (subtitleBoxflag == true){
+                        if (subtitle == null && subtitle =="" && subtitle ==undefined){
+                            $("#subtitle").text("请编辑考试副标题");
+                        }
+                        document.getElementById("subtitleDiv").style.display="";
+                    }else if (subtitleBoxflag == false) {
+                        $("#subtitle").text(null);
+                        document.getElementById("subtitleDiv").style.display="none";
+                    }
+                    if (testInfoBoxflag == true){
+                        if (testInfo == null && testInfo =="" && testInfo ==undefined){
+                            $("#testInfo").text("考试范围：；考试时间：  分钟；命题人：  ");
+                        }
+                        document.getElementById("testInfoDiv").style.display="";
+                    }else if (testInfoBoxflag == false) {
+                        $("#testInfo").text(null);
+                        document.getElementById("testInfoDiv").style.display="none";
+                    }
+                    if (stuInfoColumnBoxflag == true){
+                        $("#stuInfoColumn").text("1");
+                        document.getElementById("stuInfoColumnDiv").style.display="";
+                    }else if (stuInfoColumnBoxflag == false) {
+                        $("#stuInfoColumn").text("0");
+                        document.getElementById("stuInfoColumnDiv").style.display="none";
+                    }
+                    if (recordScoreColumnBoxflag == true){
+                        $("#recordScoreColumn").text("1");
+                        document.getElementById("recordScoreColumnDiv").style.display="";
+                    }else if (recordScoreColumnBoxflag == false) {
+                        $("#recordScoreColumn").text("0");
+                        document.getElementById("recordScoreColumnDiv").style.display="none";
+                    }
+                    if (mattersAttentionBoxflag == true){
+                        if (mattersAttention == null && mattersAttention =="" && mattersAttention ==undefined){
+                            $("#mattersAttention").text("注意事项:请输入");
+                        }
+                        document.getElementById("mattersAttentionDiv").style.display="";
+                    }else if (mattersAttentionBoxflag == false) {
+                        $("#mattersAttention").text(null);
+                        document.getElementById("mattersAttentionDiv").style.display="none";
+                    }
+
+                    layer.close(index); //如果设定了yes回调需进行手工关闭
+                },
+                btn2: function(index, layero){
+
+                    layer.close(index)
+                }
+            });
+
         },
         chooseQuestionWithKnowledge : function(event) {
             var url = CommUtils.formatStr('{0}?stageCode={1}&stageName={2}&gradeCode={3}&gradeName={4}&subjectCode={5}&subjectName={6}&userId={7}',
@@ -284,6 +500,14 @@ var VueConfig = {
                     }
                     kNode.children.splice(t, 1);
                     EditPaperPage.resetNodeIndex();
+                    //自动调节誉分栏
+                    var table=document.getElementById("rscTable");
+                    for(var i=0;i<table.rows.length;i++){
+                        table.rows[i].deleteCell(table.rows[0].cells.length-2);
+                        if (table.rows[0].cells.length==2){
+                            table.rows[1].cells[0].innerText = "得分";
+                        }
+                    }
                     opFlag = true;
                     return false;
                 });
@@ -505,6 +729,7 @@ var VueConfig = {
                 CommUtils.unLock(event.target);
                 return;
             }
+            //console.log("55");
             if (_this.editType == '_PROFESSIONAL'){
                 var isRight = true;
                 var errorQuestion = new Array();
@@ -536,6 +761,7 @@ var VueConfig = {
                 }
             }
             var canSave = _this.canSave(true);
+            //console.log(canSave);
             if (!canSave) {
                 CommUtils.unLock(event.target);
                 return ;
@@ -572,7 +798,23 @@ var VueConfig = {
 
                 });
             }
-
+            var table=document.getElementById("rscTable");
+            var sumBigtopic = table.rows[0].cells.length-2;
+            var mattersAttention =  $(".mattersAttention").text();
+            var secrecySymbol =  $("#secrecySymbol").text();
+            var subtitle =  $(".subtitle").text();
+            var testInfo =  $(".testInfo").text();
+            var stuInfoColumn =  $(".stuInfoColumn").text();
+            var recordScoreColumn =  $(".recordScoreColumn").text();
+            var examStypeinfoPO = {}
+            examStypeinfoPO.mattersAttention=mattersAttention;
+            examStypeinfoPO.secrecySymbol=secrecySymbol;
+            examStypeinfoPO.subtitle=subtitle;
+            examStypeinfoPO.testInfo=testInfo;
+            examStypeinfoPO.stuInfoColumn=stuInfoColumn;
+            examStypeinfoPO.recordScoreColumn=recordScoreColumn;
+            examStypeinfoPO.sumBigtopic=sumBigtopic;
+            paper.examStypeinfoPO=JSON.stringify(examStypeinfoPO);
             $.ajax({
                 "url": url,
                 "data": JSON.stringify(paper),
@@ -581,11 +823,20 @@ var VueConfig = {
                 success: function (result) {
                     layer.close(loading);
                     if (result.status == 1) {
+                        console.log(result)
                         if (EditPaperPage.paper.opener){
                             _this.getContentJSON(result.data);
                         } else {
-                            var url = EditPaperPage.listUrl + "?providerCode=" + Constants.PROVIDER_CODE_PERSONAL;
-                            window.location.href = url + "&stageCode=" + _this.paper.stageCode + "&gradeCode=" + _this.paper.gradeCode + "&subjectCode=" + _this.paper.subjectCode;
+                            var paperId=result.data;
+                            layer.msg('保存成功', {
+                                icon: 1,
+                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function(){
+                                var url = EditPaperPage._contextPathprr+"/preedit" + "?userId=" + paper.userId;
+                                window.location.href = url + "&paperId=" + paperId;
+                            });
+                            //var url = EditPaperPage.listUrl + "?providerCode=" + Constants.PROVIDER_CODE_PERSONAL;
+                            //window.location.href = url + "&stageCode=" + _this.paper.stageCode + "&gradeCode=" + _this.paper.gradeCode + "&subjectCode=" + _this.paper.subjectCode;
                         }
                         // if (window.opener) {
                         //     result = $.extend(result, {
@@ -906,6 +1157,10 @@ var EditPaperPage = window.EditPaperPage = {
                         typeNode.typeCode = typeInfo.typeCode;
                         typeNode.nodeSearchCode = _this.generateNodeSearchCode(kindNode.nodeId, typeNode.nodeId);
                         typeNodes.push(typeNode);
+
+                        //var newString = JSON.stringify(typeNode);
+                        //console.log(newString);
+                        //console.log(typeNode.name);
                     } else {
                         typeNode.children = [];
                         typeNode.points = 0;
@@ -933,6 +1188,68 @@ var EditPaperPage = window.EditPaperPage = {
                     // kindNode.children.push(typeNode);
                     typeInternalNo++;
                 });
+                var bigtopic = typeInternalNo -1;
+                var table = document.getElementById("rscTable");
+                var len=table.rows.length;
+                for(var i=0;i<len;i++){
+                    table.deleteRow(0);//也可以写成table.deleteRow(0);
+                }
+                var titlerow = document.createElement("tr");
+                titlerow.height = "40px";
+                var td = document.createElement("td");
+                td.width = "60px";
+                td.innerHTML = "题号";
+                titlerow.appendChild(td);
+                var scrow = document.createElement("tr");
+                var td1 = document.createElement("td");
+                td1.innerHTML = "得分";
+                scrow.appendChild(td1);
+                for (var i = 1; i <= bigtopic; i++) {
+                    var td0 = document.createElement("td");
+                    td0.width = "60px";
+                    switch(i) {
+                        case 1:
+                            td0.innerHTML = "一";
+                            break;
+                        case 2:
+                            td0.innerHTML = "二";
+                            break;
+                        case 3:
+                            td0.innerHTML = "三";
+                            break;
+                        case 4:
+                            td0.innerHTML = "四";
+                            break;
+                        case 5:
+                            td0.innerHTML = "五";
+                            break;
+                        case 6:
+                            td0.innerHTML = "六";
+                            break;
+                        case 7:
+                            td0.innerHTML = "七";
+                            break;
+                        case 8:
+                            td0.innerHTML = "八";
+                            break;
+                        case 9:
+                            td0.innerHTML = "九";
+                            break;
+                        default:
+                            td0.innerHTML = "...";
+                    }
+                    titlerow.appendChild(td0);
+                    scrow.appendChild(document.createElement("td"));
+                }
+                var td3 = document.createElement("td");
+                td3.innerHTML = "总分";
+                td3.width = "80px";
+                titlerow.appendChild(td3);
+                var td4 = document.createElement("td");
+                scrow.appendChild(td4);
+                table.appendChild(titlerow);
+                table.appendChild(scrow);
+                //console.log(typeInternalNo);
                 Vue.set(kindNode, 'children', typeNodes);
                 Vue.set(_this.vm.paper, 'totalPoints', _this.vm.paper.totalPoints + kindNode.points - kindNodePoints);
             } else if ("recommendationQuestion" === data.type) {
@@ -1318,4 +1635,5 @@ var EditPaperPage = window.EditPaperPage = {
         }
         return this.newPaperQuestions.join(",");
     }
+
 };

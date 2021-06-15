@@ -6,15 +6,20 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Entity
 @Table(name = "test_info")
 @Data
+@Accessors(chain = true)
 public class TestInfoPO {
 
 	@Id
 	@Column(name="test_id")
 	private String testId;
+
+	@Column(name = "step_id")
+	private String stepId;
 
 	@Column(name="activity_id")
 	private String activityId;
@@ -114,4 +119,7 @@ public class TestInfoPO {
 
 	@Column(name = "exam_name")
 	private String examName;
+
+	@Column(name = "process_instance_id")
+	private String processInstanceId;
 }

@@ -1,5 +1,6 @@
 package com.enableets.edu.pakage.microservice.ppr.vo;
 
+import com.enableets.edu.module.service.core.BaseVO;
 import com.enableets.edu.module.service.core.MicroServiceException;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -13,7 +14,6 @@ import lombok.Data;
  * @since 2019/11/05
  **/
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Data
 @ApiModel(value = "AnswerCardAxisVO", description = "Coordinate Info About Answer Card")
 public class AnswerCardAxisVO extends BaseVO {
 
@@ -75,16 +75,128 @@ public class AnswerCardAxisVO extends BaseVO {
 
     @Override
     public void validate() throws MicroServiceException {
-        validate(nodeId, "nodeId");
-        validate(questionId, "questionId");
-        validate(parentNodeId, "parentNodeId");
-        validate(parentId, "parentId");
-        validate(sequencing, "sequencing");
-        validate(xAxis, "xAxis");
-        validate(yAxis, "yAxis");
-        validate(width, "width");
-        validate(height, "height");
-        validate(pageNo, "pageNo");
-        validate(typeCode, "typeCode");
+        notBlank(nodeId, "nodeId");
+        notBlank(questionId, "questionId");
+        notBlank(parentNodeId, "parentNodeId");
+        notBlank(parentId, "parentId");
+        notNull(sequencing, "sequencing");
+        notNull(xAxis, "xAxis");
+        notNull(yAxis, "yAxis");
+        notNull(width, "width");
+        notNull(height, "height");
+        notNull(pageNo, "pageNo");
+        notBlank(typeCode, "typeCode");
+    }
+
+    public String getNodeId() {
+        return nodeId;
+    }
+
+    public void setNodeId(String nodeId) {
+        this.nodeId = nodeId;
+    }
+
+    public String getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(String questionId) {
+        this.questionId = questionId;
+    }
+
+    public String getParentNodeId() {
+        return parentNodeId;
+    }
+
+    public void setParentNodeId(String parentNodeId) {
+        this.parentNodeId = parentNodeId;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
+
+    public Long getSequencing() {
+        return sequencing;
+    }
+
+    public void setSequencing(Long sequencing) {
+        this.sequencing = sequencing;
+    }
+
+    public Double getxAxis() {
+        return xAxis;
+    }
+
+    public void setxAxis(Double xAxis) {
+        this.xAxis = xAxis;
+    }
+
+    public Double getyAxis() {
+        return yAxis;
+    }
+
+    public void setyAxis(Double yAxis) {
+        this.yAxis = yAxis;
+    }
+
+    public Double getWidth() {
+        return width;
+    }
+
+    public void setWidth(Double width) {
+        this.width = width;
+    }
+
+    public Double getHeight() {
+        return height;
+    }
+
+    public void setHeight(Double height) {
+        this.height = height;
+    }
+
+    public Long getPageNo() {
+        return pageNo;
+    }
+
+    public void setPageNo(Long pageNo) {
+        this.pageNo = pageNo;
+    }
+
+    public String getTypeCode() {
+        return typeCode;
+    }
+
+    public void setTypeCode(String typeCode) {
+        this.typeCode = typeCode;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
+
+    public Long getOptionCount() {
+        return optionCount;
+    }
+
+    public void setOptionCount(Long optionCount) {
+        this.optionCount = optionCount;
+    }
+
+    public Long getRowCount() {
+        return rowCount;
+    }
+
+    public void setRowCount(Long rowCount) {
+        this.rowCount = rowCount;
     }
 }

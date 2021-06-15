@@ -24,42 +24,36 @@ public class PPRConstants {
     /** */
     public static final String QUESTION_ANSWER_CONTENT_REPLACE_REGEX = "[　\\s]*<[^<>]*>[　\\s]*(答案|解析|听力原文)[　\\s]*</\\w*>[　\\s]*";
 
-    /**Cache Key Prefix: test */
-    public static final String TEST_CACHE_KEY_PREFIX = "com:enableets:edu:package:ppr:test:";
-
-    /**Cache Key Prefix: test recipient*/
-    public static final String TEST_RECIPIENT_CACHE_KEY_PREFIX = "com:enableets:edu:package:ppr:test:recipient:";
-
-    /**Cache Key Prefix：paper PaperCardBO*/
-    public static final String PPR_PAPER_CARD_KEY_PREFIX = "com:enableets:edu:package:ppr:paper:paperCard:";
+    /** Package - ppr cache key prefix*/
+    public static final String PACKAGE_PPR_CACHE_KEY_PREFIX = "com:enableets:edu:package:ppr:";
 
     /** the action of question assignee */
     public static final String ACTIVITY_ASSIGNER_ACTION_QUESTION_MARK = "3";
-
-    /** Activity Assessment Step: receive activity paper*/
-    public static final String STEP_ACTION_RECEIVE_ACTIVITY_PAPER_TYPE = "2";
-
-    /** Activity Assessment Step: answer paper type*/
-    public static final String STEP_ACTION_ANSWER_PAPER_TYPE = "3";
-
-    /** Activity Assessment Step: submit paper type*/
-    public static final String STEP_ACTION_SUBMIT_PAPER_TYPE = "4";
-
-    /** Activity Assessment Step: receive answer paper type*/
-    public static final String STEP_ACTION_RECEIVE_ANSWER_TYPE = "5";
 
     /** Mark Over! Confirmation complete, modification complete identification, used for the previous review data has been submitted to determine the review status*/
     public static final Integer MARK_TYPE_ALL_COMPLETE = 3;
 
     /** Mark Over And Submit Answers*/
-    public static final Integer MARK_TYPE_COMPLETE = 2;
-
-    /** Assessment Activity Type*/
-    public static final String ACTIVITY_TYPE_DEFAULT = "18";
+    public static final Integer MARK_TYPE_COMPLETE = 1;
 
     /** PPR Use Code*/
     public static final String DEFAULT_PPR_USE_CODE = "assessment";
 
     /** PPR Question Kind*/
     public static final String PPR_QUESTION_KIND = "4";
+
+    /** Step Action type*/
+    public static final String ANSWER_CARD_ACTION_SUBMIT = "submit";
+
+    /**(word, pdf, mp3) document file paper*/
+    public static final String ATTACHMENT_FILE_PAPER = "1";
+
+    /** Default Paper (Question paper)*/
+    public static final String DEFAULT_QUESTION_PAPER = "2";
+
+    /** micro course Time-sharing answer Paper*/
+    public static final String TIME_SHARING_PAPER = "3";
+
+    /** Frame choose paper*/
+    public static final String IMG_FRAME_CHOOSE_PAPER = "4";
 }

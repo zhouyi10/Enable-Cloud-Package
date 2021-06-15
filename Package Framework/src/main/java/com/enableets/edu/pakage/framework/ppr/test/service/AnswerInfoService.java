@@ -1,12 +1,5 @@
 package com.enableets.edu.pakage.framework.ppr.test.service;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.enableets.edu.framework.core.util.BeanUtils;
 import com.enableets.edu.framework.core.util.token.ITokenGenerator;
 import com.enableets.edu.module.service.core.MicroServiceException;
@@ -16,9 +9,12 @@ import com.enableets.edu.pakage.card.bean.body.action.ActionItem;
 import com.enableets.edu.pakage.card.bean.body.answer.Answer;
 import com.enableets.edu.pakage.card.bean.body.answer.AnswerItem;
 import com.enableets.edu.pakage.card.bean.body.answer.AnswerQuestion;
+import com.enableets.edu.pakage.framework.ppr.bo.*;
+import com.enableets.edu.pakage.framework.ppr.core.PPRConstants;
+import com.enableets.edu.pakage.framework.ppr.core.RecipientCacheMap;
+import com.enableets.edu.pakage.framework.ppr.test.dao.PackageUserAnswerInfoDAO;
 import com.enableets.edu.pakage.framework.ppr.test.dao.TestUserInfoDAO;
 import com.enableets.edu.pakage.framework.ppr.test.dao.UserAnswerCanvasInfoDAO;
-import com.enableets.edu.pakage.framework.ppr.test.dao.PackageUserAnswerInfoDAO;
 import com.enableets.edu.pakage.framework.ppr.test.dao.UserAnswerStampInfoDAO;
 import com.enableets.edu.pakage.framework.ppr.test.po.TestUserInfoPO;
 import com.enableets.edu.pakage.framework.ppr.test.po.UserAnswerCanvasInfoPO;
@@ -29,22 +25,16 @@ import com.enableets.edu.pakage.framework.ppr.test.service.submit.bo.CanvasBO;
 import com.enableets.edu.pakage.framework.ppr.test.service.submit.bo.PPRAnswerInfoBO;
 import com.enableets.edu.pakage.framework.ppr.test.service.submit.bo.SubmitAttributeBO;
 import com.enableets.edu.pakage.framework.ppr.test.service.submit.utils.AutoMarkStrategyUtils;
-import com.enableets.edu.pakage.framework.ppr.bo.PaperInfoBO;
-import com.enableets.edu.pakage.framework.ppr.bo.PaperNodeInfoBO;
-import com.enableets.edu.pakage.framework.ppr.bo.TestInfoBO;
-import com.enableets.edu.pakage.framework.ppr.bo.TestRecipientInfoBO;
-import com.enableets.edu.pakage.framework.ppr.bo.TestUserInfoBO;
-import com.enableets.edu.pakage.framework.ppr.core.PPRConstants;
-import com.enableets.edu.pakage.framework.ppr.core.RecipientCacheMap;
-import com.enableets.edu.sdk.activity.dto.AddStepInstanceMarkInfoDTO;
-import com.enableets.edu.sdk.activity.service.IStepTaskService;
+import com.enableets.edu.pakage.ppr.action.PPRPackageLifecycle;
+import com.enableets.edu.sdk.steptask.dto.AddStepRecordDTO;
+import com.enableets.edu.sdk.steptask.service.IStepRecordV2Service;
+import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -56,9 +46,6 @@ import java.util.stream.Collectors;
 public class AnswerInfoService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AnswerInfoService.class);
-
-    @Autowired
-    private TestInfoService testInfoService;
 
     @Autowired
     private UserAnswerStampInfoDAO userAnswerStampInfoDAO;
@@ -76,21 +63,35 @@ public class AnswerInfoService {
     private TestPaperService testPaperService;
 
     @Autowired
-    private IStepTaskService stepTaskServiceSDK;
+    private TestUserInfoService testUserInfoService;
+
+    @Autowired
+    private TestInfoService testInfoService;
+
+    @Autowired
+    private IStepRecordV2Service iStepRecordV2ServiceSDK;
 
     @Autowired
     private ITokenGenerator tokenGenerator;
 
+    public String submit(String answerCardXml) {
+        PPRPackageLifecycle lifecycle = new PPRPackageLifecycle();
+        EnableCardPackage cardPackage = lifecycle.parse(answerCardXml);
+        SubmitAttributeBO attributeBO = new SubmitAttributeBO();
+        attributeBO.setTestUserId(tokenGenerator.getToken().toString());
+        return this.submit(cardPackage, attributeBO);
+    }
+
     //public String submit(CardBO cardBO, SubmitAttributeBO attribute) {
-    public String submit(EnableCardPackage enableCardPackage, SubmitAttributeBO attribute){
-        //1.get test info
-        TestInfoBO testInfo = testInfoService.get(attribute.getTestId(), null, null, null, Boolean.FALSE);
+    public String submit(EnableCardPackage enableCardPackage, SubmitAttributeBO attributeBO){
         //2.get submit action info
-        ActionItem action = enableCardPackage.getBody().getAction().getItems().stream().filter(e -> PPRConstants.STEP_ACTION_SUBMIT_PAPER_TYPE.equals(e.getType())).collect(Collectors.toList()).get(0);
+        ActionItem submitAction = enableCardPackage.getBody().getAction().getItems().stream().filter(e -> PPRConstants.ANSWER_CARD_ACTION_SUBMIT.equals(e.getName())).collect(Collectors.toList()).get(0);
+        //1.get test info
+        TestInfoBO testInfo = testInfoService.get(null, submitAction.readProperty("stepId"), submitAction.readProperty("fileId"), null, false);
         //3.get submit recipient info
-        TestRecipientInfoBO recipient = RecipientCacheMap.get(testInfo.getTestId(), action.readProperty("userId"));
+        TestRecipientInfoBO recipient = RecipientCacheMap.get(testInfo.getTestId(), submitAction.readProperty("userId"));
         //4.get paper question node
-        Map<String, PaperNodeInfoBO> nodesMap = this.getQuestionNode(enableCardPackage.readRefId());
+        Map<String, PaperNodeInfoBO> nodesMap = this.getQuestionNode(testInfo.getExamId());
         List<PPRAnswerInfoBO> answers = this.convertAnswer(enableCardPackage.getBody().getAnswer());
         //5.do mark
         answers.forEach(answer -> {
@@ -98,20 +99,38 @@ public class AnswerInfoService {
         });
         TestUserInfoBO testUserInfoBO = AutoMarkStrategyUtils.resetUserMarkStatus(answers);
         //6.TestUserPO
-        TestUserInfoPO testUserInfoPO = buildTestUser(testInfo.getTestId(), recipient, testUserInfoBO, attribute, enableCardPackage.getBody().getAction().getItems());
+        TestUserInfoPO testUserInfoPO = buildTestUser(testInfo.getTestId(), recipient, testUserInfoBO, attributeBO, submitAction);
         //7.TestUserAnswerPO
-        List<UserAnswerInfoPO> userAnswerPOs = buildUserAnswers(answers, action.readProperty("userId"), enableCardPackage.readRefId(), testUserInfoPO.getTestUserId(), testInfo.getTestId(), nodesMap);
+        List<UserAnswerInfoPO> userAnswerPOs = buildUserAnswers(answers, submitAction.readProperty("userId"), testInfo.getExamId(), testUserInfoPO.getTestUserId(), testInfo.getTestId(), nodesMap);
         //8.Batch Insert Stamps And Canvas, Insert userAnswer And TestUser Info
         insertAnswerCanvas(userAnswerPOs);
         insertAnswerStamps(userAnswerPOs);
         packageUserAnswerInfoDAO.insertList(userAnswerPOs);
+        //Delete previous submission information
+        testUserInfoDAO.removePrevSubmit(testUserInfoPO.getTestId(), testUserInfoPO.getUserId());
         testUserInfoDAO.insertSelective(testUserInfoPO);
         //9.add Error Question Record
 
-        //10. Callback Activity Refresh Total Score
-        //SpringBeanUtils.getBean(SubmitAnswerService.class).replayStepSendMarkScore(testInfo.getTestId(), testInfo.getActivityId(), paperCardBO.getScore(), recipient.getUserId(), recipient.getUserName(), testUserInfoPO.getUserScore());
-        this.replayStepSendMarkScore(attribute, testUserInfoPO.getUserScore());
+        //10. Send Message Notice StepTask Update score
+        if (testUserInfoPO.getMarkStatus().equals(AutoMarkStrategyUtils.MARK_STATUS_MARKED)) {
+            //testUserInfoService.notifyStepTaskMarkResult(testInfo.getTestId(), testInfo.getStepId(), testInfo.getActivityType(), testUserInfoPO.getUserId(), testUserInfoPO.getTestUserId(), testUserInfoPO.getUserScore());
+            this.sendMarkInfo(testUserInfoPO.getTestUserId(), testUserInfoPO.getUserScore(), testUserInfoPO.getUserId());
+
+        }
         return testUserInfoPO.getTestUserId();
+    }
+
+    private void sendMarkInfo(String testUserId, Float score, String userId) {
+        AddStepRecordDTO stepRecordDTO = new AddStepRecordDTO();
+        stepRecordDTO.setStepInstanceId(testUserId);
+        stepRecordDTO.setScore(Float.toString(score));
+        stepRecordDTO.setUserId(userId);
+        try {
+            iStepRecordV2ServiceSDK.mark(stepRecordDTO);
+        }catch (Exception e) {
+            LOGGER.error("Auto Mark notify Step Task Error, StepInstanceId=" + testUserId + ", score=" + score + ", userId=" + userId, e);
+            throw new MicroServiceException("AnswerInfoService-submit-001", "Auto Mark notify Step Task Error, StepInstanceId=" + testUserId + ", score=" + score + ", userId=" + userId);
+        }
     }
 
     private List<PPRAnswerInfoBO> convertAnswer(Answer answer) {
@@ -140,13 +159,6 @@ public class AnswerInfoService {
             }
         }
         return answers;
-    }
-
-    private void replayStepSendMarkScore(SubmitAttributeBO attribute, Float userScore){
-        AddStepInstanceMarkInfoDTO markInfoDTO = new AddStepInstanceMarkInfoDTO();
-        markInfoDTO.setScore(userScore);
-        markInfoDTO.setStatus("1");  //pass
-        stepTaskServiceSDK.editStateV2(attribute.getStepId(), attribute.getUserId(), markInfoDTO);
     }
 
     private void insertAnswerStamps(List<UserAnswerInfoPO> testUserAnswers) {
@@ -196,15 +208,11 @@ public class AnswerInfoService {
      * @param testUser
      * @return
      */
-    private TestUserInfoPO buildTestUser(String testId, TestRecipientInfoBO recipient, TestUserInfoBO testUser, SubmitAttributeBO attributeBO, List<ActionItem> actions) {
+    private TestUserInfoPO buildTestUser(String testId, TestRecipientInfoBO recipient, TestUserInfoBO testUser, SubmitAttributeBO attributeBO, ActionItem submitAction) {
         Date today = Calendar.getInstance().getTime();
         TestUserInfoPO testUserPO = new TestUserInfoPO();
-        testUserPO.setTestUserId(tokenGenerator.getToken().toString());
-        if ("_STEP".equals(attributeBO.getType()) && StringUtils.isNotBlank(attributeBO.getStepInstanceId())) {
-            testUserPO.setActivityId(attributeBO.getStepInstanceId());
-        } else if ("_ACTIVITY".equals(attributeBO.getType()) && StringUtils.isNotBlank(attributeBO.getActivityId())) {
-            testUserPO.setActivityId(attributeBO.getActivityId());
-        }
+        testUserPO.setTestUserId(attributeBO.getTestUserId());
+        testUserPO.setActivityId(submitAction.readProperty("stepId"));
         testUserPO.setSchoolId(recipient.getSchoolId());
         testUserPO.setTermId(recipient.getTermId());
         testUserPO.setGradeId(recipient.getGradeCode());
@@ -215,22 +223,16 @@ public class AnswerInfoService {
         testUserPO.setUserName(recipient.getUserName());
         testUserPO.setTestId(testId);
         try{
-            ActionItem action = getAction(PPRConstants.STEP_ACTION_ANSWER_PAPER_TYPE, actions);
-            if (action != null) {
-                testUserPO.setStartAnswerTime(new Date(action.readProperty("startTimestamp")));
-                testUserPO.setEndAnswerTime(new Date(action.readProperty("endTimestamp")));
-                testUserPO.setAnswerCostTime(Long.valueOf(action.readProperty("endTimestamp")) - Long.valueOf(action.readProperty("startTimestamp")));
-            }
+            testUserPO.setStartAnswerTime(new Date(submitAction.readProperty("startTimestamp")));
+            testUserPO.setEndAnswerTime(new Date(submitAction.readProperty("endTimestamp")));
+            testUserPO.setAnswerCostTime(Long.valueOf(submitAction.readProperty("endTimestamp")) - Long.valueOf(submitAction.readProperty("startTimestamp")));
         }catch (Exception e){
             testUserPO.setAnswerCostTime(0L);
             testUserPO.setStartAnswerTime(today);
             testUserPO.setEndAnswerTime(today);
         }
         try{
-            ActionItem action = getAction(PPRConstants.STEP_ACTION_SUBMIT_PAPER_TYPE, actions);
-            if (action != null){
-                testUserPO.setSubmitTime(new Date(action.readProperty("timestamp")));
-            }
+            testUserPO.setSubmitTime(new Date(submitAction.readProperty("submitTimestamp")));
         }catch (Exception e){
             testUserPO.setSubmitTime(new Date());
         }
@@ -239,6 +241,7 @@ public class AnswerInfoService {
         testUserPO.setMarkStatus(testUser.getMarkStatus());
         testUserPO.setCreator(testUserPO.getUserId());
         testUserPO.setUpdator(testUserPO.getUserId());
+        testUserPO.setDelStatus(0);
         testUserPO.setCreateTime(today);
         testUserPO.setUpdateTime(today);
         return testUserPO;
@@ -260,14 +263,8 @@ public class AnswerInfoService {
             UserAnswerInfoPO userAnswer = new UserAnswerInfoPO();
             userAnswer.setAnswerId(tokenGenerator.getToken().toString());
             userAnswer.setParentId(answer.getParentId() == null ? null : answer.getParentId().toString());
-            userAnswer.setTestUserId(testUserId);
-            userAnswer.setUserId(userId);
-            userAnswer.setTestId(testId);
-            userAnswer.setExamId(paperId);
-            userAnswer.setQuestionId(answer.getQuestionId());
-            userAnswer.setUserAnswer(answer.getAnswer());
-            userAnswer.setAnswerScore(answer.getAnswerScore());
-            userAnswer.setAnswerStatus(answer.getAnswerStatus());
+            userAnswer.setTestUserId(testUserId).setUserId(userId).setTestId(testId).setExamId(paperId).setQuestionId(answer.getQuestionId())
+                .setUserAnswer(answer.getAnswer()).setAnswerScore(answer.getAnswerScore()).setAnswerStatus(answer.getAnswerStatus());
             try{
                 long answerCostTime = 0L;
                 List<AnswerTrailBO> trails = answer.getTrails();
@@ -276,17 +273,9 @@ public class AnswerInfoService {
                     answerCostTime += trail.getEnd() - trail.getStart();
                     UserAnswerStampInfoPO stamp = new UserAnswerStampInfoPO();
                     stamp.setAnswerStampId(tokenGenerator.getToken().toString());
-                    stamp.setAnswerId(userAnswer.getAnswerId());
-                    stamp.setBeginTime(new Date(trail.getStart()));
-                    stamp.setEndTime(new Date(trail.getEnd()));
-                    stamp.setLastTime((trail.getEnd() - trail.getStart())/1000);
-                    stamp.setQuestionId(answer.getQuestionId());
-                    stamp.setTestId(testId);
-                    stamp.setExamId(paperId);
-                    stamp.setCreator(userId);
-                    stamp.setCreateTime(today);
-                    stamp.setUpdator(userId);
-                    stamp.setUpdateTime(today);
+                    stamp.setAnswerId(userAnswer.getAnswerId()).setBeginTime(new Date(trail.getStart())).setEndTime(new Date(trail.getEnd()))
+                        .setLastTime((trail.getEnd() - trail.getStart())/1000).setQuestionId(answer.getQuestionId()).setTestId(testId).setExamId(paperId)
+                        .setCreator(userId).setCreateTime(today).setUpdator(userId).setUpdateTime(today);
                     answerStamps.add(stamp);
                 }
                 userAnswer.setAnswerStamps(answerStamps);
@@ -300,40 +289,20 @@ public class AnswerInfoService {
                 for (CanvasBO canvas : answer.getCanvases()) {
                     order++;
                     UserAnswerCanvasInfoPO canvasPO = new UserAnswerCanvasInfoPO();
-                    canvasPO.setCanvasId(tokenGenerator.getToken().toString());
-                    canvasPO.setAnswerId(userAnswer.getAnswerId());
-                    canvasPO.setCanvasType("0");
-                    canvasPO.setCanvasOrder(order);
-                    canvasPO.setCreator(userId);
-                    canvasPO.setCreateTime(today);
-                    canvasPO.setUpdator(userId);
-                    canvasPO.setUpdateTime(today);
-                    canvasPO.setFileId(canvas.getFileId());
-                    canvasPO.setFileName(canvas.getFileName());
-                    canvasPO.setUrl(canvas.getUrl());
+                    canvasPO.setCanvasId(tokenGenerator.getToken().toString()).setAnswerId(userAnswer.getAnswerId()).setCanvasType("0")
+                        .setCanvasOrder(order).setCreator(userId).setCreateTime(today).setUpdator(userId).setUpdateTime(today).setFileId(canvas.getFileId())
+                        .setFileName(canvas.getFileName()).setUrl(canvas.getUrl());
                     canvases.add(canvasPO);
                     canvasPO = new UserAnswerCanvasInfoPO();
-                    canvasPO.setCanvasId(tokenGenerator.getToken().toString());
-                    canvasPO.setAnswerId(userAnswer.getAnswerId());
-                    canvasPO.setCanvasType("1");
-                    canvasPO.setCanvasOrder(order);
-                    canvasPO.setCreator(userId);
-                    canvasPO.setCreateTime(today);
-                    canvasPO.setUpdator(userId);
-                    canvasPO.setUpdateTime(today);
-                    canvasPO.setFileId(canvas.getFileId());
-                    canvasPO.setFileName(canvas.getFileName());
-                    canvasPO.setUrl(canvas.getUrl());
+                    canvasPO.setCanvasId(tokenGenerator.getToken().toString()).setAnswerId(userAnswer.getAnswerId()).setCanvasType("1")
+                        .setCanvasOrder(order).setCreator(userId).setCreateTime(today).setUpdator(userId).setUpdateTime(today).setFileId(canvas.getFileId())
+                        .setFileName(canvas.getFileName()).setUrl(canvas.getUrl());
                     canvases.add(canvasPO);
                 }
                 userAnswer.setCanvases(canvases);
             }
-            userAnswer.setMarkStatus(answer.getMarkStatus());
-            userAnswer.setQuestionScore(questionNodes.get(answer.getQuestionId()).getPoints());
-            userAnswer.setCreator(userId);
-            userAnswer.setCreateTime(today);
-            userAnswer.setUpdator(userId);
-            userAnswer.setUpdateTime(today);
+            userAnswer.setMarkStatus(answer.getMarkStatus()).setQuestionScore(questionNodes.get(answer.getQuestionId()).getPoints())
+                .setCreator(userId).setCreateTime(today).setUpdator(userId).setUpdateTime(today);
             userAnswers.add(userAnswer);
         }
         return userAnswers;

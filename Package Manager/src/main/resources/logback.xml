@@ -68,7 +68,7 @@ debug：当此属性设置为true时，将打印出logback内部日志信息，�
     <logger name="org.springframework" level="error"></logger>
     <logger name="org.springframework.web" level="error"></logger>
 
-    <logger name="com.enableets.edu.ppr.framework.ppr.dao" level="debug" additivity="true"></logger>
+    <logger name="com.enableets.edu.ppr.framework.ppr.dao" level="error" additivity="true"></logger>
     <!-- 
     root与logger是父子关系，没有特别定义|则默认为root，任何一个类只会和一个logger对应，
     要么是定义的logger，要么是root，判断的关键在于找到这个logger，然后判断这个logger的appender和level。 

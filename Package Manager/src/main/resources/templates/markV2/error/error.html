@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <meta content="telephone=yes" name="format-detection" />
+    <meta content="email=yes" name="format-detection" />
+    <title>exam</title>
+    <script type="text/javascript" data-th-src="${_contextPath} + @{/comm/plugins/jQuery/jquery-3.0.0.min.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/fragments/fragments.js(v=${_v})}"></script>
+    <script type="text/javascript" data-th-src="${_contextPath} + @{/comm/plugins/layer/layer.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/js/BaseUtils.js(v=${_v})}"></script>
+    <script type="text/javascript" data-th-inline="javascript">
+        var message = [[${message}]];
+        var errorCode = [[${errorCode}]]; // 报表错误代码
+        if (errorCode != null) {
+            console.log("errorMessage: " + [[${errorMessage}]]);
+            message = [[#{MSG_49_03_054}]];
+            if (errorCode === "000") {
+                message += [[#{MSG_49_03_058}]];
+            } else if (errorCode === "001") {
+                message += [[#{MSG_49_03_055}]];
+            } else if (errorCode === "002") {
+                message += [[#{MSG_49_03_056}]];
+            } else if (errorCode === "003") {
+                message += [[#{MSG_49_03_059}]];
+            } else {
+                message += [[#{MSG_49_03_057}]];
+            }
+        }
+        $(function(){
+            var tip = layer.confirm(message, {
+                title : [[#{MSG_70_00_008}]],
+                anim : -1,//无动画
+                offset : '100px',
+                btn: [ [[#{MSG_70_03_02_001}]] ]//['确定'] //按钮
+            }, function(){
+                var data = {
+                    "status" : "error",
+                    "message" : message,
+                    "type" : "answer"
+                };
+                if (window.opener) {
+                    window.opener.postMessage(data,"*");
+                }
+                if(typeof(WeixinJSBridge)!="undefined"){
+                    window.history.go(-1);
+                } else {
+                    window.close();
+                }
+                layer.close(tip);
+            });
+        })
+    </script>
+</head>
+<body>
+
+</body>
+</html>

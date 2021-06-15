@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<title>ETS-School</title>
+	<link rel="stylesheet" type="text/css" data-th-href="${_contextPath} + @{/comm/plugins/bootstrap/bootstrap.min.css(v=${_v})}"/>
+	<link rel="stylesheet" data-th-href="${_contextPath} + @{/comm/plugins/Font-Awesome-4.7.0/css/font-awesome.css(v=${_v})}"/>
+	<link rel="stylesheet" data-th-href="${_contextPath} + @{/custom/package/markV2/css/markQuestionGlobal.css(v=${_v})}"/>
+	<link rel="stylesheet" data-th-href="${_contextPath} + @{/custom/package/markV2/css//markQuestion.css(v=${_v})}"/>
+	<style type="text/css" data-th-inline="text">
+		input.score{
+			text-align: right;
+			padding-right: 5px;
+		}
+		.paper:last-of-type{
+			border-bottom: 0px;
+		}
+		.names{
+			width: 167px;
+		}
+		.container .content .l .left .table tbody td .names span{
+			float: left;
+		}
+		.question_content img{
+			max-width: 798px;
+		}
+	</style>
+	<script type="text/javascript" data-th-src="${_contextPath} + @{/comm/plugins/jQuery/jquery-3.0.0.min.js(v=${_v})}"></script>
+	<script type="text/javascript" data-th-src="${_contextPath} + @{/comm/plugins/bootstrap/bootstrap.min.js(v=${_v})}"></script>
+	<script type="text/javascript" data-th-src="${_contextPath} + @{/comm/plugins/layer/layer.js(v=${_v})}"></script>
+	<script type="text/javascript" data-th-src="${_contextPath} + @{/custom/package/markV2/js/CommUtils.js(v=${_v})}"></script>
+	<script type="text/javascript" data-th-src="${_contextPath} + @{/custom/package/markV2/js/markByQuestion.js(v=${_v})}"></script>
+	<script type="text/javascript" data-th-src="${_contextPath} + @{/custom/package/markV2/js/leftMarkArea.js(v=${_v})}"></script>
+	<script type="text/javascript" th:src="${_contextPath} +@{/custom/package/markV2/js/questionDragDrop.js(v=${_v})}"></script>
+	<script type="text/javascript" th:src="${_contextPath} + @{/comm/js/BaseUtils.js(v=${_v})}"></script>
+	<script type="text/javascript" th:inline="javascript">
+		/*<![CDATA[*/
+		window.i18n = {
+			'kind_name_template' : [[#{UI_70_03_01_016}]],
+			'un_mark' : [[#{UI_70_03_01_005}]],
+			'marked' : [[#{UI_70_03_01_004}]],
+			'common_error_msg' : [[#{MSG_70_00_002}]],
+			'tip_complete_mark' : [[#{UI_70_03_01_001}]],
+			'tip_save_err' : [[#{MSG_70_03_02_002}]],
+			'hava_some_student_not_be_mark' : [[#{MSG_70_03_02_004}]],
+			'all_mark_error' : [[#{UI_70_03_01_020}]],
+			'ignore_and_continue' : [[#{UI_49_02_037}]],
+			'mark_loading' : [[#{UI_70_03_01_017}]],
+			'tipBox_title' : [[#{MSG_70_00_008}]],
+			'question_unfold' : [[#{UI_70_03_01_018}]],
+			'question_put_away' : [[#{UI_70_03_01_019}]],
+			'question_right': [[#{UI_70_03_01_022}]], // 对
+			'question_wrong': [[#{UI_70_03_01_023}]], // 错
+			'tip_all_stu_mark_in_ques': [[#{MSG_70_03_02_005}]],
+			'pre_to_first': [[#{MSG_70_03_02_006}]],
+			'back_to_last': [[#{MSG_70_03_02_007}]],
+			'confirm': [[#{MSG_70_03_02_001}]],
+			'error_not_questions': [[#{MSG_70_03_02_008}]],
+			'error_not_answers': [[#{MSG_70_03_02_009}]]
+		};
+
+		$(function () {
+			if ([[${isCertify}]]){
+				$(document).attr("title", "探寶森林");
+			}
+			$("[data-toggle='tooltip']").tooltip();
+			$(".toggle").click(function(){
+				if ($(this).siblings(".title").hasClass("h100")) {
+					$(this).find("i").text(i18n['question_unfold']);
+				} else {
+					$(this).find("i").text(i18n['question_put_away']);
+				}
+				$(this).siblings(".title").toggleClass("h100");
+				$(this).siblings(".title_bar").find(".question_answer").toggleClass("ha");
+				$(this).children("span").toggleClass("closed");
+				$(this).children("i").toggleClass("fa-chevron-down");
+
+			});
+			$('.good_d').click(function() {
+				$(this).toggleClass('good_p')
+			});
+
+			layer.config({
+				title : [[#{MSG_70_00_008}]]
+			});
+
+			MarkV2Main.exam = [[${exam}]];
+			MarkV2Main.test = [[${test}]];
+			MarkV2Main.testId = [[${testId}]];
+			MarkV2Main.groupId = [[${groupId}]];
+			MarkV2Main.activityId = [[${activityId}]];
+			MarkV2Main.fileId = [[${fileId}]];
+			MarkV2Main.userId = [[${userId}]];
+			MarkV2Main.loginUserId = [[${loginUserId}]];
+			MarkV2Main.markingCacheInfo = [[${markingCacheInfo}]];
+			MarkV2Main.actionType = [[${actionType}]];
+			MarkV2Main.completeMarkUrl = [[${_contextPath} + @{/mark/domark}]];
+			MarkV2Main.pictureUrl = [[${pictureUrl}]];
+			MarkV2Main.previewFileUrl = [[${previewFileUrl}]];
+			MarkV2Main.markStatusUpdatelUrl = [[|${_contextPath}@{'/mark/markStatus/update'}|]];
+			MarkV2Main.markStatusCleanlUrl = [[|${_contextPath}@{'/mark/markStatus/clean'}|]];
+			MarkV2Main.videoImgUrl = [[${_contextPath} + @{'/custom/package/markV2/img/video-play.png'}]];
+			/*MarkV2Main.saveExcellentAnswerUrl = [[@{/mark/question/addExcellentAnswer}]]
+            MarkV2Main.getExcellentAnswerUrl = [[@{/mark/question/getExcellentAnswer}]]
+            MarkV2Main.deleExcellentAnswerUrl = [[@{/mark/question/deleExcellentAnswer}]]*/
+			MarkV2Main.doMarkUrl = [[${_contextPath} + @{'/mark/mark'}]];
+			MarkV2Main.groupType = "2"; // 分题批阅
+			MarkV2Main.init();
+		});
+		/*]]>*/
+	</script>
+</head>
+
+<body>
+<div class="container" data-th-inline="text">
+	<div class="top">
+		<h3 data-th-text="${test.testName}">周练习</h3>
+		<!--<ul>
+			<li>[[#{UI_49_02_010}]]: [[${exam.totalPoints}]][[#{UI_49_02_012}]]</li> &lt;!&ndash;总分&ndash;&gt;
+			<li>[[#{UI_49_02_011}]]：[[${test.submitCount}]]/[[${test.totalCount}]]</li>   &lt;!&ndash;交卷人数/总人数&ndash;&gt;
+		</ul>-->
+		<div class="clear"></div>
+		<button class="temporaryBtn" id="temporaryBtn" th:text="#{UI_70_01_03_008}">批阅完成</button>
+<!--		<button  id="completeMarkBtn" data-th-text="#{UI_49_02_008}">批阅完成</button>-->
+	</div>
+	<div class="content">
+		<div class="row">
+			<div class="col-lg-2 col-md-2 r">
+				<div class="right" th:include="markV2/questionModule">
+				</div>
+			</div>
+			<div class="col-lg-8 col-md-8 l">
+				<div class="left" th:include="markV2/contentModule">
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-2 r">
+				<!-- 右侧栏目 -->
+				<div class="right" th:include="markV2/studentModule">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+
+</html>

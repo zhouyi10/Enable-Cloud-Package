@@ -1,10 +1,6 @@
 package com.enableets.edu.sdk.pakage.ppr.impl;
 
-import com.enableets.edu.sdk.pakage.ppr.dto.EditCanvasInfoDTO;
-import com.enableets.edu.sdk.pakage.ppr.dto.MarkInfoDTO;
-import com.enableets.edu.sdk.pakage.ppr.dto.QueryAnswerDTO;
-import com.enableets.edu.sdk.pakage.ppr.dto.QueryTestUserResultDTO;
-import com.enableets.edu.sdk.pakage.ppr.dto.QueryUserAnswerTrackResultDTO;
+import com.enableets.edu.sdk.pakage.ppr.dto.*;
 import com.enableets.edu.sdk.pakage.ppr.feign.IPPRTestInfoUserServiceFeignClient;
 import com.enableets.edu.sdk.pakage.ppr.service.IPPRTestUserInfoService;
 
@@ -33,8 +29,8 @@ public class DefaultPPRTestUserInfoService implements IPPRTestUserInfoService {
     }
 
     @Override
-    public void mark(MarkInfoDTO markInfoDTO) {
-        pprTestInfoUserServiceFeignClient.mark(markInfoDTO);
+    public TestMarkResultInfoDTO mark(MarkInfoDTO markInfoDTO) {
+        return pprTestInfoUserServiceFeignClient.mark(markInfoDTO).getData();
     }
 
     @Override

@@ -1,0 +1,16 @@
+.blankOption:hover+.optionTools {
+    display: block;
+}
+.blankAnswer {
+    position: relative;
+}
+.optionTools {
+    display: none;
+    position: absolute;
+    top: 0px;
+    right: -45px;
+}
+.optionTools:hover {
+    display: block;
+}
+

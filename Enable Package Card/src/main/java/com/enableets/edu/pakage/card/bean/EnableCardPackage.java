@@ -52,13 +52,4 @@ public class EnableCardPackage extends AbstractEnablePackage<CardBody> implement
               Files.class
         };
     }
-
-    public String readRefId(){
-        if (header != null && header.getProperty() != null && CollectionUtils.isNotEmpty(header.getProperty().getItems())){
-            for (Item item : header.getProperty().getItems()) {
-                if (item.getKey().equals("ref")) return item.getValue();
-            }
-        }
-        return null;
-    }
 }

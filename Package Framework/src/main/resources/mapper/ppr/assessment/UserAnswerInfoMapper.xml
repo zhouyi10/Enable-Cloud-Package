@@ -8,18 +8,8 @@
 			t1.parent_id AS questionId,
 			if (SUM(t1.mark_status) = COUNT(1), '1', '0') AS markStatus
 		FROM
-			t_as_user_answer t1,
-			(
-				SELECT
-					max(test_user_id) AS test_user_id
-				FROM
-					t_as_test_user
-				WHERE
-					test_id = #{testId}
-				GROUP BY
-					user_id
-			) t2
-		WHERE t1.test_user_id = t2.test_user_id GROUP BY t1.user_id, t1.parent_id
+			t_as_user_answer t1
+		WHERE t1.test_id = #{testId} and t1.del_status = 0 GROUP BY t1.user_id, t1.parent_id
 
 	</select>
 </mapper>

@@ -55,11 +55,11 @@ button {
   float: left;
   margin-right: 50px;
 }
-.container .top button {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-}
+/*.container .top button {*/
+  /*position: absolute;*/
+  /*top: 20px;*/
+  /*right: 20px;*/
+/*}*/
 .container .content {
   margin-top: 15px;
 }

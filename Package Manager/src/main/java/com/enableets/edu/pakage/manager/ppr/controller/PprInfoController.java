@@ -11,6 +11,7 @@ import com.enableets.edu.pakage.manager.core.Constants;
 import com.enableets.edu.pakage.manager.core.PackageConfigReader;
 import com.enableets.edu.pakage.manager.ppr.bo.PaperInfoBO;
 import com.enableets.edu.pakage.manager.ppr.core.PPRBaseInfoService;
+import com.enableets.edu.pakage.manager.ppr.core.PPRConstants;
 import com.enableets.edu.pakage.manager.ppr.service.DictionaryInfoService;
 import com.enableets.edu.pakage.manager.ppr.service.PPRInfoService;
 import com.enableets.edu.pakage.manager.ppr.vo.PaperInfoVO;
@@ -67,7 +68,7 @@ public class PprInfoController {
         response.setHeader(Constants.HEAD_X_FRAME_OPTIONS, Constants.HEAD_ALLOWALL);
         response.setHeader("Access-Control-Allow-Origin", "*");
         PaperInfoBO paperInfoBO = pprInfoService.get(paperId);
-        if (StringUtils.isBlank(paperInfoBO.getPaperType()) || !paperInfoBO.getPaperType().equals("4")) {   //4: PPR picture
+        if (paperInfoBO.getPaperType().equals("2")) {
             return "redirect:" + "/manager/package/ppr/preview/" + paperId;
         }
         model.addAttribute("mode", "preview");
@@ -77,12 +78,13 @@ public class PprInfoController {
 
     @RequestMapping(value = "/card/preedit")
     public String card(@ModelAttribute("userId") String userId){
-        return "ppr/ppr/cardinfo";
+         return "ppr/ppr/cardinfo";
     }
 
     @RequestMapping(value = "/save")
     @ResponseBody
     public OperationResult add(PaperInfoVO paper){
+        paper.setPaperType(PPRConstants.PPR_BOX_QUESTION_PAPER_TYPE);
         PaperInfoBO paperBO = pprInfoService.save(BeanUtils.convert(paper, PaperInfoBO.class));
         return new OperationResult(paperBO.getPaperId());
     }

@@ -5,9 +5,11 @@
     <link rel="stylesheet" th:href="${_contextPath} + @{/comm/plugins/bootstrap/bootstrap.min.css(v=${_v})}"/>
     <link rel="stylesheet" th:href="${_contextPath} + @{/custom/package/ppr/css/paper/preview.css(v=${_v})}"/>
     <link rel="stylesheet" th:href="${_contextPath} + @{/custom/package/ppr/css/jizhi.css(v=${_v})}"/>
+
     <script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/jQuery/jquery-3.0.0.min.js(v=${_v})}"></script>
     <script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/jQuery/jquery.cookie.js(v=${_v})}"></script>
     <script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/bootstrap/bootstrap.min.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/layer/layer.js(v=${_v})}"></script>
     <script type="text/javascript" th:src="${_contextPath} + @{/comm/js/BaseUtils.js(v=${_v})}"></script>
     <script type="text/javascript" th:src="${_contextPath} + @{/custom/package/ppr/js/CommUtils.js(v=${_v})}"></script>
     <script type="text/javascript" th:src="${_contextPath} + @{/custom/package/ppr/js/Constants.js(v=${_v})}"></script>
@@ -15,7 +17,12 @@
     <script type="text/javascript" th:src="${_contextPath} + @{/custom/package/ppr/js/paper/perview.js(v=${_v})}"></script>
     <script type="text/javascript" th:src="${_contextPath} + @{/custom/package/ppr/js/question/questionDragDrop.js(v=${_v})}"></script>
     <style th:inline="text">
-
+        .bottomline {
+            width: 50px;
+            border-top:1px #ffffff solid;
+            border-left:1px #ffffff solid;
+            border-right:1px #ffffff solid;
+        }
     </style>
     <script th:inline="javascript">
         /*<![CDATA[*/
@@ -36,11 +43,14 @@
             });
             PerView.i18n = i18n;
             PerView.paperInfo = [[${paperInfo}]];
+            PerView.examStypeinfoPO = [[${examStypeinfoPO}]];
             PerView.isJZ = [[${isJZ}]];
             PerView.viewAnswerCardUrl = [[${_contextPath} + @{'/v3/answercard/preedit'}]];
             PerView.publishmentUrl = [[${_contextPath} + @{/publishment/}]]; // 真题同步
+            PerView.exportWordUrl = [[${_contextPath} + @{'/ppr/exportWord'}]];// 真题同步
             PerView.expertPDFUrl = [[${onlineFileUrl} + @{'/trans/file/transition?htmlUrl='}]];
             PerView.printPdf = [[${printPdf}]];
+            PerView._contextPathprr = [[${_contextPath} + @{'/ppr'}]];
             PerView.init();
         });
         /*]]>*/
@@ -48,9 +58,55 @@
 </head>
 <body class="previewBody">
 <div class="previewC">
+    <div id="secrecySymbolDiv" class="secrecySymbolDiv" th:if="${examStypeinfoPO.secrecySymbol} eq 1">
+					<span style="float: left;margin-left: 20%" >
+                         <b  value="1" th:text="'绝密'+'★'+'启用前'">  </b>
+                    </span><br />
+    </div>
     <!-- 头部 -->
     <div class="previewHead">
         <div style="font-size: 23px;position:relative;padding: 18px 0px;font-weight:700;text-align:center">
+        </div>
+    </div>
+    <div id="subtitleDiv" class="subtitleDiv" style="margin-top: 15px">
+        <div th:if="${examStypeinfoPO.subtitle} != null " style="text-align: center" >
+            <b  class="subtitle"  align="center" th:text="${examStypeinfoPO.subtitle}"></b><br />
+        </div>
+    </div>
+    <div id="testInfoDiv" class="testInfoDiv" style="margin-top: 10px">
+        <div th:if="${examStypeinfoPO.testInfo} != null ">
+            <span style="text-align: center;display:block;"><b id="testInfo" class="testInfo"   th:text="${examStypeinfoPO.testInfo}"></b></span><br />
+        </div>
+    </div>
+    <div id="stuInfoColumnDiv" class="stuInfoColumnDiv"  th:if="${examStypeinfoPO.stuInfoColumn} eq 1">
+					<span style="text-align: center;display:block;" >
+                         <b id="stuInfoColumn" class="stuInfoColumn"  th:text="1" hidden></b>
+						学校：<input name="textfield" type="text" class="bottomline" size="50" maxlength="50"/>
+						姓名：<input name="textfield" type="text" class="bottomline" size="50" maxlength="50"/>
+						班级：<input name="textfield" type="text" class="bottomline" size="50" maxlength="50"/>
+						考号：<input name="textfield" type="text" class="bottomline" size="50" maxlength="50"/>
+					</span><br />
+    </div>
+    <div id="recordScoreColumnDiv" class="recordScoreColumnDiv" th:if="${examStypeinfoPO.recordScoreColumn} eq 1">
+					<span style="text-align: center;display:block;height: auto">
+                        <!--<b th:text="得分栏"></b>-->
+                            <table id="rscTable1" class="rscTable" border="1" style="border-collapse:collapse;width: auto;height: auto" align="center">
+                                <tr>
+                                     <td style="width: 60px">题号</td>
+
+                                     <td style="width: 80px">总分</td>
+                                </tr>
+                                <tr>
+                                     <td >得分</td>
+
+                                     <td></td>
+                                </tr>
+                            </table>
+                    </span><br />
+    </div>
+    <div id="mattersAttentionDiv" class="mattersAttentionDiv">
+        <div  th:if="${examStypeinfoPO.mattersAttention} != null ">
+            <span  style="float: left;margin-left: 20%" ><b   class="mattersAttention"  th:text="${examStypeinfoPO.mattersAttention}"></b></span><br />
         </div>
     </div>
     <!-- 试卷内容 -->
@@ -178,6 +234,7 @@
     <input type="button" th:title="#{UI_70_01_02_095}" value="" onclick="$('.toTop').hide();window.print(); $('.toTop').show();"
            class="btnPrint mt10 Noprint"></input>
     <input type="button" id="exportPdf" value="" th:title="#{UI_70_01_02_096}"  class="export mt10 Noprint"/>
+    <!--<input type="button" id="exportWord" value="" th:title="导出word"  class="exportWord"/>-->
     <input type="button" id="viewAnswerCard" value="" th:title="#{UI_70_01_02_097}" class="viewAnswerCard"/>
 </div>
 

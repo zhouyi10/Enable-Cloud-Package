@@ -270,23 +270,12 @@
                     CommUtils.unLock($(document.body));
                     if (data.status == "1"){
                         if (completeMarkStatus == "1") { //批阅完成
-                            layer.alert(i18n['tip_complete_mark'],{closeBtn : 0 ,title: i18n['tipBox_title'], btn: i18n['confirm']}, function(){
-                                var result = {'type':'mark', 'data': 'success'};
-                                if(typeof(WeixinJSBridge) != "undefined"){ //微信
-                                    window.history.go(-1);
-                                } else if (window.parent != window) { //子页面
-                                    window.parent.postMessage(result, "*");
-                                } else if (window.opener) { //新开窗口
-                                    window.opener.postMessage(result, "*");
-                                }
-                                if(_this.actionType == 1){
-                                    _this.changeMarkClass();
-                                } else {
-                                    window.opener= null;
-                                    window.open("","_self");
-                                    window.close();
-                                }
+                            let index = layer.alert(i18n['tip_complete_mark'],{closeBtn : 0 ,title: i18n['tipBox_title'], btn: i18n['confirm']}, function(){
+                               layer.close(index);
+                               window.close();
                             });
+                            let message = {"type" : "markResult", data : data.data};
+                            window.parent && window.parent.postMessage(message, "*");
                         } else if(completeMarkStatus == "2"){ //批阅暂存
                             layer.alert(i18n['tip_temporary_save'], {btn: i18n['confirm']});
                         } else { //暂存,下一题保存

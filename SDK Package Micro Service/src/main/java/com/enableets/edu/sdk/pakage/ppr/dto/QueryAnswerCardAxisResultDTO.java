@@ -60,4 +60,20 @@ public class QueryAnswerCardAxisResultDTO {
 
     /**Number of lines About Answer area*/
     private Long rowCount;
+
+    public Double getxAxis() {
+        return xAxis;
+    }
+
+    public void setxAxis(Double xAxis) {
+        this.xAxis = xAxis;
+    }
+
+    public Double getyAxis() {
+        return yAxis;
+    }
+
+    public void setyAxis(Double yAxis) {
+        this.yAxis = yAxis;
+    }
 }

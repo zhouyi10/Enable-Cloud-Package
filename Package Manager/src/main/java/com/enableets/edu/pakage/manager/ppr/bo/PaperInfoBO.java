@@ -86,4 +86,6 @@ public class PaperInfoBO implements java.io.Serializable{
 
 	/***/
 	private AnswerCardInfoBO answerCard;
+
+	private  String examStypeinfoPO;
 }

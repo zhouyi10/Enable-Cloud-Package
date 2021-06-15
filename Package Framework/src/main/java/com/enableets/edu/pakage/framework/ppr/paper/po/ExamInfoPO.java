@@ -1,9 +1,6 @@
 package com.enableets.edu.pakage.framework.ppr.paper.po;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import java.util.List;
 import lombok.Data;
@@ -13,6 +10,7 @@ import lombok.Data;
 @Data
 public class ExamInfoPO {
 
+  @Id
   @Column(name = "exam_id")
   private String examId;
 
@@ -72,9 +70,6 @@ public class ExamInfoPO {
 
   @Column(name = "school_name")
   private String schoolName;
-
-  @Column(name = "school_year")
-  private String schoolYear;
 
   @Column(name = "term_id")
   private String termId;

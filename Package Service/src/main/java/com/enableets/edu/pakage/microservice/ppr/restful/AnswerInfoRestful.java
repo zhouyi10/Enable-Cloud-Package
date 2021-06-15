@@ -1,22 +1,18 @@
 package com.enableets.edu.pakage.microservice.ppr.restful;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.enableets.edu.module.service.controller.ServiceControllerAdapter;
 import com.enableets.edu.module.service.core.Response;
-import com.enableets.edu.pakage.framework.ppr.test.service.TestInfoService;
-import com.enableets.edu.pakage.framework.ppr.test.service.submit.SubmitAnswerService;
 import com.enableets.edu.pakage.framework.ppr.bo.TestInfoBO;
-import com.enableets.edu.pakage.microservice.ppr.vo.AnswerSubmitInfoVO;
-
+import com.enableets.edu.pakage.framework.ppr.test.service.AnswerInfoService;
+import com.enableets.edu.pakage.framework.ppr.test.service.TestInfoService;
+import com.enableets.edu.pakage.framework.ppr.test.service.submitV2.SubmitAnswerV2Service;
+import com.enableets.edu.pakage.framework.ppr.test.service.submitV2.processor.AnswerRequestCompressorRunner;
+import com.enableets.edu.pakage.microservice.ppr.vo.AnswerCardSubmitInfoVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * answer restful interface
@@ -29,10 +25,16 @@ import io.swagger.annotations.ApiParam;
 public class AnswerInfoRestful extends ServiceControllerAdapter<String> {
 
     @Autowired
-    public SubmitAnswerService submitAnswerService;
+    public SubmitAnswerV2Service submitAnswerV2Service;
 
     @Autowired
     public TestInfoService testInfoService;
+
+    @Autowired
+    private AnswerRequestCompressorRunner answerRequestCompressorRunner;
+
+    @Autowired
+    private AnswerInfoService answerInfoService;
 
     /**
      * Submit Answer & Temporary storage
@@ -40,8 +42,8 @@ public class AnswerInfoRestful extends ServiceControllerAdapter<String> {
      * @return
      */
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
-    public Response<String> submit(@RequestBody AnswerSubmitInfoVO answerSubmitInfoVO){
-        String testUserId = submitAnswerService.save(answerSubmitInfoVO.getEnableCardXml());
+    public Response<String> submit(@ApiParam(value = "Answer Card Info", required = true) @RequestBody AnswerCardSubmitInfoVO answerSubmitInfoVO){
+        String testUserId = (String)submitAnswerV2Service.save(answerSubmitInfoVO.getEnableCardXml()).getData();
         return responseTemplate.format(testUserId);
     }
 

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/test" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1620893683131" name="" targetNamespace="http://www.activiti.org/test" typeLanguage="http://www.w3.org/2001/XMLSchema">
+  <process id="Action_Flow_Test" isClosed="false" isExecutable="true" name="测验流程" processType="None">
+    <startEvent id="start_event" name="Start"/>
+    <userTask activiti:assignee="${sender}" activiti:exclusive="true" id="publish_task" name="派卷"/>
+    <subProcess activiti:exclusive="true" id="personal_task" name="个人考试流转" triggeredByEvent="false">
+      <multiInstanceLoopCharacteristics activiti:collection="recipientList" activiti:elementVariable="userId" isSequential="false">
+        <completionCondition><![CDATA[${nrOfCompletedInstances/nrOfInstances ==1 }]]></completionCondition>
+      </multiInstanceLoopCharacteristics>
+      <startEvent id="child_start_event" name="StartEvent"/>
+      <userTask activiti:assignee="${userId}" activiti:exclusive="true" id="answer_task" name="答卷"/>
+      <userTask activiti:assignee="${userId}" activiti:exclusive="true" id="mark_task" name="阅卷"/>
+      <endEvent id="child_end_event" name="End"/>
+      <sequenceFlow id="_22" sourceRef="child_start_event" targetRef="answer_task"/>
+      <sequenceFlow id="_4" sourceRef="answer_task" targetRef="mark_task"/>
+      <sequenceFlow id="_5" sourceRef="mark_task" targetRef="child_end_event"/>
+    </subProcess>
+    <endEvent id="end_event" name="End">
+		<extensionElements>
+			<activiti:executionListener event="end" class="com.enableets.edu.pakage.framework.ppr.test.service.TestActionFlowListener"> </activiti:executionListener>
+		</extensionElements>
+	</endEvent>
+    <sequenceFlow id="_20" sourceRef="start_event" targetRef="publish_task"/>
+    <intermediateCatchEvent id="start_answer" name="考试开始">
+      <timerEventDefinition id="start_answer_ED_1">
+        <timeDate><![CDATA[${startTime}]]></timeDate>
+      </timerEventDefinition>
+    </intermediateCatchEvent>
+    <sequenceFlow id="_7" sourceRef="publish_task" targetRef="start_answer"/>
+    <sequenceFlow id="_8" sourceRef="start_answer" targetRef="personal_task"/>
+    <serviceTask activiti:class="com.enableets.edu.pakage.framework.ppr.test.service.TestCompleteServiceTask" activiti:exclusive="true" id="test_complete" name="考试完成"/>
+    <sequenceFlow id="_6" sourceRef="personal_task" targetRef="test_complete"/>
+    <sequenceFlow id="_9" sourceRef="test_complete" targetRef="end_event"/>
+  </process>
+  <bpmndi:BPMNDiagram documentation="background=#FFFFFF;count=1;horizontalcount=1;orientation=0;width=842.4;height=1195.2;imageableWidth=832.4;imageableHeight=1185.2;imageableX=5.0;imageableY=5.0" id="Diagram-_1" name="New Diagram">
+    <bpmndi:BPMNPlane bpmnElement="Action_Flow_Test">
+      <bpmndi:BPMNShape bpmnElement="start_event" id="Shape-start_event">
+        <omgdc:Bounds height="32.0" width="32.0" x="-5.0" y="240.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="publish_task" id="Shape-publish_task">
+        <omgdc:Bounds height="55.0" width="85.0" x="65.0" y="235.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="personal_task" id="Shape-personal_task" isExpanded="true">
+        <omgdc:Bounds height="250.0" width="590.0" x="415.0" y="155.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="250.0" width="590.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="end_event" id="Shape-end_event">
+        <omgdc:Bounds height="32.0" width="32.0" x="1170.0" y="245.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="start_answer" id="Shape-start_answer">
+        <omgdc:Bounds height="32.0" width="32.0" x="255.0" y="240.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="test_complete" id="Shape-test_complete">
+        <omgdc:Bounds height="55.0" width="85.0" x="1040.0" y="245.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="child_start_event" id="Shape-child_start_event">
+        <omgdc:Bounds height="32.0" width="32.0" x="470.0" y="235.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="answer_task" id="Shape-answer_task">
+        <omgdc:Bounds height="55.0" width="85.0" x="560.0" y="235.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="mark_task" id="Shape-mark_task">
+        <omgdc:Bounds height="55.0" width="85.0" x="740.0" y="235.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="child_end_event" id="Shape-child_end_event">
+        <omgdc:Bounds height="32.0" width="32.0" x="895.0" y="245.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="_4" id="BPMNEdge__4" sourceElement="answer_task" targetElement="mark_task">
+        <omgdi:waypoint x="645.0" y="262.5"/>
+        <omgdi:waypoint x="740.0" y="262.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_5" id="BPMNEdge__5" sourceElement="mark_task" targetElement="child_end_event">
+        <omgdi:waypoint x="825.0" y="262.5"/>
+        <omgdi:waypoint x="895.0" y="261.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_6" id="BPMNEdge__6" sourceElement="personal_task" targetElement="test_complete">
+        <omgdi:waypoint x="1005.0" y="280.0"/>
+        <omgdi:waypoint x="1040.0" y="272.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_7" id="BPMNEdge__7" sourceElement="publish_task" targetElement="start_answer">
+        <omgdi:waypoint x="150.0" y="262.5"/>
+        <omgdi:waypoint x="255.0" y="256.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_8" id="BPMNEdge__8" sourceElement="start_answer" targetElement="personal_task">
+        <omgdi:waypoint x="287.0" y="256.0"/>
+        <omgdi:waypoint x="415.0" y="280.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_9" id="BPMNEdge__9" sourceElement="test_complete" targetElement="end_event">
+        <omgdi:waypoint x="1125.0" y="272.5"/>
+        <omgdi:waypoint x="1170.0" y="261.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_20" id="BPMNEdge__20" sourceElement="start_event" targetElement="publish_task">
+        <omgdi:waypoint x="27.0" y="256.0"/>
+        <omgdi:waypoint x="65.0" y="262.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_22" id="BPMNEdge__22" sourceElement="child_start_event" targetElement="answer_task">
+        <omgdi:waypoint x="502.0" y="251.0"/>
+        <omgdi:waypoint x="560.0" y="262.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

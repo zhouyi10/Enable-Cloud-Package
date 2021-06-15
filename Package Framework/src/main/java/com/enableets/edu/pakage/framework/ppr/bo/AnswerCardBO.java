@@ -16,6 +16,8 @@ public class AnswerCardBO {
 
     private String stepId;
 
+    private String fileId;
+
     private String userId;
 
     private String startTime;

@@ -83,7 +83,7 @@ public class HttpClientImpl extends AbstractHttpClient {
             }
         } catch (Exception e) {
             logger.error("HttpClient do request failure!", e);
-            throw new PakcageHttpClientException("HttpClient do request failure!");
+            throw new packageHttpClientException("HttpClient do request failure!");
         }finally {
             try {
                 if (response != null) {

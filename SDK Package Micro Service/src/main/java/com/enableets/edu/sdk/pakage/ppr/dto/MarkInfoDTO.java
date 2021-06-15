@@ -17,9 +17,6 @@ public class MarkInfoDTO {
 	/** Test ID */
 	private String testId;
 	
-	/** Paper ID */
-	private String examId;
-	
 	/** User Answer List*/
 	private List<MarkUserAnswerInfoDTO> answers;
 	

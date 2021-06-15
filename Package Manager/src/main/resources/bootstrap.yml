@@ -2,17 +2,17 @@ logging:
   config: classpath:logback.xml
 eureka:
   instance:
-    ip-address: localhost
+    ip-address: 10.10.10.10
 spring:
-  main:
-    allow-bean-definition-overriding: true
   application:
     name: package-microservice-zy
+  main:
+    allow-bean-definition-overriding: true
   cloud:
     nacos:
       config:
         server-addr: 192.168.116.15:8848
-        name: package-microservice-zy
+        name: package-microservice
         file-extension: yaml
         group: DEFAULT_GROUP
         sharedConfigs[0]:
@@ -20,7 +20,7 @@ spring:
           group: COMMON_GROUP
           refresh: true
         sharedConfigs[1]:
-          data-id: activemq.yaml
+          data-id: rabbitmq.yaml
           group: COMMON_GROUP
           refresh: true
         sharedConfigs[2]:
@@ -39,4 +39,16 @@ spring:
           data-id: eureka.yaml
           group: COMMON_GROUP
           refresh: true
+        sharedConfigs[6]:
+          data-id: rabbitmq.yaml
+          group: COMMON_GROUP
+          refresh: true
 
+sdk:
+  package-microservice:
+    name: ${spring.application.name}
+server:
+  max-http-header-size: 102400
+paper:
+  static:
+    path: /home/icampus3.0/pkgs/package-microservice/paper/static

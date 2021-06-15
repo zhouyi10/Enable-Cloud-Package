@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -87,6 +88,12 @@ public class BaseInfoService {
         return new IdNameMapBO(userInfo.getSchoolId(), userInfo.getSchoolName());
     }
 
+    public IdNameMapBO getUserSchoolInfoNullOfDefault(String userId) {
+        UserIdentityDTO userInfo = this.userInfo(userId);
+        if (userInfo == null) return new IdNameMapBO(Constants.DEFAULT_SCHOOL, null);
+        return new IdNameMapBO(userInfo.getSchoolId(), userInfo.getSchoolName());
+    }
+
     /**
      * Get User Area SearchCode
      * @param userId User ID
@@ -163,29 +170,18 @@ public class BaseInfoService {
         return baseInfo;
     }
 
-    private UserIdentityDTO userInfo(String userId){
-        if (StringUtils.isBlank(userId)) return null;
-        String userInfoCacheKey = "com:enableets:edu:package:school:user:" + userId;
-        String userInfo = stringRedisTemplate.opsForValue().get(userInfoCacheKey);
-        if (StringUtils.isNotBlank(userInfo)) return JsonUtils.convert(userInfo, UserIdentityDTO.class);
+    @Cacheable(value = Constants.PACKAGE_CACHE_KEY_PREFIX + "school:user:", key = "#userId", unless="#result == null")
+    public UserIdentityDTO userInfo(String userId){
         List<UserIdentityDTO> users = userIdentityServiceSDK.query(userId, null, null, null, null, null, null, null, null);
         if (CollectionUtils.isEmpty(users)) return null;
-        else{
-            stringRedisTemplate.opsForValue().set(userInfoCacheKey, JsonUtils.convert(users.get(0)),Constants.DEFAULT_REDIS_CACHE_EXPIRE_TIME, TimeUnit.SECONDS);
-            return users.get(0);
-        }
+        return users.get(0);
     }
 
-    private List<CodeNameMapBO> getGradeStageRelation(String schoolId){
-        if (StringUtils.isBlank(schoolId)) schoolId = Constants.DEFAULT_SCHOOL;
-        String key = "com:enableets:edu:package:school:grade&stage:" + schoolId;
-        String cacheInfo = stringRedisTemplate.opsForValue().get(key);
-        if (StringUtils.isNotBlank(cacheInfo)) return JsonUtils.convert2List(cacheInfo, CodeNameMapBO.class);
+    @Cacheable(value = Constants.PACKAGE_CACHE_KEY_PREFIX + "school:grade&stage:", key = "#schoolId", unless = "#result == null")
+    public List<CodeNameMapBO> getGradeStageRelation(String schoolId){
         List<QueryGradeStageResultDTO> gradeStageDTOs = gradeStageServiceSDK.query(schoolId, null, null).getData();
         if (CollectionUtils.isNotEmpty(gradeStageDTOs)){
-            List<CodeNameMapBO> list = gradeStageDTOs.stream().map(e -> new CodeNameMapBO(e.getGradeCode(), e.getGradeName(), e.getStageCode())).collect(Collectors.toList());
-            stringRedisTemplate.opsForValue().set(key, JsonUtils.convert(list),Constants.DEFAULT_REDIS_CACHE_EXPIRE_TIME, TimeUnit.SECONDS);
-            return list;
+            return  gradeStageDTOs.stream().map(e -> new CodeNameMapBO(e.getGradeCode(), e.getGradeName(), e.getStageCode())).collect(Collectors.toList());
         }
         return null;
     }

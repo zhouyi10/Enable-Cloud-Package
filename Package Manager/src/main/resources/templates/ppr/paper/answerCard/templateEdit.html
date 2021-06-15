@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>test page</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+</head>
+<body style="background-color:lightgray;">
+<div class="answerCardContainer" id="container" style="display: flex;justify-content: space-around;"></div>
+<script th:src="${_contextPath} + @{/comm/plugins/jQuery/jquery-3.4.1.min.js(v=${_v})}"></script>
+<script th:src="${_contextPath} + @{/comm/plugins/layer/layer.js(v=${_v})}"></script>
+<script th:src="${_contextPath} + @{/custom/package/ppr/js/CommUtils.js(v=${_v})}"></script>
+<link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/custom/package/ppr/css/answerCard/articleQuestion.css(v=${_v})}"/>
+<link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/custom/package/ppr/css/answerCard/blankQuestion.css(v=${_v})}"/>
+<link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/custom/package/ppr/css/answerCard/editTemplate.css(v=${_v})}"/>
+<script type="module" th:inline="javascript">
+    import {AnswerCard} from [[${_contextPath} + @{'/custom/package/ppr/js/answerCard/template/answerCard.js'}]];
+    var answerCard = window.answerCard = new AnswerCard();
+    answerCard.urls = {
+        addBlank: [[${_contextPath} + @{'/custom/package/ppr/img/paper/answerCard/v2/jia.png'(v=${_v})}]],
+        minusBlank: [[${_contextPath} + @{'/custom/package/ppr/img/paper/answerCard/v2/jian.png'(v=${_v})}]],
+        removeLine: [[${_contextPath} + @{'/custom/package/ppr/img/paper/answerCard/v2/remove.png'(v=${_v})}]],
+        addLine: [[${_contextPath} + @{'/custom/package/ppr/img/paper/answerCard/v2/add.png'(v=${_v})}]],
+    };
+    answerCard.isPdf = [[${isPdf}]];
+    answerCard.pdf = {
+        paperInfo:[[${paperInfo}]],
+        answerCardInfo:[[${answerCardInfo}]],
+    }
+    answerCard.init();
+</script>
+</body>
+</html>

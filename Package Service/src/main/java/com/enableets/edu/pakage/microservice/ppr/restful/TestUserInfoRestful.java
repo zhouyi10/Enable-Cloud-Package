@@ -1,5 +1,7 @@
 package com.enableets.edu.pakage.microservice.ppr.restful;
 
+import com.enableets.edu.pakage.framework.ppr.test.bo.TestMarkResultInfoBO;
+import com.enableets.edu.pakage.microservice.ppr.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,10 +21,6 @@ import com.enableets.edu.pakage.framework.ppr.bo.TestUserInfoBO;
 import com.enableets.edu.pakage.framework.ppr.bo.UserAnswerCanvasInfoBO;
 import com.enableets.edu.pakage.framework.ppr.bo.UserAnswerInfoBO;
 import com.enableets.edu.pakage.framework.ppr.bo.UserAnswerStampBO;
-import com.enableets.edu.pakage.microservice.ppr.vo.EditCanvasInfoVO;
-import com.enableets.edu.pakage.microservice.ppr.vo.MarkInfoVO;
-import com.enableets.edu.pakage.microservice.ppr.vo.QueryTestUserResultVO;
-import com.enableets.edu.pakage.microservice.ppr.vo.QueryUserAnswerTrackResultVO;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -59,7 +57,7 @@ public class TestUserInfoRestful extends ServiceControllerAdapter<String> {
                                                              @ApiParam(value = "Question IDs", required = false) @RequestParam(value = "questionIds", required = false) String questionIds){
         QueryMarkAnswerBO answerBO = new QueryMarkAnswerBO();
         answerBO.setTestId(testId);
-        answerBO.setActivityId(stepId);
+        answerBO.setStepId(stepId);
         answerBO.setFileId(fileId);
         answerBO.setExamId(examId);
         answerBO.setUserId(userId);
@@ -71,9 +69,9 @@ public class TestUserInfoRestful extends ServiceControllerAdapter<String> {
 
     @ApiOperation(value = "Do Mark", notes = "Do Mark")
     @PostMapping(value = "/mark")
-    public Response<Boolean> mark(@ApiParam(value = "Mark Info", required = true) @RequestBody MarkInfoVO markInfoVO){
-        testUserInfoService.mark(markInfoVO.getTestId(), markInfoVO.getType(), BeanUtils.convert(markInfoVO.getAnswers(), UserAnswerInfoBO.class));
-        return responseTemplate.format(Boolean.TRUE);
+    public Response<TestMarkResultInfoVO> mark(@ApiParam(value = "Mark Info", required = true) @RequestBody MarkInfoVO markInfoVO){
+        TestMarkResultInfoBO result = testUserInfoService.mark(markInfoVO.getTestId(), markInfoVO.getType(), BeanUtils.convert(markInfoVO.getAnswers(), UserAnswerInfoBO.class));
+        return responseTemplate.format(BeanUtils.convert(result, TestMarkResultInfoVO.class));
     }
 
     @ApiOperation(value = "Edit Canvas", notes = "Edit Canvas")

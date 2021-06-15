@@ -1,57 +1,43 @@
 package com.enableets.edu.pakage.framework.ppr.test.service;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
-
+import cn.hutool.json.JSONUtil;
 import com.enableets.edu.framework.core.util.BeanUtils;
 import com.enableets.edu.framework.core.util.JsonUtils;
 import com.enableets.edu.framework.core.util.SpringBeanUtils;
 import com.enableets.edu.framework.core.util.token.ITokenGenerator;
 import com.enableets.edu.module.service.core.MicroServiceException;
 import com.enableets.edu.pakage.framework.core.Constants;
-import com.enableets.edu.pakage.framework.ppr.test.dao.ActivityAssignerDAO;
-import com.enableets.edu.pakage.framework.ppr.test.dao.QuestionAssignmentDAO;
-import com.enableets.edu.pakage.framework.ppr.test.dao.QuestionAssignmentRecipientDAO;
-import com.enableets.edu.pakage.framework.ppr.test.dao.TestInfoDAO;
-import com.enableets.edu.pakage.framework.ppr.test.dao.TestRecipientInfoDAO;
-import com.enableets.edu.pakage.framework.ppr.test.dao.TestUserInfoDAO;
-import com.enableets.edu.pakage.framework.ppr.test.dao.PackageUserAnswerInfoDAO;
-import com.enableets.edu.pakage.framework.ppr.test.po.ActivityAssignerPO;
-import com.enableets.edu.pakage.framework.ppr.test.po.QuestionAssignmentPO;
-import com.enableets.edu.pakage.framework.ppr.test.po.QuestionAssignmentRecipientPO;
-import com.enableets.edu.pakage.framework.ppr.test.po.TestInfoPO;
-import com.enableets.edu.pakage.framework.ppr.test.po.TestRecipientInfoPO;
-import com.enableets.edu.pakage.framework.ppr.test.po.UserAnswerInfoPO;
-import com.enableets.edu.pakage.framework.ppr.test.service.submit.utils.AutoMarkStrategyUtils;
-import com.enableets.edu.pakage.framework.ppr.bo.ActivityAssignerBO;
-import com.enableets.edu.pakage.framework.ppr.bo.ActivityTeacherBO;
-import com.enableets.edu.pakage.framework.ppr.bo.PaperInfoBO;
-import com.enableets.edu.pakage.framework.ppr.bo.QuestionAssignmentBO;
-import com.enableets.edu.pakage.framework.ppr.bo.QuestionAssignmentMarkedProcessBO;
-import com.enableets.edu.pakage.framework.ppr.bo.QuestionAssignmentRecipientBO;
-import com.enableets.edu.pakage.framework.ppr.bo.QuestionAssignmentTeacherMarkedProcessBO;
-import com.enableets.edu.pakage.framework.ppr.bo.TestInfoBO;
-import com.enableets.edu.pakage.framework.ppr.bo.TestRecipientInfoBO;
+import com.enableets.edu.pakage.framework.core.RabbitMQConfig;
+import com.enableets.edu.pakage.framework.ppr.bo.*;
+import com.enableets.edu.pakage.framework.ppr.bo.message.paper.send.ContentInfoBO;
+import com.enableets.edu.pakage.framework.ppr.bo.message.paper.send.GroupInfoBO;
+import com.enableets.edu.pakage.framework.ppr.bo.message.paper.send.StepInfoBO;
+import com.enableets.edu.pakage.framework.ppr.bo.message.paper.send.StepTaskMessageBO;
 import com.enableets.edu.pakage.framework.ppr.core.PPRConstants;
 import com.enableets.edu.pakage.framework.ppr.core.RecipientCacheMap;
 import com.enableets.edu.pakage.framework.ppr.core.tablecopy.TableCopyComponent;
-import com.enableets.edu.sdk.content.dto.ContentInfoDTO;
+import com.enableets.edu.pakage.framework.ppr.paper.service.PaperInfoService;
+import com.enableets.edu.pakage.framework.ppr.test.bo.TestActionFlowBO;
+import com.enableets.edu.pakage.framework.ppr.test.dao.*;
+import com.enableets.edu.pakage.framework.ppr.test.po.*;
+import com.enableets.edu.pakage.framework.ppr.test.service.submit.utils.AutoMarkStrategyUtils;
 import com.enableets.edu.sdk.content.service.IContentInfoService;
+import com.rabbitmq.client.Channel;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -61,12 +47,17 @@ import java.util.stream.Collectors;
  **/
 @Service
 public class TestInfoService {
+
+    private final Logger logger = LoggerFactory.getLogger(TestInfoService.class);
     
     @Autowired
     private IContentInfoService contentInfoServiceSDK;
 
     @Autowired
     private TestPaperService testPaperService;
+
+    @Autowired
+    private PaperInfoService paperInfoService;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -95,6 +86,72 @@ public class TestInfoService {
     @Autowired
     private ITokenGenerator iTokenGenerator;
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+//    @Autowired
+//    private TestActionService testActionService;
+
+   /* @RabbitListener(queues = RabbitMQConfig.QUEUE_SEND_PAPER)
+    public void send(String msg, Message message, Channel channel) throws IOException{
+        channel.basicQos(1);
+        long deliveryTag = message.getMessageProperties().getDeliveryTag();
+        logger.info("StepTask Add Test Message:" + JsonUtils.convert(msg));
+        StepTaskMessageBO stepTaskMessageBO = JSONUtil.toBean(msg, StepTaskMessageBO.class);
+        List<TestInfoBO> tests = messageConvert(stepTaskMessageBO);
+        if (CollectionUtils.isEmpty(tests)) channel.basicAck(deliveryTag, false);
+        try {
+            for (TestInfoBO test : tests) {
+                this.add(test);
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+            channel.basicAck(deliveryTag, false);
+        }
+        channel.basicAck(deliveryTag, false);
+    }
+*/
+    /**
+     * Convert Step task Queue message To Test
+     * @param stepTaskInfo
+     * @return
+     */
+    private List<TestInfoBO> messageConvert(StepTaskMessageBO stepTaskInfo) {
+        if (CollectionUtils.isEmpty(stepTaskInfo.getSteps())) return null;
+        List<TestInfoBO> tests = new ArrayList<>();
+        for (StepInfoBO step : stepTaskInfo.getSteps()) {
+            if (CollectionUtils.isEmpty(step.getContents()) || CollectionUtils.isEmpty(step.getGroups()) || CollectionUtils.isEmpty(step.getContents().get(0).getFiles())) continue;
+            TestInfoBO test = new TestInfoBO();
+            ContentInfoBO.ContentFileInfo fileInfo = step.getContents().get(0).getFiles().get(0);
+            test.setTestId(fileInfo.getBusinessId()).setFileId(fileInfo.getFileId())
+                    .setActivityId(stepTaskInfo.getTaskId()).setStepId(step.getStepId()).setActivityType(stepTaskInfo.getType())
+                    .setSchoolId(stepTaskInfo.getSchoolId()).setTermId(stepTaskInfo.getTermId())
+                    .setGradeCode(step.getGradeCode()).setGradeName(step.getGradeName()).setSubjectCode(step.getSubjectCode())
+                    .setSubjectName(step.getSubjectName()).setTestName(step.getName())
+                    .setTestPublishTime(step.getPublishTime()).setTestTime(step.getStartTime()).setStartTime(step.getStartTime())
+                    .setResubmit(-1)   //先这么设置 等steptask值
+                    .setEndTime(step.getEndTime()).setSender(stepTaskInfo.getPublisherIdentityId()); //.setSender().setSenderName()
+            List<TestRecipientInfoBO> recipients = new ArrayList<>();
+            for (GroupInfoBO group : step.getGroups()) {
+                for (GroupInfoBO.MemberInfo member : group.getMembers()) {
+                    TestRecipientInfoBO recipient = new TestRecipientInfoBO();
+                    recipient.setTestId(test.getTestId()).setUserId(member.getUserId()).setUserName(member.getFullname())
+                            .setSchoolId(stepTaskInfo.getSchoolId()).setSchoolName(stepTaskInfo.getSchoolName()).setTermId(stepTaskInfo.getTermId())
+                            .setTermName(stepTaskInfo.getTermName()).setGradeCode(group.getGradeCode()).setGradeName(group.getGradeName())
+                            .setGroupId(group.getGroupId()).setGroupName(group.getGroupName());
+                    recipients.add(recipient);
+                }
+            }
+            test.setRecipients(recipients);
+            tests.add(test);
+        }
+        return tests;
+    }
+
+    public TestInfoBO get(String testId) {
+        return get(testId, null, null, null, false);
+    }
+
     /**
      * Query test information
      * @param testId Test ID
@@ -119,9 +176,10 @@ public class TestInfoService {
             TestInfoPO testInfoPO = testInfoDAO.get(testId, stepId, fileId, examId);
             if (testInfoPO == null) return null;
             testInfo = BeanUtils.convert(testInfoPO, TestInfoBO.class);
-            stringRedisTemplate.opsForValue().set(new StringBuilder(PPRConstants.TEST_CACHE_KEY_PREFIX).append(testInfoPO.getTestId()).toString(), JsonUtils.convert(testInfo), Constants.DEFAULT_REDIS_CACHE_EXPIRE_TIME, TimeUnit.SECONDS);
-            stringRedisTemplate.opsForValue().set(new StringBuilder(PPRConstants.TEST_CACHE_KEY_PREFIX).append(testInfoPO.getActivityId()).append("_").append(testInfoPO.getFileId()).toString(), JsonUtils.convert(testInfo), Constants.DEFAULT_REDIS_CACHE_EXPIRE_TIME, TimeUnit.SECONDS);
-            stringRedisTemplate.opsForValue().set(new StringBuilder(PPRConstants.TEST_CACHE_KEY_PREFIX).append(testInfoPO.getActivityId()).append("_").append(testInfoPO.getExamId()).toString(), JsonUtils.convert(testInfo), Constants.DEFAULT_REDIS_CACHE_EXPIRE_TIME, TimeUnit.SECONDS);
+            StringBuilder sb = new StringBuilder(PPRConstants.PACKAGE_PPR_CACHE_KEY_PREFIX).append("test:");
+            stringRedisTemplate.opsForValue().set(sb.append(testInfoPO.getTestId()).toString(), JsonUtils.convert(testInfo), Constants.DEFAULT_REDIS_CACHE_EXPIRE_TIME, TimeUnit.SECONDS);
+            stringRedisTemplate.opsForValue().set(sb.append(testInfoPO.getStepId()).append("_").append(testInfoPO.getFileId()).toString(), JsonUtils.convert(testInfo), Constants.DEFAULT_REDIS_CACHE_EXPIRE_TIME, TimeUnit.SECONDS);
+            stringRedisTemplate.opsForValue().set(sb.append(testInfoPO.getStepId()).append("_").append(testInfoPO.getExamId()).toString(), JsonUtils.convert(testInfo), Constants.DEFAULT_REDIS_CACHE_EXPIRE_TIME, TimeUnit.SECONDS);
         }
         if (testInfo != null && includeRecipients) {
             testInfo.setRecipients(RecipientCacheMap.get(testInfo.getTestId()));
@@ -135,14 +193,15 @@ public class TestInfoService {
      * @return
      */
     public List<TestRecipientInfoBO> getRecipients(String testId){
-        String recipientStr = stringRedisTemplate.opsForValue().get(new StringBuilder(PPRConstants.TEST_RECIPIENT_CACHE_KEY_PREFIX).append(testId).toString());
+        String cacheKey = new StringBuilder(PPRConstants.PACKAGE_PPR_CACHE_KEY_PREFIX).append("test:recipient:").append(testId).toString();
+        String recipientStr = stringRedisTemplate.opsForValue().get(cacheKey);
         if (StringUtils.isNotBlank(recipientStr)){
             return JsonUtils.convert2List(recipientStr, TestRecipientInfoBO.class);
         }else{
             List<TestRecipientInfoPO> recipients = testRecipientInfoDAO.get(testId, null);
             List<TestRecipientInfoBO> recipientBOs = BeanUtils.convert(recipients, TestRecipientInfoBO.class);
             if (CollectionUtils.isNotEmpty(recipientBOs)){
-                stringRedisTemplate.opsForValue().set(new StringBuilder(PPRConstants.TEST_RECIPIENT_CACHE_KEY_PREFIX).append(testId).toString(), JsonUtils.convert(recipientBOs), Constants.DEFAULT_REDIS_CACHE_EXPIRE_TIME, TimeUnit.SECONDS);
+                stringRedisTemplate.opsForValue().set(cacheKey, JsonUtils.convert(recipientBOs), Constants.DEFAULT_REDIS_CACHE_EXPIRE_TIME, TimeUnit.SECONDS);
             }
             return recipientBOs;
         }
@@ -156,19 +215,27 @@ public class TestInfoService {
     public TestInfoBO add(TestInfoBO testInfoBO){
         Assert.isTrue(com.enableets.edu.framework.core.util.StringUtils.isNotBlank(testInfoBO.getExamId()) || com.enableets.edu.framework.core.util.StringUtils.isNotBlank(testInfoBO.getFileId()), "'fileId' And 'examId' cannot be null at the same time!");
         if (StringUtils.isBlank(testInfoBO.getExamId())){
-            String examId = this.getExamIdByFileId(testInfoBO.getFileId());
-            if (StringUtils.isBlank(examId)) {
+            ExamInfoBO exam = paperInfoService.getExamIdByFileId(testInfoBO.getFileId());
+            if (exam == null) {
                 throw new MicroServiceException("38-", "Paper Not exsit!");
             }
-            testInfoBO.setExamId(examId);
+            testInfoBO.setExamId(exam.getExamId());
+            testInfoBO.setExamName(exam.getExamName());
+        }else {
+            PaperInfoBO paperInfoBO = testPaperService.get(testInfoBO.getExamId());
+            testInfoBO.setExamName(paperInfoBO.getName());
         }
-        PaperInfoBO paperInfoBO = testPaperService.get(testInfoBO.getExamId());
-        testInfoBO.setExamName(paperInfoBO.getName());
-        TestInfoBO test = this.get(null, testInfoBO.getActivityId(), testInfoBO.getFileId(), testInfoBO.getExamId(), false);
-        if (test != null) {
-            throw new MicroServiceException("38-", "Test Info exist!");
+        if (StringUtils.isBlank(testInfoBO.getTestId())) {
+            testInfoBO.setTestId(iTokenGenerator.getToken().toString());
         }
-        testInfoBO.setTestId(iTokenGenerator.getToken().toString());
+        //action flow 流程
+//        if (CollectionUtils.isNotEmpty(testInfoBO.getRecipients())) {
+//            TestActionFlowBO actionFlowBO = new TestActionFlowBO();
+//            actionFlowBO.setTestId(testInfoBO.getTestId()).setSender(testInfoBO.getSender()).setStartTime(testInfoBO.getStartTime()).setEndTime(testInfoBO.getEndTime());
+//            actionFlowBO.setRecipientList(testInfoBO.getRecipients().stream().map(e -> e.getUserId()).collect(Collectors.toList()));
+//            String processInstantId = testActionService.publish(actionFlowBO);
+//            testInfoBO.setProcessInstanceId(processInstantId);
+//        }
         //1、Copy Paper Info From DB paper_storage To Paper_microservice
         try {
             TableCopyComponent paperCopyService = SpringBeanUtils.getBean("paperCopyService");
@@ -176,30 +243,28 @@ public class TestInfoService {
             condition.put("examId", testInfoBO.getExamId());
             paperCopyService.copyTable(condition);
         } catch (IOException e) {
-            throw new MicroServiceException("38-", "Copy Data From DB paper_storage To paper_microservice Error!");
+            throw new MicroServiceException("38-", "Copy Data From DB paper_storage To package_microservice Error!");
         }
+        Date today = Calendar.getInstance().getTime();
         //2.
         if (CollectionUtils.isNotEmpty(testInfoBO.getRecipients())) {
             List<TestRecipientInfoPO> recipients = new ArrayList<TestRecipientInfoPO>();
             for (TestRecipientInfoBO recipient : testInfoBO.getRecipients()) {
                 TestRecipientInfoPO recipientPO = BeanUtils.convert(recipient, TestRecipientInfoPO.class);
-                if (com.enableets.edu.framework.core.util.StringUtils.isBlank(recipientPO.getClassId())){
-                    recipientPO.setClassId(recipientPO.getGroupId());
-                    recipientPO.setClassName(recipientPO.getGroupName());
-                }
                 if (com.enableets.edu.framework.core.util.StringUtils.isBlank(recipientPO.getGroupId())){
                     recipient.setGroupId(recipientPO.getClassId());
                     recipient.setGroupName(recipientPO.getClassName());
                 }
-                if (com.enableets.edu.framework.core.util.StringUtils.isNotBlank(recipientPO.getClassId()) && com.enableets.edu.framework.core.util.StringUtils.isNotBlank(recipientPO.getGroupId()) && recipientPO.getClassId().equals(recipientPO.getGroupId())){
-                    if (com.enableets.edu.framework.core.util.StringUtils.isBlank(recipientPO.getClassName())) recipientPO.setClassName(recipientPO.getGroupName());
-                    if (com.enableets.edu.framework.core.util.StringUtils.isBlank(recipientPO.getGroupName())) recipientPO.setGroupName(recipientPO.getClassName());
+                if (StringUtils.isBlank(recipient.getClassId())) {
+                    recipient.setClassId(recipient.getGroupId());
+                    recipient.setClassName(recipient.getGroupName());
                 }
-                recipientPO.setTestId(Long.valueOf(testInfoBO.getTestId()));
-                recipientPO.setCreator(testInfoBO.getSender());
-                recipientPO.setUpdator(testInfoBO.getSender());
-                recipientPO.setCreateTime(new Date());
-                recipientPO.setUpdateTime(new Date());
+                if (StringUtils.isBlank(recipient.getGradeCode())){
+                    recipient.setGradeCode(testInfoBO.getGradeCode());
+                    recipient.setGroupName(testInfoBO.getGradeName());
+                }
+                recipientPO.setTestId(testInfoBO.getTestId()).setCreator(testInfoBO.getSender())
+                        .setUpdator(testInfoBO.getSender()).setCreateTime(today).setUpdateTime(today);
                 recipients.add(recipientPO);
             }
             if (recipients.size() > 0) {
@@ -215,33 +280,23 @@ public class TestInfoService {
         testInfoBO.setMarkType(StringUtils.defaultIfBlank(testInfoBO.getMarkType(), "0"));
         testInfoBO.setTestType(StringUtils.defaultIfBlank(testInfoBO.getTestType(), "2"));
         testInfoBO.setTestPublishType(StringUtils.defaultIfBlank(testInfoBO.getTestPublishType(), "0"));
+        if (testInfoBO.getTestCostTime() == null) {
+            try {
+                testInfoBO.setTestCostTime(Float.valueOf((testInfoBO.getEndTime().getTime() - testInfoBO.getStartTime().getTime()) / (1000 * 60)));
+            }catch (Exception e) {
+                testInfoBO.setTestCostTime(60f);
+            }
+        }
         TestInfoPO testPO = BeanUtils.convert(testInfoBO, TestInfoPO.class);
-        testPO.setDelStatus("0");
-        testPO.setCreator(testInfoBO.getSender());
-        testPO.setUpdator(testInfoBO.getSender());
-        testPO.setCreateTime(new Date());
-        testPO.setUpdateTime(new Date());
-        testPO.setTestPublishTime(new Date());
-        if (com.enableets.edu.framework.core.util.StringUtils.isNotBlank(testInfoBO.getAppId())) testPO.setAppId(testInfoBO.getAppId());
-        else testPO.setAppId(PPRConstants.CLIENT_APP);
+        testPO.setDelStatus("0").setCreator(testInfoBO.getSender()).setUpdator(testInfoBO.getSender());
+        testPO.setCreateTime(today).setUpdateTime(today).setTestPublishTime(today);
+        if (StringUtils.isEmpty(testPO.getAppId())) testPO.setAppId(PPRConstants.CLIENT_APP);
         testInfoDAO.insertSelective(testPO);
         return testInfoBO;
     }
 
-    private String getExamIdByFileId(String fileId){
-        List<ContentInfoDTO> contents = contentInfoServiceSDK.queryByFileId(fileId, Constants.CONTENT_TYPE_EXAM);
-        if (CollectionUtils.isEmpty(contents)) return null;
-        String examId = null;
-        for (ContentInfoDTO content : contents) {
-            if ((StringUtils.isNotBlank(content.getProviderContentId()) && content.getContentId().toString().equals(content.getProviderContentId())) || Constants.CONTENT_PRIVATE_TYPE.equals(content.getProviderCode())){
-                examId = content.getContentId().toString(); break;
-            }
-        }
-        return examId;
-    }
-
     private String getTestCacheKey(String testId, String stepId, String fileId, String examId){
-        StringBuilder sb = new StringBuilder(PPRConstants.TEST_CACHE_KEY_PREFIX);
+        StringBuilder sb = new StringBuilder(PPRConstants.PACKAGE_PPR_CACHE_KEY_PREFIX).append("test:");
         if (StringUtils.isNotBlank(testId)) return sb.append(testId).toString();
         else {
             sb.append(stepId).append("_");
@@ -389,7 +444,7 @@ public class TestInfoService {
         this.addActivityAssigner(activityAssignerBO);
     }
 
-    @Transactional
+    @Transactional(value = "packageTransactionManager")
     public Boolean addActivityAssigner(ActivityAssignerBO activityAssignerBO) {
 
         //删除数据库中已存在的活动信息

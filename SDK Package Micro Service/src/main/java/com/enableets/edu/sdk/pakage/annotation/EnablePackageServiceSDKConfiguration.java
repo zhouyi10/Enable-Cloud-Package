@@ -45,6 +45,9 @@ public class EnablePackageServiceSDKConfiguration {
     @Autowired
     private IAssessmentActionFlowServiceFeignClient assessmentActionFlowServiceFeignClient;
 
+    @Autowired
+    private IPPRAnswerInfoServiceFeignClient pprAnswerInfoServiceFeignClient;
+
     @Bean(name = "pprPaperInfoServiceSDK")
     public IPPRPaperInfoService pprPaperInfoServiceSDK() {
         return new DefaultPPRPaperInfoService(pprPaperInfoServiceFeignClient);
@@ -83,5 +86,10 @@ public class EnablePackageServiceSDKConfiguration {
     @Bean(name = "assessmentActionFlowServiceSDK")
     public IAssessmentActionFlowService assessmentActionFlowServiceSDK() {
         return new DefaultAssessmentActionFlowService(assessmentActionFlowServiceFeignClient);
+    }
+
+    @Bean(name = "pprAnswerInfoServiceSDK")
+    public IPPRAnswerInfoService pprAnswerInfoServiceSDK(){
+        return new DefaultPPRAnswerInfoService(pprAnswerInfoServiceFeignClient);
     }
 }

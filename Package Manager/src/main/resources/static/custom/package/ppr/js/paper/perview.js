@@ -36,7 +36,27 @@
                 var url = document.URL + "?printPdf=true&window-status=completed";
                 window.open(_this.expertPDFUrl + window.btoa(url),'_blank', '');
             });
+
+            $("#exportWord").on("click", function(){
+                //alert(PerView.paperInfo.paperId);
+                var url = _this.exportWordUrl;
+                $.ajax({
+                    url: url,
+                    type:"POST",
+                    data:PerView.paperInfo.paperId,
+                    contentType:"application/json; charset=utf-8",
+                    dataType:"json",
+                    async: true,
+                    success: function(data){
+                    },
+                    error: function () {
+
+                    }
+                });
+
+            });
         },
+
         default: function () {
             var _this = this;
             $('title').html(_this.paperInfo.name);
@@ -44,9 +64,81 @@
             $('.previewHead').append("<div style='text-align: center;'>" + _this.i18n['paper_total_points'] + "：" +_this.paperInfo.totalPoints + "分</div>");
 
             $('#viewAnswerCard').on('click', function () {
-
+                var url = PerView._contextPathprr+'/answercard/preedit?paperId='+_this.paperInfo.paperId+'&userId='+ parent.EditPaperPage.paper.userId;
+                top.layer.open({
+                        type: 2,
+                        title: i18n['answer_card'],
+                        shadeClose: false,
+                        scrollbar: false,
+                        shade: 0.3,
+                        area: [ '96%',  '92%'],
+                        content: url //iframe的url
+                    });
             });
 
+            if (_this.examStypeinfoPO.recordScoreColumn == 1){
+                var bigtopic = _this.examStypeinfoPO.sumBigtopic;
+                var table = document.getElementById("rscTable1");
+                var len=table.rows.length;
+                for(var i=0;i<len;i++){
+                    table.deleteRow(0);//也可以写成table.deleteRow(0);
+                }
+                var titlerow = document.createElement("tr");
+                titlerow.height = "40px";
+                var td = document.createElement("td");
+                td.width = "60px";
+                td.innerHTML = "题号";
+                titlerow.appendChild(td);
+                var scrow = document.createElement("tr");
+                var td1 = document.createElement("td");
+                td1.innerHTML = "得分";
+                scrow.appendChild(td1);
+                for (var i = 1; i <= bigtopic; i++) {
+                    var td0 = document.createElement("td");
+                    td0.width = "60px";
+                    switch(i) {
+                        case 1:
+                            td0.innerHTML = "一";
+                            break;
+                        case 2:
+                            td0.innerHTML = "二";
+                            break;
+                        case 3:
+                            td0.innerHTML = "三";
+                            break;
+                        case 4:
+                            td0.innerHTML = "四";
+                            break;
+                        case 5:
+                            td0.innerHTML = "五";
+                            break;
+                        case 6:
+                            td0.innerHTML = "六";
+                            break;
+                        case 7:
+                            td0.innerHTML = "七";
+                            break;
+                        case 8:
+                            td0.innerHTML = "八";
+                            break;
+                        case 9:
+                            td0.innerHTML = "九";
+                            break;
+                        default:
+                            td0.innerHTML = "...";
+                    }
+                    titlerow.appendChild(td0);
+                    scrow.appendChild(document.createElement("td"));
+                }
+                var td3 = document.createElement("td");
+                td3.innerHTML = "总分";
+                td3.width = "80px";
+                titlerow.appendChild(td3);
+                var td4 = document.createElement("td");
+                scrow.appendChild(td4);
+                table.appendChild(titlerow);
+                table.appendChild(scrow);
+            }
         },
         buildPaper: function () {
             var _this = this;
@@ -213,3 +305,4 @@
         },
     };
 })(window, jQuery);
+

@@ -1,5 +1,6 @@
 package com.enableets.edu.pakage.microservice.ppr.vo;
 
+import com.enableets.edu.module.service.core.BaseVO;
 import com.enableets.edu.module.service.core.MicroServiceException;
 import com.enableets.edu.pakage.framework.ppr.core.PPRConstants;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -37,11 +38,10 @@ public class MarkInfoVO extends BaseVO {
 
 	@Override
 	public void validate() throws MicroServiceException {
-		validate(testId, "testId");
-		validate(examId, "examId");
-		validate(type, "type");
+		this.notBlank(testId, "testId");
+		this.notNull(type, "type");
 		if (type != null && type != PPRConstants.MARK_TYPE_ALL_COMPLETE) {
-			validate(answers, "answers");
+			this.notBlank(answers, "answers");
 		}
 	}
 
@@ -79,13 +79,13 @@ public class MarkInfoVO extends BaseVO {
 
 		@Override
 		public void validate() throws MicroServiceException {
-			validate(answerId, "answerId");
-			validate(testUserId, "testUserId");
-			validate(questionId, "questionId");
-			validate(userId, "userId");
-			validate(answerScore, "answerScore");
-			validate(answerStatus, "answerStatus");
-			validate(markStatus, "markStatus");
+			this.notBlank(answerId, "answerId");
+			this.notBlank(testUserId, "testUserId");
+			this.notBlank(questionId, "questionId");
+			this.notBlank(userId, "userId");
+			this.notNull(answerScore, "answerScore");
+			this.notNull(answerStatus, "answerStatus");
+			this.notNull(markStatus, "markStatus");
 		}
 	}
 }

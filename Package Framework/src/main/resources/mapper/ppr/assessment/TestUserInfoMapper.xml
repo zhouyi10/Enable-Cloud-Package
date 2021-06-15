@@ -42,7 +42,7 @@
 		FROM
 			test_info t4
 		INNER JOIN exam_info t5 ON t4.exam_id = t5.exam_id
-		RIGHT JOIN test_user_info t1 ON t1.test_id = t4.test_id
+		RIGHT JOIN test_user_info t1 ON t1.test_id = t4.test_id and t1.del_status = 0
 		LEFT JOIN test_recipient_info t6 ON t1.test_id = t6.test_id and t1.user_id = t6.user_id
 		LEFT JOIN user_answer_info t2 ON t1.test_user_id = t2.test_user_id and t4.test_id = t2.test_id
 		LEFT JOIN user_answer_canvas_info t3 ON t2.answer_id = t3.answer_id and t3.canvas_type = '1'
@@ -54,8 +54,8 @@
 			<if test="examId != null and examId != ''">
 				and t4.exam_id = #{examId}
 			</if>
-			<if test="activityId != null and activityId != ''">
-				and t4.activity_id = #{activityId}
+			<if test="stepId != null and stepId != ''">
+				and t4.step_id = #{stepId}
 			</if>
 			<if test="fileId != null and fileId != ''">
 				and t4.file_id = #{fileId}
@@ -85,7 +85,7 @@
 
 	<select id="getByTestId" parameterType="String" resultType="com.enableets.edu.pakage.framework.ppr.test.po.TestUserInfoPO">
 		SELECT
-			a.test_user_id AS testUserId,
+			b.test_user_id AS testUserId,
 			b.activity_id AS activityId,
 			b.class_id AS classId,
 			b.group_id AS groupId,
@@ -100,20 +100,34 @@
 			b.end_answer_time AS endAnswerTime,
 			b.mark_status AS markStatus
 		FROM
-			(
-				SELECT
-					MAX(test_user_id) AS test_user_id
-				FROM
-					test_user_info t1
-				WHERE
-					test_id = #{testId}
-				GROUP BY
-					user_id
-			) a,
 			test_user_info b
 		WHERE
-			b.test_id = #{testId}
-		  AND a.test_user_id = b.test_user_id
+			b.test_id = #{testId} and b.del_status = 0
+	</select>
+
+	<select id="selectByIds" parameterType="java.util.List" resultType="com.enableets.edu.pakage.framework.ppr.test.po.TestUserInfoPO">
+		SELECT
+			b.test_user_id AS testUserId,
+			b.activity_id AS activityId,
+			b.class_id AS classId,
+			b.group_id AS groupId,
+			b.group_name AS groupName,
+			b.user_id AS userId,
+			b.user_name AS userName,
+			b.test_id AS testId,
+			b.answer_cost_time AS answerCostTime,
+			b.user_score AS userScore,
+			b.create_time AS createTime,
+			b.start_answer_time AS startAnswerTime,
+			b.end_answer_time AS endAnswerTime,
+			b.mark_status AS markStatus
+		FROM
+			test_user_info b
+		WHERE
+			b.test_user_id in
+		<foreach collection="list" separator="," open="(" close=")" item="item">
+			#{item}
+		</foreach>
 	</select>
 
 	<update id="completeMark" parameterType="java.util.List">
@@ -142,6 +156,10 @@
 		WHERE a.test_user_id = tmp.test_user_id
 	</update>
 
+	<update id="removePrevSubmit" parameterType="java.lang.String">
+		update test_user_info set del_status = 1 where test_id = #{testId} and user_id = #{userId}
+	</update>
+
 	<update id="completeMark2" parameterType="java.lang.String">
         UPDATE test_user_info t1
             JOIN (
@@ -151,11 +169,11 @@
                 FROM
                     (
                         SELECT
-                            MAX(test_user_id) AS test_user_id
+							test_user_id
                         FROM
                             test_user_info
                         WHERE
-                            test_id = #{testId}
+                            test_id = #{testId} and del_status = 0
                         <if test="userId != null and userId != ''">
                             AND user_id = #{userId}
                         </if>

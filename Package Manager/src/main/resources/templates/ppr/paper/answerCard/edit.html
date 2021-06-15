@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:v-bind="http://www.w3.org/1999/xhtml"
+      xmlns:v-on="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>ETS-School</title>
+    <link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/comm/plugins/bootstrap/bootstrap.min.css(v=${_v})}" />
+    <link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/custom/package/ppr/css/answerCard/index.css(v=${_v})}" />
+    <style>
+
+    </style>
+    <script th:src="${_contextPath} + @{/comm/plugins/jQuery/jquery-3.0.0.min.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/jquery/jquery.print.min.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/layer/layer.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/js/BaseUtils.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/custom/package/ppr/js/CommUtils.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/custom/package/ppr/js/answerCard/index.js(v=${_vr})}"></script>
+    <script type="text/javascript" th:inline="javascript">
+        //<![CDATA[
+        /** 基础信息 开关按钮组件 */
+        window.i18n = {
+            'tipBox_title': [[#{UI_38_00_020}]],
+            'confirm' : [[#{UI_38_00_008}]], //确定
+            'cancel' : [[#{UI_38_00_009}]],   //取消
+            'number_format': '必须为数字！',
+            'least_one_line': '至少一行！',
+            'least_hundred_cell': '至少100字！',
+            'save_success': '保存成功！',
+            'please_save': '请先保存！'
+        };
+
+        $(function(){
+            AnswerCardIndex.paperInfo = [[${paperInfo}]];
+            AnswerCardIndex.answerCardInfo = [[${answerCardInfo}]];
+            AnswerCardIndex.userId = [[${userId}]];
+            AnswerCardIndex.answerCardTemplateUrl = [[${_contextPath} + @{/ppr/answercard/template/preedit}]];
+            AnswerCardIndex.saveAnswerCardUrl = [[${_contextPath} + @{/ppr/answercard/edit}]];
+            AnswerCardIndex.init();
+        });
+        //]]>
+    </script>
+</head>
+
+<body>
+<div class="MaxContanier" mode="edit">
+    <div class="bgc_font" id="answerCardPages">
+        <iframe id="answerCardTemplate" style="width: 820px;"></iframe>
+    </div>
+    <div class="MaxContanier_r" id="baseInfo">
+        <div class="fix_right">
+            <div>
+                <!--                <div class="Nav_title">选择考号板式</div>-->
+                <div class="Nav_title">选择答题卡模式</div>
+                <ul class="All_format" id="myTab">
+                    <li class="ac_config border_fm" data-value="1" data-type="cardType"><a href="javascript:;">网阅卡</a></li>
+<!--                    <li class="border_fm" data-value="2"><a href="javascript:;">手阅卡</a></li>-->
+                </ul>
+                <!--                <div class="Nav_title">选择考号板式</div>-->
+                <div class="Nav_title">选择答题卡布局</div>
+                <ul class="All_format" id="myTab">
+                    <li class="ac_config columnType" data-value="1" data-type="columnType">
+                        <div class="columnType_option">
+                            <div class="columnType_option_img"><img src="/manager/package/custom/package/ppr/img/answerCard/oneColumn.png" alt=""></div>
+                            <div class="columnType_option_text"><b style="white-space: nowrap;">一栏</b></div>
+                        </div>
+                    </li>
+                    <li class="columnType ac_config" data-value="2" data-type="columnType">
+                        <div class="columnType_option">
+                            <div class="columnType_option_img"><img src="/manager/package/custom/package/ppr/img/answerCard/twoColumn.png" alt=""></div>
+                            <div class="columnType_option_text"><b style="white-space: nowrap;">两栏</b></div>
+                        </div>
+                    </li>
+                    <li class="columnType ac_config" data-value="3" data-type="columnType">
+                        <div class="columnType_option">
+                            <div class="columnType_option_img"><img src="/manager/package/custom/package/ppr/img/answerCard/threeColum.png" alt=""></div>
+                            <div class="columnType_option_text"><b style="white-space: nowrap;">三栏</b></div>
+                        </div>
+                    </li>
+                </ul>
+                <!--                <div class="Nav_title">选择考号板式</div>-->
+                <div class="Nav_title">考号板式</div>
+                <ul class="All_format" id="myTab">
+                    <li class="ac_config border_fm" data-value="1" data-type="candidateNumberEdition"><a href="javascript:;">二维码</a></li>
+                    <li class="ac_config border_fm" data-value="2" data-type="candidateNumberEdition"> <a href="javascript:;">准考证号</a></li>
+                    <li class="ac_config border_fm" data-value="3" data-type="candidateNumberEdition"><a href="javascript:;">短考号</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="Nav_title">设置</div>
+                <ul class="SettingThree">
+                   <!-- <li>
+                        <div th:inline="text">判断题样式（TF-√×）</div>
+                        <div class="ac_config No_radius" data-type="judgeStyle"><div class="no"></div></div>
+                    </li>
+                    <li>
+                        <div>显示密封线</div>
+                        <div class="ac_config No_radius" data-type="sealingLineStatus"><div class="no"></div></div>
+                    </li>-->
+                    <li>
+                    <div>显示题干</div>
+                        <div class="ac_config No_radius" data-type="questionContentStatus"><div class="no"></div></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="ContanierBottomFix">
+    <div class="marginFixBot">
+        <div>共 <span class="red_font count_question">--</span> 道题 &nbsp; &nbsp;<span class="red_font total_score">--</span>分</div>
+        <div class="All_input_font">
+            <div class="input_font" id="pdfBtn">PDF导出</div>
+            <div class="input_font" id="printBtn">打印</div>
+            <!--<div class="input_font">下载</div>-->
+            <!--<div class="input_font">预览</div>-->
+            <div class="input_font" id="saveBtn">保存</div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

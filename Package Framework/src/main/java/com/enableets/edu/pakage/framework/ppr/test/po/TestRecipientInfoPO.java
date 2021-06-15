@@ -6,14 +6,16 @@ import javax.persistence.Table;
 
 import java.util.Date;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Entity
 @Table(name = "test_recipient_info")
 @Data
+@Accessors(chain = true)
 public class TestRecipientInfoPO {
 
 	@Column(name="test_id")
-	private Long testId;
+	private String testId;
 
 	@Column(name="user_id")
 	private String userId;

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <meta content="telephone=yes" name="format-detection" />
+    <meta content="email=yes" name="format-detection" />
+    <title>ETS-School</title>
+    <style type="text/css">
+
+    </style>
+</head>
+<body>
+    <div class="student_answer">
+        <table class="table table-bordered" style="margin-bottom: -1px; border:0;">
+            <thead>
+            <tr>
+                <td data-th-text="#{UI_70_03_01_006}">学生答案</td>
+                <!--<td width="50">
+                    <span class="good_d" id="good" style="display: inline-block"></span>
+               </td>-->
+                <td width="80" style="border-right: 0px;" data-th-text="#{UI_70_03_01_007}">批改</td>
+            </tr>
+            <tbody class="table_mark_area">
+
+            </tbody>
+            </thead>
+        </table>
+    </div>
+    <!-- 图片区域 -->
+    <div class="canvas_root_area" style="display: none">
+        <div class="canvas_container" style="position: relative;">
+        </div>
+        <!--<div class="user_answer_canvas clearfix">
+            <ul class="imgs">
+            </ul>
+        </div>-->
+        <ul class="colors" style="display: none">
+            <li><a href="javascript:;" class="color1" data-color="black"></a></li>
+            <li><a href="javascript:;" class="color2 select" data-color="red"></a></li>
+            <li><a href="javascript:;" class="color3" data-color="yellow"></a></li>
+            <li><a href="javascript:;" class="color4" data-color="#bcd7ed"></a></li>
+            <li><a href="javascript:;" class="color5" data-color="blue"></a></li>
+            <li><a href="javascript:;" class="color6" data-color="white"></a></li>
+        </ul>
+        <div class="tools">
+            <ul class="l">
+                <li><a class="pencil" href="javascript:;"><img data-th-src="${_contextPath} + @{/custom/package/markV2/img/icon1.png}" /></a></li>
+                <li><a class="input" href="javascript:;"><img data-th-src="${_contextPath} + @{/custom/package/markV2/img/icon2.png}" /></a></li>
+                <li><a class="rectangle" href="javascript:;"><img data-th-src="${_contextPath} + @{/custom/package/markV2/img/icon3.png}" /></a></li>
+                <li><a class="color" href="javascript:;"><em></em></a></li>
+                <li><a class="eraser" href="javascript:;"><img data-th-src="${_contextPath} + @{/custom/package/markV2/img/icon5.png}" /></a></li>
+                <li><a class="clear" href="javascript:;"><img data-th-src="${_contextPath} + @{/custom/package/markV2/img/icon6.png}" /></a></li>
+            </ul>
+            <ul class="tright">
+                <li><a class="drag" href="javascript:;"><img data-th-src="${_contextPath} + @{/custom/package/markV2/img/icon12.png}" /></a></li>
+                <li><a class="zoomIn" href="javascript:;"><img data-th-src="${_contextPath} + @{/custom/package/markV2/img/icon7.png}" /></a></li>
+                <li><a class="zoomOut" href="javascript:;"><img data-th-src="${_contextPath} + @{/custom/package/markV2/img/icon8.png}" /></a></li>
+                <li><a class="rotate90" href="javascript:;"><img data-th-src="${_contextPath} + @{/custom/package/markV2/img/icon9.png}" /></a></li>
+                <li><a class="rotate180" href="javascript:;"><img data-th-src="${_contextPath} + @{/custom/package/markV2/img/icon10.png}" /></a></li>
+                <li><a class="rotate270" href="javascript:;"><img data-th-src="${_contextPath} + @{/custom/package/markV2/img/icon11.png}" /></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="quetstion">
+        <div class="tip" data-th-text="#{UI_70_03_01_008}">原题</div>
+        <a href="javascript:;" class="toggle"><span class="open"></span><i class="fa fa-chevron-up" aria-hidden="true" th:text="#{UI_70_03_01_018}"></i></a>
+        <div class="title">
+        </div>
+        <div class="title_bar"><span class="red" data-th-text="|#{UI_70_03_01_009}：|">题目分数：</span><div class="description question_score"></div></div>
+        <div class="title_bar"><span class="red" data-th-text="|#{UI_70_03_01_010}：|">标准答案：</span><div class="description question_answer"></div></div>
+    </div>
+</body>
+</html>

@@ -120,7 +120,7 @@ public class TableCopyComponent {
 	 * 保存数据到目标数据库
 	 * @param statementList 语句list
 	 */
-	@Transactional
+	//@Transactional
 	public void save(List<Statement> statementList) {
 		if (isEmpty(statementList)) {
 			return;

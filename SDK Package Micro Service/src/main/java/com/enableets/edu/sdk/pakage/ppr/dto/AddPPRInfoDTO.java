@@ -15,6 +15,9 @@ public class AddPPRInfoDTO{
     /** Paper Name */
     private String name;
 
+    /** Paper type*/
+    private String paperType;
+
     /** Stage Info  */
     private CodeNameMapDTO stage;
 

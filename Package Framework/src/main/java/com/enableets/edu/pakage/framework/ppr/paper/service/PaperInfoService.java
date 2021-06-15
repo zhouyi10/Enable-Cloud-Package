@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -112,7 +113,7 @@ public class PaperInfoService {
      */
     public PaperInfoBO get(String paperId){
         if (StringUtils.isBlank(paperId)) return null;
-        String redisKey = String.format("com:enableets:edu:package:ppr:paper:%s", paperId);
+        String redisKey = new StringBuilder(PPRConstants.PACKAGE_PPR_CACHE_KEY_PREFIX).append("paper:").append(paperId).toString();
         String paperStr = stringRedisTemplate.opsForValue().get(redisKey);
         if (StringUtils.isNotBlank(paperStr)){
             return JsonUtils.convert(paperStr, PaperInfoBO.class);
@@ -411,6 +412,17 @@ public class PaperInfoService {
         if (difficultyLevel.equals("0")) return "5";
         else if (difficultyLevel.equals("1")) return "10";
         else return "15";
+    }
+
+    @Cacheable(value = PPRConstants.PACKAGE_PPR_CACHE_KEY_PREFIX + "paper:file-exam:", key = "#fileId", unless="#result == null")
+    public ExamInfoBO getExamIdByFileId(String fileId){
+        List<ContentInfoDTO> contents = contentInfoServiceSDK.queryByFileId(fileId, Constants.CONTENT_TYPE_EXAM);
+        if (CollectionUtils.isEmpty(contents)) return null;
+        for (ContentInfoDTO content : contents) {
+            ExamInfoPO examInfoPO = examInfoDAO.selectByPrimaryKey(content.getContentId().toString());
+            if (examInfoPO != null) return BeanUtils.convert(examInfoPO, ExamInfoBO.class);
+        }
+        return null;
     }
 
 }

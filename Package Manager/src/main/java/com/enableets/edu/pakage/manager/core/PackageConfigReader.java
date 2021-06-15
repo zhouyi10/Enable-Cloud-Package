@@ -40,4 +40,16 @@ public class PackageConfigReader {
 
     @Value("${nginx.server-address}")
     private String nginxServer;
+
+    @Value("${picture.url}")
+    private String pictureUrl;
+
+    @Value("${file-preview.url}")
+    private String previewFileUrl;
+
+    @Value("${paper.static.path}")
+    private String paperStaticPath;
+
+    @Value("${file-preview.src}")
+    private String previewFileSrc;
 }

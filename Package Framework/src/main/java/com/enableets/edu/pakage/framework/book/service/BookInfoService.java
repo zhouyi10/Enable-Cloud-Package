@@ -12,18 +12,19 @@ import com.enableets.edu.pakage.core.action.IPackageLifecycle;
 import com.enableets.edu.pakage.core.bean.PackageFileInfo;
 import com.enableets.edu.pakage.core.core.Configuration;
 import com.enableets.edu.pakage.framework.book.bo.*;
-import com.enableets.edu.pakage.framework.book.core.BookConstants;
-import com.enableets.edu.pakage.framework.core.Constants;
 import com.enableets.edu.sdk.content.dto.ContentFileInfoDTO;
 import com.enableets.edu.sdk.content.dto.ContentInfoDTO;
 import com.enableets.edu.sdk.content.service.IContentInfoService;
+import com.enableets.edu.sdk.teachingassistant.dto.QueryBookInfoResultDTO;
+import com.enableets.edu.sdk.teachingassistant.service.IBookInfoService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 @Service("packageBookInfo")
 public class BookInfoService {
@@ -34,14 +35,20 @@ public class BookInfoService {
     @Autowired
     private IContentInfoService contentInfoServiceSDK;
 
-    @Transactional
+    @Autowired
+    private IBookInfoService bookInfoServiceSDK;
+
     public BookInfoBO add(BookInfoBO bookInfoBO) {
         if (CollectionUtils.isEmpty(bookInfoBO.getPageList())) {
             throw new MicroServiceException("70-", "Book Missing structure(Node)");
         }
-        ContentInfoDTO content = contentInfoServiceSDK.add(this.convertBook2Content(bookInfoBO)).getData();
+        QueryBookInfoResultDTO queryBookInfo = bookInfoServiceSDK.completeBook(String.valueOf(bookInfoBO.getBookId()));
+        ContentInfoDTO contentInfoDTO = new ContentInfoDTO();
+        if (Objects.nonNull(queryBookInfo)) {
+            contentInfoDTO = contentInfoServiceSDK.get(queryBookInfo.getContentId()).getData();
+        }
         //Set Book basic information through Content
-        this.setBasicInfo(bookInfoBO, content);
+        this.setBasicInfo(bookInfoBO, contentInfoDTO);
         //Generate Book File & Add it to Book Content
         this.generateBookFile(bookInfoBO);
         return bookInfoBO;
@@ -88,32 +95,34 @@ public class BookInfoService {
         // 6. Get .book document
         PackageFileInfo packageFileInfo = bookPackageWrapper.getPackageFileInfo();
         // ------------------------ ----------------------------------
-        ContentFileInfoDTO file = new ContentFileInfoDTO();
-        file.setFileId(packageFileInfo.getFileId());
-        file.setFileName(packageFileInfo.getName());
-        file.setFileExt(packageFileInfo.getExt());
-        file.setUrl(packageFileInfo.getDownloadUrl());
-        file.setMd5(packageFileInfo.getMd5());
-        file.setSize(packageFileInfo.getSize());
-        file.setSizeDisplay(packageFileInfo.getSizeDisplay());
+        if (Objects.nonNull(packageFileInfo)) {
 
-        if (book.getContentId() != null)
-            file.setContentId(book.getContentId().toString());
+            ContentFileInfoDTO file = new ContentFileInfoDTO();
+            file.setFileId(packageFileInfo.getFileId());
+            file.setFileName(packageFileInfo.getName());
+            file.setFileExt(packageFileInfo.getExt());
+            file.setUrl(packageFileInfo.getDownloadUrl());
+            file.setMd5(packageFileInfo.getMd5());
+            file.setSize(packageFileInfo.getSize());
+            file.setSizeDisplay(packageFileInfo.getSizeDisplay());
 
-        file.setFileOrder(0);
-        contentInfoServiceSDK.addFileToContent(file);
+            if (book.getContentId() != null)
+                file.setContentId(book.getContentId().toString());
 
+            file.setFileOrder(0);
+            contentInfoServiceSDK.addFileToContent(file);
+        }
         System.out.println(packageFileInfo.getDownloadUrl());
         System.out.println(packageFileInfo.getFileId());
     }
 
     private void setBasicInfo(BookInfoBO book, ContentInfoDTO content) {
-        book.setBookId(content.getContentId());
         //contentId
         book.setContentId(content.getContentId());
         //user
         book.setUser(new BookIdNameMapBO(content.getCreator(), content.getCreatorName()));
         book.setCreatTime(new Date());
+        book.setUpdateTime(new Date());
     }
 
     private EnableBookBeanDefinition convert2BookBean(BookInfoBO bookInfoBO) {
@@ -201,44 +210,6 @@ public class BookInfoService {
             regionBOList.add(regionBO);
         }
         return regionBOList;
-    }
-
-    private ContentInfoDTO convertBook2Content(BookInfoBO bookInfoBO) {
-        SimpleDateFormat sdf = new SimpleDateFormat(Constants.DEFAULT_DATE_TIME_FORMAT);
-        Date today = Calendar.getInstance().getTime();
-        ContentInfoDTO content = new ContentInfoDTO();
-        content.setContentName(bookInfoBO.getBookName());
-        content.setContentDescription(bookInfoBO.getBookName());
-
-        //contentId
-        if (bookInfoBO.getContentId() != null)
-            content.setProviderContentId(bookInfoBO.getContentId().toString());
-
-        content.setProviderCode(Constants.CONTENT_PRIVATE_TYPE);
-        content.setTypeCode(BookConstants.CONTENT_TYPE_ETM);
-        content.setTypeName(BookConstants.CONTENT_TYPE_NAME);
-        content.setCreator(bookInfoBO.getCreator());
-        //content.setCreatorName(bookInfoBO.getUser().getName());
-        content.setCreateTime(sdf.format(today));
-        content.setUpdateTime(sdf.format(today));
-        //School
-
-        content.setStageCode(bookInfoBO.getStage().getCode());
-        content.setStageName(bookInfoBO.getStage().getName());
-        content.setGradeCode(bookInfoBO.getStage().getCode());
-        content.setGradeName(bookInfoBO.getGrade().getName());
-        content.setSubjectCode(bookInfoBO.getSubject().getCode());
-        content.setSubjectName(bookInfoBO.getSubject().getName());
-        content.setHtmlContext(bookInfoBO.getBookName());
-        content.setPlaintextContext(bookInfoBO.getBookName());
-        //knowledgeList
-
-        //BookConstants
-        content.setUsageCode(BookConstants.DEFAULT_BOOK_USE_CODE);
-        //fileList
-
-        content.setSourceCode("_book");
-        return content;
     }
 
     private BookInfoBO convert2BookBO(EnableBookBeanDefinition bookBean) {

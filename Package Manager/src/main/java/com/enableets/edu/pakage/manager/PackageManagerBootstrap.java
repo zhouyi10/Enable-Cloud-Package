@@ -3,7 +3,11 @@ package com.enableets.edu.pakage.manager;
 import javax.servlet.http.HttpServletRequest;
 
 import com.enableets.edu.sdk.actionflow.annotation.EnableActionFlowServiceSDK;
+import com.enableets.edu.sdk.assessment.annotation.EnableAssessmentServiceSDK;
 import com.enableets.edu.sdk.catalog.v2.core.annotation.EnableCatalogV2ServiceSDK;
+import com.enableets.edu.sdk.cloudclass.annotation.EnableCloudClassServiceSDK;
+import com.enableets.edu.sdk.group.annotation.EnableGroupServiceSDK;
+import com.enableets.edu.sdk.steptask.annotation.EnableStepV2ServiceSDK;
 import com.enableets.edu.sdk.teachingassistant.annotation.EnableTeachingAssistantServiceSDK;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -62,6 +66,10 @@ import java.util.Locale;
 @EnableETSService
 @EnableActionFlowServiceSDK
 @EnablePackageMicroService
+@EnableGroupServiceSDK
+@EnableAssessmentServiceSDK
+@EnableCloudClassServiceSDK
+@EnableStepV2ServiceSDK
 @PropertySource(value = {"classpath:auto-mark-strategy.properties"})
 public class PackageManagerBootstrap extends ApplicationBootstrap {
 
@@ -78,6 +86,7 @@ public class PackageManagerBootstrap extends ApplicationBootstrap {
         registry.addResourceHandler(Constants.CONTEXT_PATH + "/comm/**").addResourceLocations("classpath:/static/comm/");
     }
 
+    @Override
     @Bean
     public LocaleResolver localeResolver() {
         Locale locale = I18nUtils.localeFromString(this.locale, (Locale)null);

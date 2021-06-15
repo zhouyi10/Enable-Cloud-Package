@@ -1,45 +1,30 @@
 package com.enableets.edu.pakage.framework.ppr.test.service;
 
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
-
 import com.enableets.edu.framework.core.util.BeanUtils;
+import com.enableets.edu.pakage.framework.core.RabbitMQConfig;
+import com.enableets.edu.pakage.framework.ppr.bo.*;
+import com.enableets.edu.pakage.framework.ppr.core.PPRConfigReader;
+import com.enableets.edu.pakage.framework.ppr.core.PPRConstants;
+import com.enableets.edu.pakage.framework.ppr.paper.service.PaperInfoService;
+import com.enableets.edu.pakage.framework.ppr.test.bo.TestMarkResultInfoBO;
+import com.enableets.edu.pakage.framework.ppr.test.dao.PackageUserAnswerInfoDAO;
 import com.enableets.edu.pakage.framework.ppr.test.dao.TestUserInfoDAO;
 import com.enableets.edu.pakage.framework.ppr.test.dao.UserAnswerCanvasInfoDAO;
-import com.enableets.edu.pakage.framework.ppr.test.dao.PackageUserAnswerInfoDAO;
 import com.enableets.edu.pakage.framework.ppr.test.dao.UserAnswerStampInfoDAO;
 import com.enableets.edu.pakage.framework.ppr.test.po.TAsUserAnswerStampPO;
 import com.enableets.edu.pakage.framework.ppr.test.po.TestUserInfoPO;
 import com.enableets.edu.pakage.framework.ppr.test.po.UserAnswerCanvasInfoPO;
 import com.enableets.edu.pakage.framework.ppr.test.po.UserAnswerInfoPO;
-import com.enableets.edu.pakage.framework.ppr.bo.PaperInfoBO;
-import com.enableets.edu.pakage.framework.ppr.bo.PaperNodeInfoBO;
-import com.enableets.edu.pakage.framework.ppr.bo.QueryMarkAnswerBO;
-import com.enableets.edu.pakage.framework.ppr.bo.TestInfoBO;
-import com.enableets.edu.pakage.framework.ppr.bo.TestUserInfoBO;
-import com.enableets.edu.pakage.framework.ppr.bo.UserAnswerCanvasInfoBO;
-import com.enableets.edu.pakage.framework.ppr.bo.UserAnswerInfoBO;
-import com.enableets.edu.pakage.framework.ppr.bo.UserAnswerStampBO;
-import com.enableets.edu.pakage.framework.ppr.core.PPRConfigReader;
-import com.enableets.edu.pakage.framework.ppr.core.PPRConstants;
-import com.enableets.edu.pakage.framework.ppr.paper.service.PaperInfoService;
-import com.enableets.edu.sdk.activity.dto.AddStepInstanceMarkInfoDTO;
-import com.enableets.edu.sdk.activity.service.IStepTaskService;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author walle_yu@enable-ets.com
@@ -55,12 +40,6 @@ public class TestUserInfoService {
     private PaperInfoService paperInfoService;
 
     @Autowired
-    private PPRConfigReader pprConfigReader;
-
-    @Autowired
-    private IStepTaskService stepTaskServiceSDK;
-
-    @Autowired
     private TestUserInfoDAO testUserInfoDAO;
 
     @Autowired
@@ -72,6 +51,9 @@ public class TestUserInfoService {
     @Autowired
     private UserAnswerStampInfoDAO userAnswerStampInfoDAO;
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
     /**
      * Query Answer By Marking Condition
      * @param queryMarkAnswerBO
@@ -80,14 +62,14 @@ public class TestUserInfoService {
     public List<TestUserInfoBO> queryAnswer(QueryMarkAnswerBO queryMarkAnswerBO){
         if (StringUtils.isBlank(queryMarkAnswerBO.getTestId())){
             if (StringUtils.isBlank(queryMarkAnswerBO.getExamId())){
-                Assert.notNull(queryMarkAnswerBO.getActivityId(), "activityId is null!");
+                Assert.notNull(queryMarkAnswerBO.getStepId(), "stepId is null!");
                 Assert.notNull(queryMarkAnswerBO.getFileId(), "fileId is null!");
             }
         }
         //1.查询所有交卷信息包含答案信息
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("testId", queryMarkAnswerBO.getTestId());
-        params.put("activityId", queryMarkAnswerBO.getActivityId());
+        params.put("stepId", queryMarkAnswerBO.getStepId());
         params.put("fileId", queryMarkAnswerBO.getFileId());
         params.put("examId", queryMarkAnswerBO.getExamId());
         params.put("userId", queryMarkAnswerBO.getUserId());
@@ -122,7 +104,7 @@ public class TestUserInfoService {
         return BeanUtils.convert(retTestUsers, TestUserInfoBO.class);
     }
 
-    public void mark(String testId, Integer type, List<UserAnswerInfoBO> answers) {
+    public TestMarkResultInfoBO mark(String testId, Integer type, List<UserAnswerInfoBO> answers) {
         Assert.notNull("type", "type is null!");
         if (type != PPRConstants.MARK_TYPE_ALL_COMPLETE) Assert.notEmpty(answers, "No Answers Info!");
         List<String> testUserIds = new ArrayList<String>();
@@ -158,11 +140,10 @@ public class TestUserInfoService {
         } else {
             testUserInfoDAO.recalculateTotalScore(testUserIds);
         }
-        //缓存已批阅信息
-        //this.cacheAddMarkStatus(testId, userIds);
         if (type != null && (type == PPRConstants.MARK_TYPE_COMPLETE || type == PPRConstants.MARK_TYPE_ALL_COMPLETE)) { //批阅完成通知活动批阅
-            sendMarkInfo(testId, testUserIds);
+            return sendMarkInfo(testId, testUserIds);
         }
+        return null;
     }
 
     public void editCanvasInfo(UserAnswerCanvasInfoBO userAnswerCanvasInfoBO){
@@ -174,26 +155,25 @@ public class TestUserInfoService {
         userAnswerCanvasInfoDAO.updateByExampleSelective(canvas, example);
     }
 
-    private void sendMarkInfo(String testId, List<String> testUserIds) {
-        TestInfoBO testInfo = testInfoService.get(testId, null, null, null, false);
-        List<String> activityTypesOfStep = Arrays.asList(pprConfigReader.getActivityTypeStepArr());
-        if (!PPRConstants.ACTIVITY_TYPE_DEFAULT.equals(testInfo.getActivityType()) && !activityTypesOfStep.contains(testInfo.getActivityType())) {
-            return;
-        }
-        List<TestUserInfoPO> users = testUserInfoDAO.getByTestId(testId);
-        for(TestUserInfoPO user : users){
-            for(String testUserId : testUserIds){
-                if(!testUserId.equals(user.getTestUserId())) continue;
-                // 1 不回复学习活动的测验 活动标识为 testUserId_activityId  2 回复学习活动但出错的 为 testUserId 3 回复活动成功的为回复活动标识
-                if (user.getActivityId().indexOf(user.getTestUserId()) >= 0) {
-                    continue;
-                }
-                AddStepInstanceMarkInfoDTO markInfoDTO = new AddStepInstanceMarkInfoDTO();
-                markInfoDTO.setScore(user.getScore());
-                markInfoDTO.setStatus("1");  //pass
-                stepTaskServiceSDK.editStateV2(testInfo.getActivityId(), user.getUserId(), markInfoDTO);
-            }
-        }
+    private TestMarkResultInfoBO sendMarkInfo(String testId, List<String> testUserIds) {
+        TestInfoBO testInfoBO = testInfoService.get(testId);
+        List<TestUserInfoPO> testUsers = testUserInfoDAO.selectByIds(testUserIds);
+        TestMarkResultInfoBO resultInfoBO = new TestMarkResultInfoBO();
+        resultInfoBO.setStepId(testInfoBO.getStepId()).setActivityId(testInfoBO.getActivityId()).setFileId(testInfoBO.getFileId());
+        List<TestMarkResultInfoBO.UserScoreBO> list = testUsers.stream().map(e -> new TestMarkResultInfoBO.UserScoreBO(e.getTestUserId(), e.getUserId(), e.getUserScore())).collect(Collectors.toList());
+        resultInfoBO.setUsers(list);
+        return resultInfoBO;
+    }
+
+    public void notifyStepTaskMarkResult(String testId, String stepId, String activityType, String userId, String testUserId, Float score){
+//        Map<String, Object> messages = new HashMap<>();
+//        messages.put("testId", testId);
+//        messages.put("stepId", stepId);
+//        messages.put("activityType", activityType);
+//        messages.put("userId", userId);
+//        messages.put("testUserId", testUserId);
+//        messages.put("score", score);
+        //rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_USER_ASSESSMENT_RESULT, RabbitMQConfig.ROUTING_KEY_USER_ASSESSMENT_RESULT, messages);
     }
 
     public List<UserAnswerStampBO> getAnswerTracks(String testUserId) {

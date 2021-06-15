@@ -18,6 +18,9 @@ public class PaperInfoVO {
     /** Paper Name */
     private String name;
 
+    /***/
+    private String paperType;
+
     /** Stage Info  */
     @Mapping(value = "stage.code")
     private String stageCode;
@@ -64,4 +67,11 @@ public class PaperInfoVO {
 
     /***/
     private String opener;
+
+    /***/
+    private String subtitle;
+
+    private  String examStypeinfoPO;
+
+    private  String sumBigtopic;
 }

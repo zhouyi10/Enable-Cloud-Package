@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+	<head>
+		<meta charset="UTF-8" />
+		<title>试卷信息</title>
+
+		<!--<link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/custom/package/ppr/css/paper/baseStyle.css(v=${_v})}"/>-->
+		<link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/custom/package/ppr/css/paper/style20190606.css(v=${_v})}"/>
+        <link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/comm/plugins/jsTree/themes/default/font-awesome/css/font-awesome.min.css(v=${_v})}" />
+        <link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/comm/plugins/jsTree/themes/default/style.min.css(v=${_v})}" />
+        <link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/comm/plugins/jsTree/themes/default/components.min.css(v=${_v})}" />
+        <link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/comm/plugins/jsTree/themes/default/plugins.min.css(v=${_v})}" />
+		<style th:inline="text">
+			.form-box201906 .li_ .lt_{
+				width: 50px;
+			}
+            .editPaperInfo .li_ {
+                margin-top: 15px;
+            }
+            .form-box201906 .li_ .rt_ .select_{
+                margin-left: 8px;
+            }
+            .form-box201906 .li_ .lt_ {
+                width: 56px;
+            }
+		</style>
+	</head>
+	<body style="overflow-y: hidden;overflow-x: hidden">
+	<form>
+		<div style="margin-top: 50px;height: 50px;width: auto;text-align: center" >
+			<input style="margin-left: 10px"  id="secrecySymbolBox" class="secrecySymbolBox" type="checkbox" ></input><label>保密标记</label>
+			<input style="margin-left: 10px"  id="subtitleBox" type="checkbox" ></input><label>副标题</label>
+			<input style="margin-left: 10px"  id="testInfoBox" type="checkbox" ></input><label>试卷信息</label>
+			<input style="margin-left: 10px"  id="stuInfoColumnBox" type="checkbox" ></input><label>考生输入栏</label>
+			<input style="margin-left: 10px"  id="recordScoreColumnBox" type="checkbox" ></input><label>誉分栏</label>
+			<input style="margin-left: 10px"  id="mattersAttentionBox" type="checkbox" ></input><label>注意事项</label>
+			<!--input style="margin-left: 10px" checked="checked" id="secrecySymbolBox" class="secrecySymbolBox" type="checkbox" onclick="secrecySymbolHander(this)"></input><label>保密标记</label>
+			<input style="margin-left: 10px" checked="checked" id="subtitleBox" type="checkbox" onclick="subtitleHander(this)"></input><label>副标题</label>
+			<input style="margin-left: 10px" checked="checked" id="testInfoBox" type="checkbox" onclick="testInfoHander(this)"></input><label>试卷信息</label>
+			<input style="margin-left: 10px" checked="checked" id="stuInfoColumnBox" type="checkbox" onclick="stuInfoColumnHander(this)"></input><label>考生输入栏</label>
+			<input style="margin-left: 10px" checked="checked" id="recordScoreColumnBox" type="checkbox" onclick="recordScoreHander(this)"></input><label>誉分栏</label>
+			<input style="margin-left: 10px" checked="checked" id="mattersAttentionBox" type="checkbox" onclick="mattersAttentionHander(this)"></input><label>注意事项</label>-->
+		</div>
+	</form>
+		<script th:src="${_contextPath} + @{/comm/plugins/jQuery/jquery-3.0.0.min.js(v=${_v})}"></script>
+		<script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/layer/layer.js(v=${_v})}"></script>
+		<script type="text/javascript" th:src="${_contextPath} + @{/comm/js/BaseUtils.js(v=${_v})}"></script>
+		<script type="text/javascript" th:src="${_contextPath} + @{/custom/package/ppr/js/CommUtils.js(v=${_v})}"></script>
+        <script th:inline="javascript" th:src="${_contextPath} + @{/comm/plugins/jsTree/jstree.min.js(v=${_v})}"></script>
+		<script type="text/javascript" th:inline="javascript">
+			$(function () {
+				var examStypeinfoPO = [[${examStypeinfoPO}]];
+				//console.log(examStypeinfoPO);
+				if (examStypeinfoPO.secrecySymbol ==1){
+					$("#secrecySymbolBox").prop("checked","true");
+					$("#secrecySymbolBox").attr("checked","true");
+				}else {
+					$("#secrecySymbolBox").prop("checked","")
+					$("#secrecySymbolBox").attr("checked","")
+				}
+				if (examStypeinfoPO.subtitle != null && examStypeinfoPO.subtitle !="" && examStypeinfoPO.subtitle !=undefined){
+					$("#subtitleBox").prop("checked","true");
+					$("#subtitleBox").attr("checked","true");
+				}else {
+					$("#subtitleBox").prop("checked","")
+					$("#subtitleBox").attr("checked","")
+				}
+				if (examStypeinfoPO.testInfo != null && examStypeinfoPO.testInfo !="" && examStypeinfoPO.testInfo !=undefined){
+					$("#testInfoBox").prop("checked","true");
+					$("#testInfoBox").attr("checked","true");
+				}else {
+					$("#testInfoBox").prop("checked","")
+					$("#testInfoBox").attr("checked","")
+				}
+				if (examStypeinfoPO.stuInfoColumn ==1){
+					$("#stuInfoColumnBox").prop("checked","true");
+					$("#stuInfoColumnBox").attr("checked","true");
+				}else {
+					$("#stuInfoColumnBox").prop("checked","")
+					$("#stuInfoColumnBox").attr("checked","")
+				}
+				if (examStypeinfoPO.recordScoreColumn ==1){
+					$("#recordScoreColumnBox").prop("checked","true");
+					$("#recordScoreColumnBox").attr("checked","true");
+				}else {
+					$("#recordScoreColumnBox").prop("checked","")
+					$("#recordScoreColumnBox").attr("checked","")
+				}
+				if (examStypeinfoPO.mattersAttention != null && examStypeinfoPO.mattersAttention !="" && examStypeinfoPO.mattersAttention !=undefined){
+					$("#mattersAttentionBox").prop("checked","true");
+					$("#mattersAttentionBox").attr("checked","true");
+				}else {
+					$("#mattersAttentionBox").prop("checked","")
+					$("#mattersAttentionBox").attr("checked","")
+				}
+
+			});
+
+
+
+		</script>
+	</body>
+</html>

@@ -5,6 +5,7 @@
 	<select id="get" parameterType="java.lang.String" resultType="com.enableets.edu.pakage.framework.ppr.test.po.TestInfoPO">
 		select
 			t1.test_id as testId,
+			t1.step_id as stepId,
 			t1.activity_id as activityId,
 		    t1.activity_type as activityType,
 			t1.school_id as schoolId,
@@ -35,14 +36,15 @@
 			t1.app_id as appId,
 			t1.delay_submit AS delaySubmit,
 			t1.resubmit,
+		    t1.process_instance_id AS processInstanceId,
 			t2.score
 		from test_info t1 inner join exam_info t2 on t1.exam_id = t2.exam_id
 		<where>
 			<if test="testId != null and testId != ''">
 				t1.test_id = #{testId}
 			</if>
-			<if test="activityId != null and activityId != ''">
-				AND t1.activity_id = #{activityId}
+			<if test="stepId != null and stepId != ''">
+				AND t1.step_id = #{stepId}
 			</if>
 			<if test="fileId != null and fileId != ''">
 				AND t1.file_id = #{fileId}
@@ -54,9 +56,10 @@
 		limit 1
 	</select>
 
-	<select id="getByActivityId" parameterType="java.lang.String" resultType="com.enableets.edu.pakage.framework.ppr.test.po.TestInfoPO">
+	<select id="getByStepId" parameterType="java.lang.String" resultType="com.enableets.edu.pakage.framework.ppr.test.po.TestInfoPO">
 		select
 			t1.test_id as testId,
+		    t1.step_id as stepId,
 			t1.activity_id as activityId,
 			t1.school_id as schoolId,
 			t1.term_id as termId,
@@ -92,6 +95,10 @@
 			t2.score
 		from test_info t1 inner join exam_info t2 on t1.exam_id = t2.exam_id
 		where
-			t1.activity_id = #{activityId}
+			t1.step_id = #{stepId}
 	</select>
+
+	<update id="setTestProcessInstanceId" parameterType="java.lang.String">
+		update test_info set process_instance_id = #{processInstanceId} where test_id = #{testId}
+	</update>
 </mapper>

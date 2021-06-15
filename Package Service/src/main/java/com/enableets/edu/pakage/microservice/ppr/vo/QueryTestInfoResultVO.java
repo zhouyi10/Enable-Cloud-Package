@@ -29,6 +29,9 @@ public class QueryTestInfoResultVO {
 	@ApiModelProperty(value="Test Document File ID")
 	private String fileId;
 
+	@ApiModelProperty(value = "Step Id")
+	private String stepId;
+
 	/** Activity ID*/
 	@ApiModelProperty(value="Activity ID")
 	private String activityId;
@@ -89,7 +92,7 @@ public class QueryTestInfoResultVO {
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@ApiModelProperty(value=" Test Begin Time")
-	private Date beginTime;
+	private Date startTime;
 
 	/** Test End Time*/
 	@ApiModelProperty(value="Test End Time")
@@ -158,5 +161,8 @@ public class QueryTestInfoResultVO {
 	/** Exam Recipient details*/
 	@ApiModelProperty(value="Exam Recipient details")
 	private List<TestRecipientInfoVO> recipients;
+
+	@ApiModelProperty(value = "Activiti Process Instance Id")
+	private String processInstantId;
 
 }

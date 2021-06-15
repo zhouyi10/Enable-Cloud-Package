@@ -262,6 +262,7 @@
 					'paperId' : _this.examId,
 					'userId' : _this.userId,
 					'stepId' : _this.stepId,
+					'fileId' : _this.fileId,
 					'startTime': PaperTestTimer.startTestTimeStr,
 					'endTime': PaperTestTimer.endAnswerTimeStr
 				};
@@ -272,29 +273,28 @@
 					dataType : "json",
 					url: _this.saveUrl,
 					success:function(data){
-						CommUtils.closeMask();
-						CommUtils.unLock($(document.body));
 						if(data.status == "0" || !data.data){
 							if (!CommUtils.isEmpty(data.message)) {
-								//_this.tipBox(data.message);
 								CommUtils.tipBoxV2(data.message, 3000, function(){
 
 								});
 							} else {
-								//_this.tipBox(i18n['submit_failed']);//交卷失败
 								CommUtils.tipBoxV2(i18n['submit_failed'], 3000, function(){
 
 								});
 							}
 						}else{
-							CommUtils.tipBoxV2(i18n['submit_success'], 3000, function(){
-								data.status = "success";
-								data.type = "answer";
-								window.opener && window.opener.postMessage(data, "*");
-								window.parent.postMessage(data, "*");
-							});
+							// CommUtils.tipBoxV2(i18n['submit_success'], 3000, function(){
+							// 	data.status = "success";
+							// 	data.type = "answer";
+							// 	window.opener && window.opener.postMessage(data, "*");
+							// 	window.parent.postMessage(data, "*");
+							// });
+							data.status = "success";
+							data.type = "answer";
+							window.opener && window.opener.postMessage(data, "*");
+							window.parent.postMessage(data, "*");
 						}
-
 					},
 					error: function (returndata) {
 						CommUtils.closeMask();

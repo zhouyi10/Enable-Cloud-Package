@@ -3,37 +3,33 @@ package com.enableets.edu.pakage.manager.ppr.controller;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.hutool.core.io.FileUtil;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.enableets.edu.pakage.framework.ppr.bo.BaseSearchConditionBO;
+import com.enableets.edu.pakage.framework.ppr.bo.GradeInfoBO;
+import com.enableets.edu.pakage.framework.ppr.bo.StageInfoBO;
+import com.enableets.edu.pakage.framework.ppr.paper.po.ExamStypeInfoPO;
+import com.enableets.edu.pakage.manager.ppr.service.ExamStypeInfoService;
 import com.enableets.edu.framework.core.controller.OperationResult;
 import com.enableets.edu.framework.core.util.BeanUtils;
 import com.enableets.edu.pakage.manager.core.BaseInfoService;
 import com.enableets.edu.pakage.manager.core.Constants;
 import com.enableets.edu.pakage.manager.core.PackageConfigReader;
-import com.enableets.edu.pakage.manager.ppr.bo.PaperInfoBO;
-import com.enableets.edu.pakage.manager.ppr.bo.PaperQuestionBO;
-import com.enableets.edu.pakage.manager.ppr.bo.QueryContentBO;
-import com.enableets.edu.pakage.manager.ppr.bo.QueryPaperBO;
-import com.enableets.edu.pakage.manager.ppr.bo.QueryQuestionBO;
+import com.enableets.edu.pakage.manager.ppr.bo.*;
 import com.enableets.edu.pakage.manager.ppr.core.PPRBaseInfoService;
-import com.enableets.edu.pakage.manager.ppr.service.DictionaryInfoService;
-import com.enableets.edu.pakage.manager.ppr.service.PaperInfoService;
-import com.enableets.edu.pakage.manager.ppr.service.QuestionInfoService;
-import com.enableets.edu.pakage.manager.ppr.vo.ChooseQuestionVO;
-import com.enableets.edu.pakage.manager.ppr.vo.PaperInfoVO;
-import com.enableets.edu.pakage.manager.ppr.vo.QueryContentVO;
-import com.enableets.edu.pakage.manager.ppr.vo.QueryPaperVO;
-import com.enableets.edu.pakage.manager.ppr.vo.QueryQuestionInfoVO;
-
+import com.enableets.edu.pakage.manager.ppr.service.*;
+import com.enableets.edu.pakage.manager.ppr.vo.*;
+import com.enableets.edu.sdk.paper.service.IPaperInfoService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
+import java.io.*;
 import java.util.List;
 
 /**
@@ -64,29 +60,64 @@ public class PaperInfoController {
     @Autowired
     private PackageConfigReader packageConfigReader;
 
+    @Autowired
+    private ExamStypeInfoService examStypeInfoService;
+
+    @Autowired
+    private IPaperInfoService paperInfoServiceV1;
+
+    @Autowired
+    private AnswerCardService answerCardService;
+
+    /** model key */
+    public static final String MODEL_KEY_PAPER_INFO = "paperInfo";
+    public static final String MODEL_KEY_ANSWER_CARD_INFO = "answerCardInfo";
+    public static final String MODEL_KEY_USER_ID = "userId";
+
     /**
      * Mark & Edit Paper
      * @param paper Paper Info
-     * @param model Model
+     * @parame model Model
      * @return
      */
     @RequestMapping(value = "/preedit")
     public String preEdit(@ModelAttribute("paper") PaperInfoVO paper, Model model, HttpSession session){
         if (StringUtils.isNotBlank(paper.getPaperId())){
             PaperInfoBO paperInfo = paperInfoService.get(Long.valueOf(paper.getPaperId()));
+            String userId = paper.getUserId();
             BeanUtils.convert(paperInfo, paper);
+            paper.setUserId(userId);
+            BaseSearchConditionBO stageGradeSubjects = dictionaryInfoService.schoolConditionDictionary(baseInfoService.getUserSchoolInfo(paper.getUserId()).getId());
+            paper = addStageToPaper(paper,  stageGradeSubjects);
         }else{
             this.initPaperBaseInfo(paper);
             pprBaseInfoService.getTeacherBaseInfo(session, paper.getUserId());
         }
+        ExamStypeInfoPO examStypeinfoPO =null;
+        if (StringUtils.isNotBlank(paper.getPaperId())){
+            examStypeinfoPO = examStypeInfoService.querybyid(paper.getPaperId());
+        }else {
+            examStypeinfoPO = new ExamStypeInfoPO();
+        }
+        model.addAttribute("examStypeinfoPO", examStypeinfoPO);
         model.addAttribute("questionTypes", dictionaryInfoService.contentQuestionType());
         model.addAttribute(Constants.MODEL_KEY_CONTENT_MANAGER_URL, packageConfigReader.getContentManagerUrl());
         return "ppr/paper/edit";
     }
 
+
+
     @RequestMapping(value = "/add")
     @ResponseBody
     public OperationResult add(@RequestBody PaperInfoVO paper){
+        paper.setMaterialVersion(null);
+        PaperInfoBO paperInfoBO = paperInfoService.add(BeanUtils.convert(paper, PaperInfoBO.class));
+        return new OperationResult(paperInfoBO.getPaperId().toString());
+    }
+
+    @RequestMapping(value = "/edit")
+    @ResponseBody
+    public OperationResult edit(@RequestBody PaperInfoVO paper){
         paper.setMaterialVersion(null);
         PaperInfoBO paperInfoBO = paperInfoService.add(BeanUtils.convert(paper, PaperInfoBO.class));
         return new OperationResult(paperInfoBO.getPaperId().toString());
@@ -106,9 +137,34 @@ public class PaperInfoController {
      */
     @RequestMapping(value = "/baseinfo/preedit")
     public String baseInfo(@ModelAttribute(name = "paper") PaperInfoVO paper, Model model){
-        model.addAttribute("stageGradeSubjects", dictionaryInfoService.schoolConditionDictionary(baseInfoService.getUserSchoolInfo(paper.getUserId()).getId()));
+        BaseSearchConditionBO stageGradeSubjects = dictionaryInfoService.schoolConditionDictionary(baseInfoService.getUserSchoolInfo(paper.getUserId()).getId());
+        paper = addStageToPaper(paper,  stageGradeSubjects);
+        model.addAttribute("stageGradeSubjects", stageGradeSubjects);
         return "ppr/paper/editBaseInfo";
     }
+
+
+
+    private PaperInfoVO addStageToPaper(PaperInfoVO paper,BaseSearchConditionBO stageGradeSubjects){
+        if (paper!=null&&StringUtils.isBlank(paper.getStageCode())){
+            if (paper.getGradeCode()!=null){
+                List<StageInfoBO> stages = stageGradeSubjects.getStages();
+                List<GradeInfoBO> grades = stageGradeSubjects.getGrades();
+                for (GradeInfoBO gradeInfoBO :grades){
+                    if (gradeInfoBO.getGradeCode().equals(paper.getGradeCode())){
+                        paper.setStageCode(gradeInfoBO.getStageCode());
+                        for (StageInfoBO stageInfoBO :stages){
+                            if (stageInfoBO.getStageCode().equals(gradeInfoBO.getStageCode())){
+                                paper.setStageName(stageInfoBO.getStageName());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return paper;
+    }
+
 
     /**
      * Mark Paper : Choose Question about ZK
@@ -129,10 +185,11 @@ public class PaperInfoController {
     public String chooseQuestionWithChapter(@ModelAttribute(name = "condition") ChooseQuestionVO condition, Model model){
         if (condition == null)
             condition = new ChooseQuestionVO();
-        model.addAttribute("stageGradeSubjects", dictionaryInfoService.schoolConditionDictionary(baseInfoService.getUserSchoolInfo(condition.getUserId()).getId()));
+        model.addAttribute("stageGradeSubjects", dictionaryInfoService.schoolConditionDictionary(baseInfoService.getUserSchoolInfoNullOfDefault(condition.getUserId()).getId()));
         model.addAttribute("difficultys", dictionaryInfoService.contentDifficulty());
         model.addAttribute("questionTypes", dictionaryInfoService.contentQuestionType());
         model.addAttribute("questionMarkets",condition.getParams());
+        model.addAttribute("_cloudResourceEnable",true);
         return "ppr/paper/chooseQuestion/withChapter";
     }
 
@@ -290,13 +347,146 @@ public class PaperInfoController {
         response.setHeader(Constants.HEAD_X_FRAME_OPTIONS, Constants.HEAD_ALLOWALL);
         response.setHeader("Access-Control-Allow-Origin", "*");
         PaperInfoBO paperInfoBO = paperInfoService.get(id);
+        ExamStypeInfoPO examStypeinfoPO = examStypeInfoService.querybyid(String.valueOf(id));
+        if (examStypeinfoPO != null){
+            model.addAttribute("examStypeinfoPO", examStypeinfoPO);
+        }else {
+            examStypeinfoPO = new ExamStypeInfoPO();
+            model.addAttribute("examStypeinfoPO", examStypeinfoPO);
+        }
         if (paperInfoBO != null) {
+            PaperInfoVO paperInfo = BeanUtils.convert(paperInfoBO, PaperInfoVO.class);
             model.addAttribute("onlineFileUrl", packageConfigReader.getOnlineFileUrl());
-            model.addAttribute("paperInfo", BeanUtils.convert(paperInfoBO, PaperInfoVO.class));
+            model.addAttribute("paperInfo", paperInfo);
             model.addAttribute("printPdf", printPdf);
             return "ppr/paper/preview";
         }else{
             return "ppr/paper/resourceNotExist";
         }
     }
+
+
+    /**
+     * Test Paper Preview Page
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/previewPaper")
+    public String previewpaper(@RequestParam String paperStr ,Model model, HttpServletResponse response,WebRequest request){
+        //String paperStr = request.getParameter("paper").trim();
+        response.setHeader(Constants.HEAD_X_FRAME_OPTIONS, Constants.HEAD_ALLOWALL);
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        if (StringUtils.isNotBlank(paperStr)) {
+            JSONObject json = JSONObject.parseObject(paperStr);
+            PaperInfoVO paper = JSON.toJavaObject(json,PaperInfoVO.class);
+            JSONObject examStypeinfoPOjsonObj = JSONObject.parseObject(paper.getExamStypeinfoPO());
+            ExamStypeInfoPO examStypeinfoPO  = JSON.toJavaObject(examStypeinfoPOjsonObj,ExamStypeInfoPO.class);
+            model.addAttribute("onlineFileUrl", packageConfigReader.getOnlineFileUrl());
+            model.addAttribute("paperInfo",  paper);
+            model.addAttribute("examStypeinfoPO", examStypeinfoPO);
+            return "ppr/paper/previewPaper";
+        }else{
+            return "ppr/paper/resourceNotExist";
+        }
+
+    }
+
+
+
+    //@ResponseBody
+    @RequestMapping(value = "/paperTopEdit")
+    public String paperTopEdit(Model model, HttpServletResponse response,WebRequest request){
+        String examStypeinfoPOStr = request.getParameter("examStypeinfoPO").trim();
+        if (StringUtils.isNotBlank(examStypeinfoPOStr)){
+            JSONObject json = JSONObject.parseObject(examStypeinfoPOStr);
+            ExamStypeInfoPO examStypeInfoPO = JSON.toJavaObject(json,ExamStypeInfoPO.class);
+            response.setHeader(Constants.HEAD_X_FRAME_OPTIONS, Constants.HEAD_ALLOWALL);
+            response.setHeader("Access-Control-Allow-Origin", "*");
+            model.addAttribute("examStypeinfoPO", examStypeInfoPO);
+            return "ppr/paper/paperTopEdit";
+        }else {
+            return "ppr/paper/resourceNotExist";
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/word/preview/{id}")
+    public void preview(@PathVariable("id") String id, Model model, HttpServletResponse response) throws IOException {
+//        PaperInfoBO paperInfoBO = paperInfoService.getV2(Long.valueOf(id));
+//        model.addAttribute("paperInfo", paperInfoBO);
+        String staticHtmlPath = paperInfoService.createStaticHtml(Long.valueOf(id));
+        if (StringUtils.isBlank(staticHtmlPath)) {
+            String str = "试卷不存在!";
+            response.setContentType("text/html;charset=utf-8");
+            PrintWriter out = response.getWriter();
+            out.write(str);
+            out.close();
+        }else {
+            InputStream inputStream = FileUtil.getInputStream(staticHtmlPath);
+            byte[] buffer = new byte[inputStream.available()];
+            inputStream.read(buffer);
+            inputStream.close();
+            response.reset();
+            OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
+            toClient.write(buffer);
+            toClient.flush();
+            toClient.close();
+        }
+    }
+
+
+ /*   @ResponseBody
+    @RequestMapping(value = "/exportWord")
+    public void exportWord( @RequestBody  String id, Model model, WebRequest request,HttpServletResponse response) throws IOException {
+        String staticHtmlPath = paperInfoService.createStaticHtml(Long.valueOf(id));
+        if (StringUtils.isBlank(staticHtmlPath)) {
+            String str = "试卷不存在!";
+            response.setContentType("text/html;charset=utf-8");
+            PrintWriter out = response.getWriter();
+            out.write(str);
+            out.close();
+        }else {
+            InputStream inputStream = FileUtil.getInputStream(staticHtmlPath);
+            byte[] buffer = new byte[inputStream.available()];
+            inputStream.read(buffer);
+            inputStream.close();
+            response.reset();
+            OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
+            toClient.write(buffer);
+            toClient.flush();
+            toClient.close();
+            try {
+                boolean b = ExportWordUtil.exportWord(staticHtmlPath);
+                System.out.println(b);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }*/
+
+    @RequestMapping(value = "/answercard/template/preedit")
+    public String answercardTemplatePreedit(String paperId, String userId, boolean isPdf, Model model){
+        if (isPdf) {
+            model.addAttribute(MODEL_KEY_PAPER_INFO, BeanUtils.convert(paperInfoService.get(Long.parseLong(paperId)), PaperInfoVO.class));
+            model.addAttribute(MODEL_KEY_ANSWER_CARD_INFO, BeanUtils.convert(answerCardService.getAnswerCardInfo(Long.parseLong(paperId), userId), AddAnswerCardInfoVO.class));
+            model.addAttribute("isPdf", true);
+        }
+        return "ppr/paper/answerCard/templateEdit";
+    }
+
+    @RequestMapping(value = "/answercard/preedit", method = RequestMethod.GET)
+    public String answercardEdit(String paperId, String userId,Model model,WebRequest request) {
+        model.addAttribute(MODEL_KEY_PAPER_INFO, BeanUtils.convert(paperInfoService.get(Long.parseLong(paperId)), PaperInfoVO.class));
+        model.addAttribute(MODEL_KEY_ANSWER_CARD_INFO, BeanUtils.convert(answerCardService.getAnswerCardInfo(Long.parseLong(paperId), userId), AddAnswerCardInfoVO.class));
+        model.addAttribute(MODEL_KEY_USER_ID, userId);
+        return "ppr/paper/answerCard/edit";
+    }
+
+    @RequestMapping(value = "/answercard/edit", method = RequestMethod.POST)
+    @ResponseBody
+    public OperationResult edit(@RequestBody AddAnswerCardInfoVO param) {
+        AnswerCardInfoBO answerCardInfoBO = answerCardService.addAnswerCardInfo(BeanUtils.convert(param, AnswerCardInfoBO.class));
+        return new OperationResult(BeanUtils.convert(answerCardInfoBO, AddAnswerCardInfoVO.class));
+    }
+
 }

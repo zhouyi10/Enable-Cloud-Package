@@ -1,5 +1,6 @@
 package com.enableets.edu.pakage.microservice.ppr.vo;
 
+import com.enableets.edu.module.service.core.BaseVO;
 import com.enableets.edu.module.service.core.MicroServiceException;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
@@ -14,7 +15,7 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 @ApiModel(value = "CardTimeAxisVO", description = "Timeline Info About Answer Card")
-public class CardTimeAxisVO extends BaseVO{
+public class CardTimeAxisVO extends BaseVO {
 
     /**
      * Answer trigger time
@@ -84,13 +85,13 @@ public class CardTimeAxisVO extends BaseVO{
 
     @Override
     public void validate() throws MicroServiceException {
-        validate(triggerTime, "triggerTime");
-        validate(nodeId, "nodeId");
-        validate(questionId, "questionId");
-        validate(parentNodeId, "parentNodeId");
-        validate(parentId, "parentId");
-        validate(sequencing, "sequencing");
-        validate(pageNo, "pageNo");
-        validate(typeCode, "typeCode");
+        notNull(triggerTime, "triggerTime");
+        notBlank(nodeId, "nodeId");
+        notBlank(questionId, "questionId");
+        notBlank(parentNodeId, "parentNodeId");
+        notBlank(parentId, "parentId");
+        notNull(sequencing, "sequencing");
+        notNull(pageNo, "pageNo");
+        notBlank(typeCode, "typeCode");
     }
 }

@@ -1,5 +1,6 @@
 package com.enableets.edu.pakage.microservice.ppr.vo;
 
+import com.enableets.edu.module.service.core.BaseVO;
 import com.enableets.edu.module.service.core.MicroServiceException;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -69,13 +70,13 @@ public class EditAnswerCardInfoVO extends BaseVO {
 
     @Override
     public void validate() throws MicroServiceException {
-        validate(answerCardId, "answerCardId");
-        validate(examId, "examId");
-        validate(columnType, "columnType");
-        validate(candidateNumberEdition, "candidateNumberEdition");
-        validate(judgeStyle, "judgeStyle");
-        validate(sealingLineStatus, "sealingLineStatus");
-        validate(questionContentStatus, "questionContentStatus");
-        validate(pageCount, "pageCount");
+        notBlank(answerCardId, "answerCardId");
+        notBlank(examId, "examId");
+        notNull(columnType, "columnType");
+        notNull(candidateNumberEdition, "candidateNumberEdition");
+        notBlank(judgeStyle, "judgeStyle");
+        notBlank(sealingLineStatus, "sealingLineStatus");
+        notBlank(questionContentStatus, "questionContentStatus");
+        notNull(pageCount, "pageCount");
     }
 }

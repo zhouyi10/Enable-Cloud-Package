@@ -1,0 +1,118 @@
+body,
+ul,
+li,
+a {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+}
+
+body {
+    background-color: #EFEFEF;
+}
+
+.Essay_table {
+    /*margin-bottom: 3px;*/
+    border-spacing: 0;
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+
+.Essay_table tr {
+    height: 31px;
+    /* margin-bottom: 3px; */
+}
+
+.Essay_table tr td {
+    width: 31px;
+    border: 2px solid #000000;
+}
+
+.chinese-article-content{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /*margin-bottom: 10px;*/
+    /*margin-top:10px;*/
+}
+.chinese-article-words{
+    display: flex;
+}
+
+.title-number{
+    display: flex;
+}
+
+.chinese-article-words span{
+    margin-right: 10px;
+    width: 76px;
+    height: 31px;
+    text-align: center;
+    line-height: 31px;
+    cursor: pointer;
+}
+
+.chinese-article-words span:not(:first-child){
+    border: 1px solid #CBCBCB;
+}
+
+.chinese-article-words-active{
+    background-color: #4598EC;
+    color: #ffffff;
+}
+
+
+.article-words-input{
+    width: 86px;
+    padding-left: 12px;
+    margin-right: 10px;
+}
+
+.article-sign-words{
+    display: none;
+    /*font-weight: bold;*/
+   /* font-size: 8px;
+    transform: scale(0.7);
+    position: absolute;*/
+}
+
+
+.judge-all-content{
+    /*border: 1px solid red;*/
+    display: flex;
+    width: 150px;
+    margin: 6px;
+    font-size: 14px;
+    /*margin:10px;*/
+}
+.judge-all-content div{
+    height: 20px;
+}
+
+.judge-ques-no{
+    width: 34px;
+}
+
+.judge-content :nth-child(2){
+    font-size: 12px;
+}
+.judge-content{
+    cursor: pointer;
+    width: 50px;
+}
+.judge-answer-content-div{
+    cursor: pointer;
+    width: 50px;
+    display: none;
+}
+
+.judge-answer-content{
+    height: 14px !important;
+    background-color: black;
+    margin-top: 3px;
+    margin-left: 2px;
+    width: 27px;
+}
+.stem-div p{
+    margin: 0 !important;
+}

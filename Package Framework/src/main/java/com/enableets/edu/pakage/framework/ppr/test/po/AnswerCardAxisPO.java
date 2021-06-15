@@ -71,4 +71,20 @@ public class AnswerCardAxisPO {
 
   @Column(name = "update_time")
   private Date updateTime;
+
+  public Double getxAxis() {
+    return xAxis;
+  }
+
+  public void setxAxis(Double xAxis) {
+    this.xAxis = xAxis;
+  }
+
+  public Double getyAxis() {
+    return yAxis;
+  }
+
+  public void setyAxis(Double yAxis) {
+    this.yAxis = yAxis;
+  }
 }

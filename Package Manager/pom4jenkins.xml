@@ -58,7 +58,7 @@
         <dependency>
             <groupId>com.enableets.edu.sdk</groupId>
             <artifactId>sdk-package</artifactId>
-            <version>0.0.2</version>
+            <version>1.0.1.RELEASE</version>
         </dependency>
 
         <dependency>
@@ -94,9 +94,21 @@
         </dependency>
 
         <dependency>
+            <groupId>com.enableets.edu.package</groupId>
+            <artifactId>enable-package-ppr</artifactId>
+            <version>1.0.0.release</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.enableets.edu.sdk.catalog</groupId>
             <artifactId>sdk-catalog-v2</artifactId>
             <version>1.0.0.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.enableets.edu.package</groupId>
+            <artifactId>enable-package-etm</artifactId>
+            <version>1.0.0.release</version>
         </dependency>
 
         <dependency>
@@ -104,7 +116,16 @@
             <artifactId>sdk-teaching-assistant</artifactId>
             <version>1.0.0.RELEASE</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.enableets.edu.sdk</groupId>
+            <artifactId>sdk-assessment</artifactId>
+            <version>1.0.0.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>com.enableets.edu.sdk</groupId>
+            <artifactId>sdk-group</artifactId>
+            <version>1.0.0.RELEASE</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -115,4 +136,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>

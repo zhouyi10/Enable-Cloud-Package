@@ -39,7 +39,7 @@ public class SavePaperAdapterService {
     @Autowired
     private ExamQuestionChildDAO examQuestionChildDAO;
 
-    @Transactional
+    @Transactional(value = "questionStorageTransactionManager")
     public void save(SaveExamBO examBO){
         if (examBO == null) return;
         ExamPO exam = examBO.getExam();

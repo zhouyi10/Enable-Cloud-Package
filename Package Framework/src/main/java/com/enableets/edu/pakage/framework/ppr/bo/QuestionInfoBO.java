@@ -80,8 +80,6 @@ public class QuestionInfoBO {
 
   private String schoolName;
 
-  private String schoolYear;
-
   private String termCode;
 
   private String termName;

@@ -23,6 +23,11 @@ public class DefaultPPRTestInfoService implements IPPRTestInfoService {
     }
 
     @Override
+    public QueryTestInfoResultDTO get(String testId) {
+        return this.get(testId, null, null, null);
+    }
+
+    @Override
     public QueryTestInfoResultDTO get(String testId, String stepId, String fileId, String examId) {
         return pprTestInfoServiceFeignClient.get(testId, stepId, fileId, examId).getData();
     }

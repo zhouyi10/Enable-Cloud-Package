@@ -1,5 +1,6 @@
 package com.enableets.edu.pakage.microservice.ppr.vo;
 
+import com.enableets.edu.module.service.core.BaseVO;
 import com.enableets.edu.module.service.core.MicroServiceException;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -35,8 +36,8 @@ public class QuestionAssignmentVO extends BaseVO {
 
     @Override
     public void validate() throws MicroServiceException {
-        this.validate(this.getUserId(), "userId");
-        this.validate(this.getTestId(), "testId");
-        this.validate(this.getQuestionId(), "questionId");
+        this.notBlank(this.getUserId(), "userId");
+        this.notBlank(this.getTestId(), "testId");
+        this.notBlank(this.getQuestionId(), "questionId");
     }
 }

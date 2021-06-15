@@ -373,7 +373,7 @@
 						"termCode":$("#termCode").val(),
 						"termName":CommUtils.isEmpty($("#termCode").val()) ? '' : $("#termCode option:selected").text(),
 						"coverId": $(".imgbox").attr("data-fileid"),
-						"coverUrl" : CommUtils.isEmpty($(".imgbox").attr("data-fileid")) ? '' : $("img").attr("src"),
+						"coverUrl" : $("img").attr("src"),
 						"coverImgName" : CommUtils.isEmpty(cname)? this.coverImgName : cname
 					};
 				},

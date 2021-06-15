@@ -70,4 +70,22 @@ public class AnswerCardAxisBO {
 
     /**Update Time*/
     private Date updateTime;
+
+    private String answer;
+
+    public Double getxAxis() {
+        return xAxis;
+    }
+
+    public void setxAxis(Double xAxis) {
+        this.xAxis = xAxis;
+    }
+
+    public Double getyAxis() {
+        return yAxis;
+    }
+
+    public void setyAxis(Double yAxis) {
+        this.yAxis = yAxis;
+    }
 }

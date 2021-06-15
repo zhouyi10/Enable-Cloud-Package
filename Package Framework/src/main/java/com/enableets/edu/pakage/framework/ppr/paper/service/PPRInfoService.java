@@ -1,5 +1,8 @@
 package com.enableets.edu.pakage.framework.ppr.paper.service;
 
+import com.enableets.edu.pakage.framework.ppr.bo.*;
+import com.enableets.edu.pakage.framework.ppr.test.dao.CardTimeAxisDAO;
+import com.enableets.edu.pakage.framework.ppr.test.po.CardTimeAxisPO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,16 +24,6 @@ import com.enableets.edu.pakage.framework.bo.IdNameMapBO;
 import com.enableets.edu.pakage.framework.core.Constants;
 import com.enableets.edu.pakage.framework.ppr.test.po.QuestionAxisInfoPO;
 import com.enableets.edu.pakage.framework.ppr.test.service.AnswerCardInfoService;
-import com.enableets.edu.pakage.framework.ppr.bo.AnswerCardInfoBO;
-import com.enableets.edu.pakage.framework.ppr.bo.ExamInfoBO;
-import com.enableets.edu.pakage.framework.ppr.bo.FileInfoBO;
-import com.enableets.edu.pakage.framework.ppr.bo.PPRInfoBO;
-import com.enableets.edu.pakage.framework.ppr.bo.PPRNodeInfoBO;
-import com.enableets.edu.pakage.framework.ppr.bo.PPRQuestionAxisBO;
-import com.enableets.edu.pakage.framework.ppr.bo.PPRQuestionBO;
-import com.enableets.edu.pakage.framework.ppr.bo.PaperQuestionOptionBO;
-import com.enableets.edu.pakage.framework.ppr.bo.QuestionInfoBO;
-import com.enableets.edu.pakage.framework.ppr.bo.QuestionKnowledgeInfoBO;
 import com.enableets.edu.pakage.framework.ppr.core.PPRConstants;
 import com.enableets.edu.pakage.framework.ppr.paper.dao.ExamInfoDAO;
 import com.enableets.edu.pakage.framework.ppr.paper.dao.ExamKindInfoDAO;
@@ -110,13 +103,16 @@ public class PPRInfoService {
     @Autowired
     private ITokenGenerator tokenGenerator;
 
+    @Autowired
+    private CardTimeAxisDAO cardTimeAxisDAO;
+
 
     /**
      * Add New PPR
      * @param ppr
      * @return
      */
-    @Transactional
+    @Transactional(value = "paperStorageTransactionManager")
     public PPRInfoBO add(PPRInfoBO ppr){
         if (ppr.getAnswerCard() == null) {
             throw new MicroServiceException("70-", "Answer Card Info Is Null!");
@@ -196,7 +192,7 @@ public class PPRInfoService {
         List<ExamQuestionInfoPO> questions = new ArrayList<>();
         exam.setExamId(ppr.getPaperId().toString());
         exam.setExamName(ppr.getName());
-        exam.setExamType("4"); //Default "The PPR(Picture) Exam Type"
+        exam.setExamType(ppr.getPaperType()); //Default "The PPR(Picture) Exam Type"
         if (ppr.getMaterialVersion() != null)
             exam.setMaterialVersionId(ppr.getMaterialVersion().getId());
         exam.setScore(ppr.getTotalPoints());
@@ -486,7 +482,7 @@ public class PPRInfoService {
 
     public PPRInfoBO get(String id) {
         if (StringUtils.isBlank(id)) return null;
-        String redisKey = String.format("com:enableets:edu:package:ppr:%s", id);
+        String redisKey = new StringBuilder(PPRConstants.PACKAGE_PPR_CACHE_KEY_PREFIX).append(id).toString();
         String paperStr = stringRedisTemplate.opsForValue().get(redisKey);
         if (StringUtils.isNotBlank(paperStr)){
             return JsonUtils.convert(paperStr, PPRInfoBO.class);
@@ -530,7 +526,7 @@ public class PPRInfoService {
             this.remove(pprInfoBO.getPaperId().toString());
             answerCardInfoService.remove(pprInfoBO.getAnswerCard().getAnswerCardId(), pprInfoBO.getPaperId(), pprInfoBO.getUser().getId());
         }).start();
-        stringRedisTemplate.delete(String.format("com:enableets:edu:package:ppr:%s", pprInfoBO.getPaperId()));
+        stringRedisTemplate.delete(new StringBuilder(PPRConstants.PACKAGE_PPR_CACHE_KEY_PREFIX).append(pprInfoBO.getPaperId()).toString());
         return this.add(pprInfoBO);
     }
 

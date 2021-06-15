@@ -13,7 +13,9 @@ import java.util.List;
  **/
 public interface TestInfoDAO extends BaseDao<TestInfoPO> {
 
-    public TestInfoPO get(@Param("testId") String testId, @Param("activityId") String activityId, @Param("fileId") String fileId, @Param("examId") String examId);
+    public TestInfoPO get(@Param("testId") String testId, @Param("stepId") String stepId, @Param("fileId") String fileId, @Param("examId") String examId);
 
-    public List<TestInfoPO> getByActivityId(@Param("activityId") String activityId);
+    public List<TestInfoPO> getByStepId(@Param("stepId") String stepId);
+
+    public void setTestProcessInstanceId(String testId, String processInstanceId);
 }

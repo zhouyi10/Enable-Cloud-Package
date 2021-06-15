@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <meta content="telephone=yes" name="format-detection" />
+    <meta content="email=yes" name="format-detection" />
+    <title>ETS-School</title>
+    <style type="text/css">
+
+    </style>
+</head>
+<body>
+        <div class="row">
+            <div class="col-lg-6"><button th:text="#{UI_70_01_01_004}" class="pre_question">上一题</button></div>
+            <div class="col-lg-6"><button th:text="#{UI_70_01_01_006}" class="next_question">下一题</button></div>
+        </div>
+        <div class="row" data-th-inline="text">
+            <div class="col-lg-6 txt"><span class="green"><i class="fa fa-circle" aria-hidden="true"></i>[[#{UI_70_03_01_004}]]</span></div> <!--已批完-->
+            <div class="col-lg-6 txt"><span class="red"><i class="fa fa-circle" aria-hidden="true"></i>[[#{UI_70_03_01_005}]]</span></div> <!--未批阅-->
+        </div>
+
+        <!-- 题号导航区域-->
+        <div class="page_nav" style="">
+
+        </div>
+
+        <!-- 卷别模版-->
+        <div id="kind_template" class="hidden">
+            <h3 class="kind">{name}<a class="togglePaper" href="javascript:;"><i class="fa fa-chevron-up" aria-hidden="true"></i></a></h3>
+            <div class="paper">
+
+            </div>
+        </div>
+
+</body>
+</html>

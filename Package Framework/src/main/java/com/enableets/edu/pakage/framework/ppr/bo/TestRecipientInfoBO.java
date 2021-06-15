@@ -1,12 +1,14 @@
 package com.enableets.edu.pakage.framework.ppr.bo;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * @author walle_yu@enable-ets.com
  * @since 2020/07/31
  **/
 @Data
+@Accessors(chain = true)
 public class TestRecipientInfoBO implements java.io.Serializable {
 
     private String testId;

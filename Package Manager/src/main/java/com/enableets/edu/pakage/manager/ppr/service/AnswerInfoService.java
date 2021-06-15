@@ -1,39 +1,28 @@
 package com.enableets.edu.pakage.manager.ppr.service;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Service;
-
 import com.enableets.edu.framework.core.util.BeanUtils;
 import com.enableets.edu.framework.core.util.JsonUtils;
 import com.enableets.edu.framework.core.util.SpringBeanUtils;
+import com.enableets.edu.module.service.core.MicroServiceException;
 import com.enableets.edu.pakage.card.bean.EnableCard;
 import com.enableets.edu.pakage.card.bean.EnableCardPackage;
 import com.enableets.edu.pakage.card.bean.body.FileItem;
 import com.enableets.edu.pakage.card.bean.body.action.Action;
 import com.enableets.edu.pakage.card.bean.body.action.ActionItem;
-import com.enableets.edu.pakage.card.bean.body.answer.Answer;
-import com.enableets.edu.pakage.card.bean.body.answer.AnswerItem;
-import com.enableets.edu.pakage.card.bean.body.answer.AnswerQuestion;
-import com.enableets.edu.pakage.card.bean.body.answer.Timestamp;
-import com.enableets.edu.pakage.card.bean.body.answer.Trail;
+import com.enableets.edu.pakage.card.bean.body.answer.*;
 import com.enableets.edu.pakage.card.bo.action.ActionMapper;
 import com.enableets.edu.pakage.core.bean.Item;
 import com.enableets.edu.pakage.core.bean.PackageFileInfo;
 import com.enableets.edu.pakage.core.bean.Property;
 import com.enableets.edu.pakage.core.core.Configuration;
+import com.enableets.edu.pakage.core.core.xstream.EntityToXmlUtils;
+import com.enableets.edu.pakage.framework.core.IJedisCache;
 import com.enableets.edu.pakage.framework.ppr.bo.AnswerCardBO;
 import com.enableets.edu.pakage.framework.ppr.bo.TestRecipientInfoBO;
 import com.enableets.edu.pakage.framework.ppr.core.RecipientCacheMap;
 import com.enableets.edu.pakage.manager.core.Constants;
-import com.enableets.edu.pakage.manager.ppr.bo.MarkActionInfoBO;
-import com.enableets.edu.pakage.manager.ppr.bo.PaperInfoBO;
-import com.enableets.edu.pakage.manager.ppr.bo.PaperNodeInfoBO;
-import com.enableets.edu.pakage.manager.ppr.bo.TestUserInfoBO;
-import com.enableets.edu.pakage.manager.ppr.bo.UserAnswerCanvasInfoBO;
-import com.enableets.edu.pakage.manager.ppr.bo.UserAnswerInfoBO;
+import com.enableets.edu.pakage.manager.core.MessageUtils;
+import com.enableets.edu.pakage.manager.ppr.bo.*;
 import com.enableets.edu.pakage.manager.ppr.core.PPRConstants;
 import com.enableets.edu.pakage.ppr.action.PPRPackageLifecycle;
 import com.enableets.edu.pakage.ppr.bean.PPRPackageWrapper;
@@ -44,24 +33,19 @@ import com.enableets.edu.sdk.activity.service.IStepTaskService;
 import com.enableets.edu.sdk.content.dto.ContentFileInfoDTO;
 import com.enableets.edu.sdk.content.dto.ContentInfoDTO;
 import com.enableets.edu.sdk.content.service.IContentInfoService;
-import com.enableets.edu.sdk.pakage.ppr.dto.EditCanvasInfoDTO;
-import com.enableets.edu.sdk.pakage.ppr.dto.MarkInfoDTO;
-import com.enableets.edu.sdk.pakage.ppr.dto.QueryAnswerDTO;
-import com.enableets.edu.sdk.pakage.ppr.dto.QueryPPRInfoResultDTO;
-import com.enableets.edu.sdk.pakage.ppr.dto.QueryTestInfoResultDTO;
-import com.enableets.edu.sdk.pakage.ppr.dto.QueryTestUserResultDTO;
-import com.enableets.edu.sdk.pakage.ppr.service.IPPRInfoService;
-import com.enableets.edu.sdk.pakage.ppr.service.IPPRTestInfoService;
-import com.enableets.edu.sdk.pakage.ppr.service.IPPRTestUserInfoService;
+import com.enableets.edu.sdk.pakage.ppr.dto.*;
+import com.enableets.edu.sdk.pakage.ppr.service.*;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -90,6 +74,13 @@ public class AnswerInfoService {
     @Autowired
     private IPPRInfoService pprInfoServiceSDK;
 
+    @Autowired
+    private IPPRAnswerInfoService pprAnswerInfoServiceSDK;
+
+    @Autowired
+    @Qualifier("submitAnswerJedisCache")
+    public IJedisCache<String> submitAnswerCacheSupport;
+
     public PaperInfoBO get(String paperId){
         QueryPPRInfoResultDTO pprInfoResultDTO = pprInfoServiceSDK.get(paperId);
         PaperInfoBO paperInfoBO = BeanUtils.convert(pprInfoResultDTO, PaperInfoBO.class);
@@ -116,7 +107,10 @@ public class AnswerInfoService {
         return paperInfoBO;
     }
 
-    public void submit2(AnswerCardBO answerCardBO){
+    public SubmitResultBO submit2(AnswerCardBO answerCardBO){
+        //0、valid
+        SubmitResultBO submitResultBO = this.validSubmit(answerCardBO);
+        if (submitResultBO.getSubmitStatus().equals(SubmitResultBO.ERROR)) return submitResultBO;
         //1、Get Recipient Info
         TestRecipientInfoBO recipientInfoBO = RecipientCacheMap.get(answerCardBO.getTestId(), answerCardBO.getUserId());
         //-----------------------------------------------
@@ -125,12 +119,96 @@ public class AnswerInfoService {
         //3、Get EnableCard
         Configuration configuration = SpringBeanUtils.getBean(Configuration.class);
         EnableCard enableCard = new EnableCard(enableCardPackage, configuration);
+        //--------------------------------------
         //3.1 EnableCard Clock-In Step Action
-        enableCard.getEnableCardPackage().getBody().setAction(this.getActions(answerCardBO.getStepId(), answerCardBO.getUserId(), recipientInfoBO.getUserName(), answerCardBO.getStartTime(), answerCardBO.getEndTime()));
-        enableCard.clockIn();
+        //enableCard.getEnableCardPackage().getBody().setAction(this.getActions(answerCardBO.getStepId(), answerCardBO.getUserId(), recipientInfoBO.getUserName(), answerCardBO.getStartTime(), answerCardBO.getEndTime()));
+        //enableCard.clockIn();
         //3.2 EnableCard save (Submit)
         enableCard.getEnableCardPackage().getBody().setAnswer(this.convertAnswer(answerCardBO));
-        enableCard.save();
+        //enableCard.save();
+        //------------------------------
+
+        enableCard.getEnableCardPackage().getBody().setAction(this.getSubmitActions(answerCardBO.getStepId(), answerCardBO.getFileId(), answerCardBO.getUserId(), recipientInfoBO.getUserName(), answerCardBO.getStartTime(), answerCardBO.getEndTime()));
+        EnableCardPackage answerCard = enableCard.getEnableCardPackage();
+        String answerCardXml = EntityToXmlUtils.toXml(answerCard);
+        AnswerCardSubmitInfoDTO answerCardDTO = new AnswerCardSubmitInfoDTO();
+        answerCardDTO.setEnableCardXml(answerCardXml);
+        try {
+            String businessId = pprAnswerInfoServiceSDK.submit(answerCardDTO);
+            submitResultBO.setBusinessId(businessId);
+        }catch (Exception e){
+            submitResultBO = SubmitResultBO.error("other", MessageUtils.getMessage("MSG_70_01_03_031"));
+        }
+        return submitResultBO;
+    }
+
+    private SubmitResultBO validSubmit(AnswerCardBO answerCardBO) {
+        QueryTestInfoResultDTO test = pprTestInfoServiceSDK.get(answerCardBO.getTestId());
+        if (test == null) {
+            return SubmitResultBO.error("0001", MessageUtils.getMessage("MSG_70_01_03_001")); //No test;
+        }
+        if(test.getStartTime().getTime() > Calendar.getInstance().getTime().getTime()) {
+            return SubmitResultBO.error("0002", MessageUtils.getMessage("MSG_70_01_03_027")); //Test No start;
+        }
+        if (this.getCacheMarkedStatus(answerCardBO.getTestId(), answerCardBO.getUserId()).equals("1")) {
+            return SubmitResultBO.error("0003", MessageUtils.getMessage("MSG_70_01_03_028")); //Marked, Stop submit
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat(Constants.DEFAULT_DATE_TIME_FORMAT);
+        //test has end
+        if (test.getDelaySubmit() != -1) {
+            Date answerTime = null;
+            try{
+                answerTime = sdf.parse(answerCardBO.getEndTime());
+            }catch(Exception ex){
+            }
+            if (answerTime.getTime() > test.getEndTime().getTime() + test.getDelaySubmit() * 60 * 1000) {
+                return SubmitResultBO.error("0004", MessageUtils.getMessage("MSG_70_01_03_029")); //Out of the paper submission time
+            }
+        }
+        //submit has out of submit times
+        if (test.getResubmit().intValue() != -1) {
+            int cacheSubmitCount = this.getCacheSubmitCount(test.getTestId(), answerCardBO.getUserId());
+            if (cacheSubmitCount > test.getResubmit().intValue()) { // The 0 representative can hand it in one and the representative can hand it in 2. By analogy
+               return SubmitResultBO.error("0005", MessageUtils.getMessage("MSG_70_01_03_030")); //Out of Submit Times;
+            }
+        }
+        return SubmitResultBO.success("");
+    }
+
+    private String getCacheMarkedStatus(String testId, String userId){
+        String key = new StringBuffer("MarkedList_").append(testId).toString();
+        String userStrs = submitAnswerCacheSupport.get(key);
+        if (org.apache.commons.lang.StringUtils.isNotEmpty(userStrs)) {
+            List<String> users = JsonUtils.convert2List(userStrs, String.class);
+            if (users.contains(userId)) return "1";
+        }
+        return "0";
+    }
+
+    private int getCacheSubmitCount(String testId, String userId){
+        String key = new StringBuffer("submitCount_").append(testId).append("&").append(userId).toString();
+        String s = submitAnswerCacheSupport.get(key);
+        if (org.apache.commons.lang.StringUtils.isEmpty(s)) return 0;
+        else return Integer.valueOf(s).intValue();
+    }
+
+    private Action getSubmitActions(String stepId, String fileId, String userId, String fullName, String startTime, String endTime){
+        SimpleDateFormat sdf = new SimpleDateFormat(Constants.DEFAULT_DATE_TIME_FORMAT);
+        List<ActionItem> items = new ArrayList<>();
+        List<Item> props = new ArrayList<>();
+        props.add(new Item("stepId", stepId));
+        props.add(new Item("fileId", fileId));
+        props.add(new Item("userId", userId));
+        props.add(new Item("fullName", fullName));
+        try {
+            props.add(new Item("startTimestamp", String.valueOf(sdf.parse(startTime).getTime())));
+            props.add(new Item("endTimestamp", String.valueOf(sdf.parse(endTime).getTime())));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        props.add(new Item("submitTimestamp", String.valueOf(Calendar.getInstance().getTime().getTime())));
+        items.add(new ActionItem("1", null, "submit", "submit", new Property(props)));
+        return new Action(items);
     }
 
     private Action getActions(String stepId, String userId, String fullName, String startTime, String endTime) {
@@ -216,7 +294,7 @@ public class AnswerInfoService {
 
     public EnableCardPackage getEnableCardPackage(String paperId){
         if (StringUtils.isBlank(paperId)) return null;
-        String cacheKey = new StringBuilder(PPRConstants.PPR_ENABLE_CARD_KEY_PREFIX).append(paperId).toString();
+        String cacheKey = new StringBuilder(PPRConstants.PACKAGE_PPR_CACHE_KEY_PREFIX).append("enable:card:").append(paperId).toString();
         String enableCardStr = stringRedisTemplate.opsForValue().get(cacheKey);
         EnableCardPackage enableCardPackage = null;
         if (StringUtils.isNotBlank(enableCardStr)){
@@ -295,12 +373,13 @@ public class AnswerInfoService {
     /**
      * @param markInfo
      */
-    public void mark(MarkActionInfoBO markInfo) {
+    public TestMarkResultInfoBO mark(MarkActionInfoBO markInfo) {
         MarkInfoDTO markDTO = new MarkInfoDTO();
         markDTO.setTestId(markInfo.getTestId());
         markDTO.setType(markInfo.getType());
         markDTO.setAnswers(BeanUtils.convert(markInfo.getAnswers(), MarkInfoDTO.MarkUserAnswerInfoDTO.class));
-        pprTestUserInfoServiceSDK.mark(markDTO);
+        TestMarkResultInfoDTO markResult = pprTestUserInfoServiceSDK.mark(markDTO);
+        return BeanUtils.convert(markResult, TestMarkResultInfoBO.class);
     }
 
     /**

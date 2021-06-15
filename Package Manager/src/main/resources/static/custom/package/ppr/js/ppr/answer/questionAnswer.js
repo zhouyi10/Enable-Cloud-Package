@@ -11,6 +11,7 @@
 			paperInfo : null,
 			originQuestionOrder : [],
 			curQuestionId : "",
+			originWidth: 796,
  			init : function(){
 				this.questionReOrder();
 				this.initImage();
@@ -44,7 +45,33 @@
                     var file = _this.paperInfo.files[0];
                     var imgHtml = '<img alt="" src="' + file.url + '" />';
                     $('.imgList').append(imgHtml);
-              }
+			    }
+			    let width = $(".container .row .imgList").width();
+				$('.imgList img').css({"max-width": width});
+				$(window).resize(function(){
+					let width = $(".container .row .imgList").width();
+					$('.imgList img').css({"max-width": width});
+					let ratio = parseFloat($(".imgList").width() / _this.originWidth).toFixed(2);
+					$('.imgList div.ques_item_related, .imgList div.ques_item_not_related').each(function(){
+						_this.paperInfo.nodes.forEach((node) => {
+							if (node.level == 3 || node.level == 4) {
+								if (node.question != null && node.question.questionId == _this.curQuestionId) {
+									let axisHtml = "";
+									let axisHtmlTem = '<div class="ques_item_related" style="left: {0}px; top: {1}px; width: {2}px; height: {3}px;"></div>';
+									let axisHtmlTem_ = '<div class="ques_item_not_related" style="left: {0}px; top: {1}px; width: {2}px; height: {3}px;"></div>';
+									$.each(node.question.axises,function (index1, axise) {
+										axisHtml += CommUtils.formatStr(axisHtmlTem,axise.xAxis  * ratio ,axise.yAxis * ratio ,axise.width * ratio,axise.height * ratio);
+										axisHtml += CommUtils.formatStr(axisHtmlTem_,axise.xAxis * ratio,0,axise.width * ratio, axise.yAxis * ratio);
+										axisHtml += CommUtils.formatStr(axisHtmlTem_,axise.xAxis  * ratio ,axise.yAxis  * ratio + axise.height * ratio,axise.width * ratio,1127 * ratio - axise.yAxis * ratio - axise.height * ratio);
+									})
+									$('.imgList div.ques_item_related, .imgList div.ques_item_not_related').remove();
+									$('.imgList').append(axisHtml);
+									$('.imgList').animate({scrollTop:node.question.axises[0].yAxis - window.scrollY} ,600);
+								}
+							}
+						})
+					})
+				});
             },
 			//render question info list
 			renderPage : function(){
@@ -65,9 +92,9 @@
 						}
 						if (node.childAmount > 0) {
 							$.each(node.children, function(c, child) {
-								quesHtml += '<div class="question_stem _child">' + child.externalNo + '.(' + typeNme + ')' + '</div>';
-								quesHtml += '<div class="question_answer _child" id="ques_' + child.question.questionId + '" child-question-id="' + child.question.questionId + '" exam-child-question-id="' + child.nodeId + '">' + Utils.processAnswer(child) + '</div>';
-								quesHtml += '<div class="answer_canvas_area"><div><i class="fa fa-paint-brush"></i></div><div class="img_all"></div></div>';
+								axisHtml += CommUtils.formatStr(axisHtmlTem,axise.xAxis  * ratio ,axise.yAxis * ratio ,axise.width * ratio,axise.height * ratio);
+								axisHtml += CommUtils.formatStr(axisHtmlTem_,axise.xAxis * ratio,0,axise.width * ratio, axise.yAxis * ratio);
+								axisHtml += CommUtils.formatStr(axisHtmlTem_,axise.xAxis  * ratio ,axise.yAxis  * ratio + axise.height * ratio,axise.width * ratio,1127 * ratio - axise.yAxis * ratio - axise.height * ratio);
 							});
 						} else {
 							quesHtml += '<div class="question_answer">' + Utils.processAnswer(node) + '</div>';
@@ -161,10 +188,11 @@
                             if(_this.curQuestionId == node.question.questionId) {
                                 var axisHtml = '';
                                 if(node.question.axises != null && node.question.axises.length > 0) {
+                                	let ratio = parseFloat($(".imgList").width() / _this.originWidth).toFixed(2);
                                     $.each(node.question.axises,function (index1, axise) {
-                                        axisHtml += CommUtils.formatStr(axisHtmlTem,axise.xaxis,axise.yaxis,axise.width,axise.height);
-                                        axisHtml += CommUtils.formatStr(axisHtmlTem_,axise.xaxis,0,axise.width, axise.yaxis);
-                                        axisHtml += CommUtils.formatStr(axisHtmlTem_,axise.xaxis,axise.yaxis + axise.height,axise.width,1127 - axise.yaxis - axise.height);
+                                        axisHtml += CommUtils.formatStr(axisHtmlTem,axise.xAxis,axise.yAxis,axise.width * ratio,axise.height * ratio);
+                                        axisHtml += CommUtils.formatStr(axisHtmlTem_,axise.xAxis,0,axise.width * ratio, axise.yAxis * ratio);
+                                        axisHtml += CommUtils.formatStr(axisHtmlTem_,axise.xAxis,axise.yAxis + axise.height * ratio,axise.width * ratio,1127 * ratio - axise.yAxis - axise.height * ratio);
                                     })
 									$('.imgList').append(axisHtml);
 									$('.imgList').animate({scrollTop:node.question.axises[0].yaxis - window.scrollY} ,600);
@@ -187,6 +215,7 @@
 					'paperId' : _this.examId,
 					'userId' : _this.userId,
 					'stepId' : _this.stepId,
+					'fileId' : _this.fileId,
 					'startTime': PaperTestTimer.startTestTimeStr,
 					'endTime': _this.endTestTime
 				};
@@ -210,12 +239,16 @@
 								});
 							}
 						}else{
-							CommUtils.tipBoxV2(i18n['submit_success'], 3000, function(){
-								data.status = "success";
-								data.type = "answer";
-								window.opener && window.opener.postMessage(data, "*");
-								window.parent.postMessage(data, "*");
-							});
+							// CommUtils.tipBoxV2(i18n['submit_success'], 3000, function(){
+							// 	data.status = "success";
+							// 	data.type = "answer";
+							// 	window.opener && window.opener.postMessage(data, "*");
+							// 	window.parent.postMessage(data, "*");
+							// });
+							data.status = "success";
+							data.type = "answer";
+							window.opener && window.opener.postMessage(data, "*");
+							window.parent.postMessage(data, "*");
 						}
 					},
 					error: function () {

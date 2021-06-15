@@ -125,9 +125,6 @@ public class QuestionInfoPO {
   @Column(name = "school_name")
   private String schoolName;
 
-  @Column(name = "school_year")
-  private String schoolYear;
-
   @Column(name = "term_code")
   private String termCode;
 

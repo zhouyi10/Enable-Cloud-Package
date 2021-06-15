@@ -1,5 +1,6 @@
 package com.enableets.edu.pakage.manager.ppr.service;
 
+import com.enableets.edu.pakage.framework.ppr.core.PPRConstants;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -169,9 +170,10 @@ public class DictionaryInfoService {
      */
     public List<CodeNameMapBO> subjectQuestionType(String subjectCode){
         String subjectQuestionTypeCacheKey = null;
+        StringBuilder sb = new StringBuilder(PPRConstants.PACKAGE_PPR_CACHE_KEY_PREFIX).append("paper:question:type:");
         if (StringUtils.isNotBlank(subjectCode))
-            subjectQuestionTypeCacheKey = new StringBuilder("com:enableets:edu:package:ppr:paper:question:type:").append(subjectCode).toString();
-        else subjectQuestionTypeCacheKey = new StringBuilder("com:enableets:edu:package:ppr:paper:question:type:").append("_all").toString();
+            subjectQuestionTypeCacheKey = sb.append(subjectCode).toString();
+        else subjectQuestionTypeCacheKey = sb.append("_all").toString();
         String typeStr = stringRedisTemplate.opsForValue().get(subjectQuestionTypeCacheKey);
         if (StringUtils.isNotBlank(typeStr)) {
             return JsonUtils.convert2List(typeStr, CodeNameMapBO.class);
@@ -210,9 +212,10 @@ public class DictionaryInfoService {
      */
     public List<CodeNameMapBO> subjectAbility(String subjectCode){
         String subjectQuestionAbilityCacheKey = null;
+        StringBuilder sb = new StringBuilder(PPRConstants.PACKAGE_PPR_CACHE_KEY_PREFIX).append("question:ability:");
         if (StringUtils.isNotBlank(subjectCode))
-            subjectQuestionAbilityCacheKey = new StringBuilder("com:enableets:edu:package:ppr:paper:question:ability:").append(subjectCode).toString();
-        else subjectQuestionAbilityCacheKey  = new StringBuilder("com:enableets:edu:package:ppr:paper:question:ability:").append("_all").toString();
+            subjectQuestionAbilityCacheKey = sb.append(subjectCode).toString();
+        else subjectQuestionAbilityCacheKey  = sb.append("_all").toString();
         String jsonStr = stringRedisTemplate.opsForValue().get(subjectQuestionAbilityCacheKey);
         if (StringUtils.isNotBlank(jsonStr)) return JsonUtils.convert2List(jsonStr, CodeNameMapBO.class);
         else{
@@ -262,7 +265,7 @@ public class DictionaryInfoService {
      */
     public List<ContentKnowledgeInfoBO> contentKnowledge(String gradeCode, String subjectCode, String materialVersion){
         if (StringUtils.isBlank(subjectCode) || StringUtils.isBlank(materialVersion)) return null;
-        StringBuilder sb = new StringBuilder("com:enableets:edu:package:ppr:paper:knowledge:");
+        StringBuilder sb = new StringBuilder(PPRConstants.PACKAGE_PPR_CACHE_KEY_PREFIX).append("paper:knowledge:");
         if (StringUtils.isNotBlank(gradeCode)) sb.append(gradeCode);
         String knowledgeCacheKey = sb.append(gradeCode).append(subjectCode).append(materialVersion).toString();
         String knowledgeStr = stringRedisTemplate.opsForValue().get(knowledgeCacheKey);
@@ -281,7 +284,7 @@ public class DictionaryInfoService {
     }
 
     public List<CodeNameMapBO> contentMaterialVersion(String gradeCode, String subjectCode){
-        String materialVersionCacheKey = new StringBuilder("com:enableets:edu:package:ppr:paper:materialVersion:").append(StringUtils.isBlank(gradeCode) ? "all" : gradeCode).append("_").append(StringUtils.isBlank(subjectCode) ? "all" : subjectCode).toString();
+        String materialVersionCacheKey = new StringBuilder(PPRConstants.PACKAGE_PPR_CACHE_KEY_PREFIX).append("paper:materialVersion:").append(StringUtils.isBlank(gradeCode) ? "all" : gradeCode).append("_").append(StringUtils.isBlank(subjectCode) ? "all" : subjectCode).toString();
         String materialVersionStr = stringRedisTemplate.opsForValue().get(materialVersionCacheKey);
         if (StringUtils.isNotBlank(materialVersionStr)){
             return JsonUtils.convert2List(materialVersionStr, CodeNameMapBO.class);
@@ -301,7 +304,7 @@ public class DictionaryInfoService {
      * @param schoolId
      * @return
      */
-    @Cacheable(value = "com:enableets:edu:package:ppr:paper:school:condition", key = "#schoolId")
+    @Cacheable(value = PPRConstants.PACKAGE_PPR_CACHE_KEY_PREFIX + "paper:school:condition", key = "#schoolId", unless = "#result == null")
     public BaseSearchConditionBO schoolConditionDictionary(String schoolId){
         if (StringUtils.isBlank(schoolId)) return null;
         List<QueryDictionaryInfoDTO> stageInfos = dictionaryInfoV2ServiceSDK.query(schoolId, "02", null, null, null, null, null);
@@ -348,7 +351,7 @@ public class DictionaryInfoService {
      */
     private List<CodeNameMapBO> contentDictionary(String type){
         if (StringUtils.isBlank(type)) return null;
-        String dictionaryKey = new StringBuilder("com:enableets:edu:package:ppr:paper:content:dictionary:type:").append(type).toString();
+        String dictionaryKey = new StringBuilder(PPRConstants.PACKAGE_PPR_CACHE_KEY_PREFIX).append("content:dictionary:type:").append(type).toString();
         String jsonStr = stringRedisTemplate.opsForValue().get(dictionaryKey);
         if (StringUtils.isNotBlank(jsonStr)) return JsonUtils.convert2List(jsonStr, CodeNameMapBO.class);
         List<ContentDictionaryInfoDTO> dictionaries = contentDictionaryInfoServiceSDK.query(Constants.DEFAULT_SCHOOL, type, null, null, null, "0");//Query All

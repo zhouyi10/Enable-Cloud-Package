@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="${_contextPath} + @{/comm/plugins/bootstrap/bootstrap.min.css(v=${_v})}"/>
+    <link rel="stylesheet" th:href="${_contextPath} + @{/custom/package/ppr/css/paper/preview.css(v=${_v})}"/>
+    <link rel="stylesheet" th:href="${_contextPath} + @{/custom/package/ppr/css/jizhi.css(v=${_v})}"/>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/jQuery/jquery-3.0.0.min.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/jQuery/jquery.cookie.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/bootstrap/bootstrap.min.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/layer/layer.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/js/BaseUtils.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/custom/package/ppr/js/CommUtils.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/custom/package/ppr/js/Constants.js(v=${_v})}"></script>
+    <script th:inline="javascript" th:src="${_contextPath} + @{/comm/fragments/fragments.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/custom/package/ppr/js/paper/perviewPaper.js(v=${_v})}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/custom/package/ppr/js/question/questionDragDrop.js(v=${_v})}"></script>
+    <style th:inline="text">
+        .bottomline {
+            width: 50px;
+            border-top:1px #ffffff solid;
+            border-left:1px #ffffff solid;
+            border-right:1px #ffffff solid;
+        }
+    </style>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        if (window.i18n == undefined) {
+            window.i18n = {}
+        }
+
+        $(function () {
+            $.extend(i18n, {
+                'question_right': [[#{UI_70_01_01_007}]], // 对
+                'question_wrong': [[#{UI_70_01_01_008}]], // 错
+                'question_or': [[#{UI_70_01_01_016}]], // 或者
+                'viewAnswerCard' : [[#{UI_38_01_063}]],  // 答题卡预览
+                'paper_analysis_loading' : [[#{UI_70_01_02_032}]], //试卷信息解析中...
+                'load_succeed' : [[#{MSG_38_01_016}]], //加载成功!.
+                'load_fail' : [[#{MSG_38_01_017}]], //试卷信息获取失败！
+                'paper_total_points' : [[#{UI_70_01_02_092}]], //Paper Total Points
+            });
+            PerView.i18n = i18n;
+            PerView.paperInfo = [[${paperInfo}]];
+            PerView.examStypeinfoPO = [[${examStypeinfoPO}]];
+            PerView.isJZ = [[${isJZ}]];
+            PerView.viewAnswerCardUrl = [[${_contextPath} + @{'/v3/answercard/preedit'}]];
+            PerView.publishmentUrl = [[${_contextPath} + @{/publishment/}]]; // 真题同步
+            PerView.expertPDFUrl = [[${onlineFileUrl} + @{'/trans/file/transition?htmlUrl='}]];
+            PerView.printPdf = [[${printPdf}]];
+            PerView._contextPathprr = [[${_contextPath} + @{'/ppr'}]];
+            PerView.viewPaperUrl = [[${_contextPath} + @{'/ppr/preview/{0}'}]];
+            PerView.init();
+        });
+        /*]]>*/
+    </script>
+</head>
+<body class="previewBody" id="previewBody">
+<div class="previewC">
+    <div id="secrecySymbolDiv" class="secrecySymbolDiv" th:if="${examStypeinfoPO.secrecySymbol} eq 1">
+					<span style="float: left;margin-left: 20%" >
+                         <b  value="1" th:text="'绝密'+'★'+'启用前'">  </b>
+                    </span><br />
+    </div>
+    <!-- 头部 -->
+    <div class="previewHead">
+        <div style="font-size: 23px;position:relative;padding: 18px 0px;font-weight:700;text-align:center">
+        </div>
+    </div>
+    <div id="subtitleDiv" class="subtitleDiv" style="margin-top: 15px">
+        <div th:if="${examStypeinfoPO.subtitle} != null " style="text-align: center" >
+            <b  class="subtitle"  align="center" th:text="${examStypeinfoPO.subtitle}"></b><br />
+        </div>
+    </div>
+    <div id="testInfoDiv" class="testInfoDiv" style="margin-top: 10px">
+        <div th:if="${examStypeinfoPO.testInfo} != null ">
+            <span style="text-align: center;display:block;"><b id="testInfo" class="testInfo"   th:text="${examStypeinfoPO.testInfo}"></b></span><br />
+        </div>
+    </div>
+    <div id="stuInfoColumnDiv" class="stuInfoColumnDiv"  th:if="${examStypeinfoPO.stuInfoColumn} eq 1">
+					<span style="text-align: center;display:block;" >
+                         <b id="stuInfoColumn" class="stuInfoColumn"  th:text="1" hidden></b>
+						学校：<input name="textfield" type="text" class="bottomline" size="50" maxlength="50"/>
+						姓名：<input name="textfield" type="text" class="bottomline" size="50" maxlength="50"/>
+						班级：<input name="textfield" type="text" class="bottomline" size="50" maxlength="50"/>
+						考号：<input name="textfield" type="text" class="bottomline" size="50" maxlength="50"/>
+					</span><br />
+    </div>
+    <div id="recordScoreColumnDiv" class="recordScoreColumnDiv" th:if="${examStypeinfoPO.recordScoreColumn} eq 1">
+					<span style="text-align: center;display:block;height: auto">
+                        <!--<b th:text="得分栏"></b>-->
+                            <table id="rscTable1" class="rscTable" border="1" style="border-collapse:collapse;width: auto;height: auto" align="center">
+                                <tr>
+                                     <td style="width: 60px">题号</td>
+
+                                     <td style="width: 80px">总分</td>
+                                </tr>
+                                <tr>
+                                     <td >得分</td>
+
+                                     <td></td>
+                                </tr>
+                            </table>
+                    </span><br />
+    </div>
+    <div id="mattersAttentionDiv" class="mattersAttentionDiv">
+        <div  th:if="${examStypeinfoPO.mattersAttention} != null ">
+            <span  style="float: left;margin-left: 20%" ><b   class="mattersAttention"  th:text="${examStypeinfoPO.mattersAttention}"></b></span><br />
+        </div>
+    </div>
+
+    <!-- 试卷内容 -->
+    <div class="previewCtn" style="min-height: 500px;">
+        <div class="previewArea">
+        </div>
+    </div>
+
+
+</div>
+
+<!-- 卷别信息 -->
+<div id="volumeTTemplate" style="display: none">
+    <div class="volumeT"><span style="width:510px;">{paperId}({paperPoint})</span></div>
+</div>
+
+<!-- 大题信息 -->
+<div id="volumeNTemplate" style="display: none">
+    <div class="volumeN"><span>{questionTitle}({questionPoint})</span></div>
+</div>
+
+
+<!-- 选择题、多选题模板 -->
+<div id="ops_template" style="display: none">
+    <div>
+        <div class="answerCtn">
+            <table border="0" cellpadding="0" cellspacing="0" class="questionFont">
+                <!-- 提干 -->
+                <tr>
+                    <td width="80" valign="top" class="breakWord">{questionNo}({questionPoint})</td><!-- 题号 -->
+                    <td>
+                        <div class="questionContent">
+                            <div style="line-break: auto;">
+                                {questionContent}
+                            </div>
+                        </div>
+                        <div class="opt_list" style="display: none">
+                            <table width="100%">
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- 答案 -->
+                <tr>
+                    <td></td>
+                    <td class="answerGroup">
+                        <!-- 题目类型:选择题、阅读题等 -->
+                        <div class="answerP">
+                            <div class="yellowbg">
+                                <div class="answerYes questionFont">
+                                    {answer}
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="explain">
+                            <li>
+                                <div class="eTheme questionFont">
+                                    <!-- 解析 -->
+                                    {answerAnalyse}
+                                </div>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- 非选择题模板 -->
+<div id="general_template" style="display: none">
+    <div>
+        <div class="answerCtn">
+            <table border="0" cellpadding="0" cellspacing="0" class="questionFont">
+                <!-- 提干 -->
+                <tr>
+                    <td width="80" valign="top" class="breakWord">{questionNo}({questionPoint})</td><!-- 题号 -->
+                    <td>
+                        <div class="questionContent">
+                            <div style="line-break: auto;">
+                                {questionContent}
+                            </div>
+                        </div>
+                        <div class="opt_list" style="display: none">
+                            <table width="100%">
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- 答案 -->
+                <td></td>
+                <td class="answerGroup" >
+                    <ul class="explain">
+                        <!-- 答案 -->
+                        <li>
+                <span class="eTheme questionFont" th:inline="text">
+                    <div>
+                        <div class="answerHeader" style="color: red; font-weight: bold;">[[#{UI_70_01_02_078}]]  &nbsp;</div>
+                        <div class="answerTail">{answer}</div>
+                    </div>
+                </span>
+                        </li>
+                        <!-- 解析 -->
+                        <li>
+                <span class="eTheme questionFont" th:inline="text">
+                    <div>
+                        <div class="answerHeader" style="color: red; font-weight: bold;" th:inline="text">[[#{UI_70_01_02_079}]]  &nbsp;</div>
+                        <div class="answerTail">{answerAnalyse}</div>
+                    </div>
+                </span>
+                        </li>
+                    </ul>
+                </td>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="btndiv" class="divcss5-right">
+
+    <input type="button" th:title="#{UI_70_01_02_093}" id="hide_btn" class="btnSwitch"></input>
+    <input type="button" th:title="#{UI_70_01_02_094}" value="" onclick="window.scroll(0,0);" class="btnTop Noprint"></input>
+    <input type="button" th:title="#{UI_70_01_02_095}" value="" onclick="$('.toTop').hide();window.print(); $('.toTop').show();"
+           class="btnPrint mt10 Noprint"></input>
+    <input type="button" id="exportPdf" value="" th:title="#{UI_70_01_02_096}"  class="export mt10 Noprint"/>
+    <input type="button" id="viewAnswerCard" value="" th:title="#{UI_70_01_02_097}" class="viewAnswerCard"/>
+</div>
+</body>
+<div id="canvas">
+
+</div>
+
+</html>

@@ -20,6 +20,7 @@ import com.enableets.edu.pakage.framework.ppr.bo.AnswerCardInfoBO;
 import com.enableets.edu.pakage.framework.ppr.bo.CardTimeAxisBO;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import tk.mybatis.mapper.entity.Example;
@@ -31,6 +32,15 @@ import tk.mybatis.mapper.entity.Example;
  **/
 @Service
 public class AnswerCardInfoService {
+
+    /** constant field */
+    public static final String MAP_KEY_ANSWER_CARD_ID = "answerCardId";
+    public static final String MAP_KEY_EXAM_ID = "examId";
+    public static final String MAP_KEY_CREATOR = "creator";
+    public static final String MAP_KEY_NODE_ID = "nodeId";
+    public static final String MAP_KEY_SEQUENCING = "sequencing";
+    public static final String MAP_KEY_CREATE_TIME = "createTime";
+
 
     @Autowired
     private ITokenGenerator tokenGenerator;
@@ -44,7 +54,7 @@ public class AnswerCardInfoService {
     @Autowired
     private CardTimeAxisDAO cardTimeAxisDAO;
 
-    @Transactional
+    @Transactional(value = "packageTransactionManager")
     public AnswerCardInfoBO add(AnswerCardInfoBO info) {
         Assert.notNull(info, "info cannot be empty!");
         Assert.notNull(info.getExamId(), "examId cannot be empty!");
@@ -109,7 +119,7 @@ public class AnswerCardInfoService {
      * @param creator creator
      * @return true/false
      */
-    @Transactional
+    @Transactional(value = "packageTransactionManager")
     public boolean remove(Long answerCardId, Long examId, String creator) {
         Example example = new Example(AnswerCardInfoPO.class);
         Example.Criteria criteria = example.createCriteria();
@@ -153,5 +163,43 @@ public class AnswerCardInfoService {
             return answerCard;
         }
         return null;
+    }
+
+    @Transactional(value = "packageTransactionManager")
+    public List<AnswerCardInfoBO> query(Long examId, String creator){
+        Assert.notNull(examId, "examId cannot be empty!");
+        Example example = new Example(AnswerCardInfoPO.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo(MAP_KEY_EXAM_ID, examId).andEqualTo("status", 0);
+        if (StringUtils.isNotBlank(creator)) {
+            criteria.andEqualTo(MAP_KEY_CREATOR, creator);
+        }
+        example.orderBy(MAP_KEY_CREATE_TIME).desc();
+        List<AnswerCardInfoPO> pos = answerCardInfoDAO.selectByExample(example);
+        if (CollectionUtils.isEmpty(pos)) {
+            return Collections.emptyList();
+        }
+        List<AnswerCardInfoBO> result = BeanUtils.convert(pos, AnswerCardInfoBO.class);
+        for (AnswerCardInfoBO answerCardInfoBO : result) {
+            answerCardInfoBO.setAxises(queryAxises(answerCardInfoBO.getAnswerCardId()));
+        }
+        return result;
+    }
+
+    /**
+     * Query the answer sheet coordinate information according to the answer sheet ID {@code Long}
+     * @param answerCardId answer card id
+     * @return answer sheet coordinate information
+     */
+    private List<AnswerCardAxisBO> queryAxises(Long answerCardId) {
+        Example example = new Example(AnswerCardAxisPO.class);
+        example.createCriteria().andEqualTo(MAP_KEY_ANSWER_CARD_ID, answerCardId);
+        example.orderBy(MAP_KEY_NODE_ID).asc();
+        example.orderBy(MAP_KEY_SEQUENCING).asc();
+        List<AnswerCardAxisPO> pos = answerCardAxisDAO.selectByExample(example);
+        if (CollectionUtils.isEmpty(pos)) {
+            return Collections.emptyList();
+        }
+        return BeanUtils.convert(pos, AnswerCardAxisBO.class);
     }
 }

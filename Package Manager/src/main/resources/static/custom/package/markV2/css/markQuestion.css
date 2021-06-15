@@ -1,0 +1,133 @@
+/* mark menu */
+.hidden{
+    display: none;
+}
+.paper{
+    border-bottom: 1px solid #a7a7a7;
+}
+.container .content .r .right .squares .blank {
+    border-color: white;
+    border-radius: 30px;
+    cursor: pointer;
+    text-align: center;
+    width: 60px;
+    height: 60px;
+    padding-top: 10px;
+}
+button, .question{
+    cursor: pointer;
+}
+button.disabled{
+    opacity:0.5;
+    pointer-events:none;
+}
+.good_d{
+    background: url(../../img/errorQuestion/点赞2.png) 100% 100% no-repeat;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+.good_p{
+    background: url(../../img/errorQuestion/点赞1.png)100% 100% no-repeat;
+}
+
+/* mark page*/
+.title_bar{
+    min-height: 20px;
+}
+.title_bar.ques_answer_area {min-height: 40px;}
+.title_bar span{
+    float: left;
+    width: 80px;
+    height: 0;
+}
+
+.title_bar .question_answer span {
+    float: none;
+}
+.description{
+    padding-left: 80px;
+    width: 100%;
+    float: left;
+}
+
+.quetstion .tip {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border: 1px solid red;
+    font-style: normal;
+    background: red;
+    color: #fff;
+    border-radius: 3px;
+    margin-right: 10px;
+}
+.title{
+    margin-left: 29px;
+}
+.left .quetstion .title{
+    width: 95%;
+}
+.exerimg, .exerconnectionimg{
+    display: inline-block;
+}
+.right_icon, .wrong_icon {
+    width: 25px;
+    height: 25px;
+    margin-right: 6px;
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+}
+.right_icon{
+    background: url('../../img/ok_gray.png') no-repeat;
+}
+.rh{
+    background: url('../../img/ok_green.png') no-repeat;
+}
+.wrong_icon{
+    background: url('../../img/no_gray.png') no-repeat;
+}
+.wh{
+    background: url('../../img/no_red.png') no-repeat;
+}
+.mark_sort, .person_count_sort{
+    cursor: pointer;
+}
+.data{
+    max-width: 80px;
+    max-height: 40px;
+}
+.img-div {
+    width: 80px;
+    height: 42px;
+    vertical-align: middle;
+    float: left;
+    border: 1px solid #eee;
+    margin: 2px;
+    cursor: pointer;
+}
+
+.container .content .l .left .table tbody td .img-div img.data {
+    float: none;
+    margin: 0px;
+}
+
+.question_answer{
+    height: 40px;
+    min-height: 40px;
+    overflow: hidden;
+}
+.ha{
+    height: unset;
+}
+.page_nav{
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.page_nav::-webkit-scrollbar {
+    display: none;
+}
+.right .markListRateTableList::-webkit-scrollbar {
+    display: none;
+}

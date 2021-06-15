@@ -34,6 +34,13 @@
             margin-left: 5px;
             margin-right: 5px;
         }
+        .mark_save{
+            position: absolute;
+            width: 174px;
+            right: 0px;
+            top: 10px;
+            display: flex;
+        }
     </style>
     <script type="text/javascript" data-th-src="${_contextPath} + @{/comm/plugins/jQuery/jquery-3.0.0.min.js(v=${_v})}"></script>
     <script type="text/javascript" data-th-src="${_contextPath} + @{/comm/plugins/bootstrap/bootstrap.min.js(v=${_v})}"></script>
@@ -140,8 +147,10 @@
                 <li>[[#{UI_70_01_03_011}]]：[[${test.submitCount}]]/[[${test.totalCount}]]</li>   <!--交卷人数/总人数-->
             </ul>
             <div class="clear"></div>
-            <button style="margin-right: 10px;" class="temporaryBtn" id="temporaryBtn" th:text="#{UI_70_01_03_007}">批阅暂存</button>
-            <button style="display: none;" id="completeMarkBtn" data-th-text="#{UI_70_01_03_008}">批阅完成</button>
+            <div class="mark_save">
+                <button style="margin-right: 10px;" class="temporaryBtn" id="temporaryBtn" th:text="#{UI_70_01_03_007}">批阅暂存</button>
+                <button id="completeMarkBtn" data-th-text="#{UI_70_01_03_008}">批阅完成</button>
+            </div>
         </div>
         <div class="content">
             <div class="row">

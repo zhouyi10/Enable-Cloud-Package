@@ -22,12 +22,16 @@ public class AddPPRInfoVO extends BaseVO {
 
     @Override
     public void validate() throws MicroServiceException {
-
+        this.notBlank(name, "name");
+        this.notBlank(paperType, "paperType");
     }
 
     /** Paper Name */
-    @ApiModelProperty(value = "Paper Name", required = false)
+    @ApiModelProperty(value = "Paper Name", required = true)
     private String name;
+
+    @ApiModelProperty(value = "Paper Type", required = true)
+    private String paperType;
 
     /** Stage Info  */
     @ApiModelProperty(value = "Stage Info", required = false)

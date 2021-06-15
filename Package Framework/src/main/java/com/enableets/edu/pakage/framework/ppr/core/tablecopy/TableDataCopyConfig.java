@@ -49,7 +49,7 @@ public class TableDataCopyConfig {
     }
 
     @Bean("pprJdbcTemplate")
-    public JdbcTemplate paperJdbcTemplate(@Qualifier("pprDataSource") DataSource datSource){
+    public JdbcTemplate paperJdbcTemplate(@Qualifier("packageDataSource") DataSource datSource){
         return new JdbcTemplate(datSource);
     }
 }

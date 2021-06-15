@@ -52,8 +52,6 @@ public class ExamInfoBO {
 
   private String schoolName;
 
-  private String schoolYear;
-
   private String termId;
 
   private String termName;

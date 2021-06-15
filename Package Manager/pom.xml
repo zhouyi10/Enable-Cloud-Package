@@ -13,7 +13,8 @@
     <parent>
         <groupId>com.enableets.edu.framework</groupId>
         <artifactId>enableets-service-parent</artifactId>
-        <version>1.0.0.RELEASE</version>
+        <version>1.0.3.RELEASE</version>
+        <relativePath></relativePath>
     </parent>
 
     <properties>
@@ -28,7 +29,6 @@
     </properties>
 
     <dependencies>
-
         <dependency>
             <groupId>com.enableets.edu.package</groupId>
             <artifactId>package-service</artifactId>
@@ -58,7 +58,7 @@
         <dependency>
             <groupId>com.enableets.edu.sdk</groupId>
             <artifactId>sdk-package</artifactId>
-            <version>0.0.2</version>
+            <version>1.0.1.RELEASE</version>
         </dependency>
 
         <dependency>
@@ -117,6 +117,16 @@
             <version>1.0.0.RELEASE</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.enableets.edu.sdk</groupId>
+            <artifactId>sdk-assessment</artifactId>
+            <version>1.0.0.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>com.enableets.edu.sdk</groupId>
+            <artifactId>sdk-group</artifactId>
+            <version>1.0.0.RELEASE</version>
+        </dependency>
     </dependencies>
 
     <build>

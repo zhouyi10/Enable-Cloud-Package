@@ -121,8 +121,8 @@ public class PPRTestDemoTest {
         cardAxis.setQuestionId("q_01");
         cardAxis.setParentId("q_01");
         cardAxis.setSequencing(1L);
-        cardAxis.setXAxis(100d);
-        cardAxis.setYAxis(100d);
+        cardAxis.setxAxis(100d);
+        cardAxis.setyAxis(100d);
         cardAxis.setWidth(100d);
         cardAxis.setHeight(100d);
         cardAxis.setPageNo(1L);
@@ -138,8 +138,8 @@ public class PPRTestDemoTest {
         cardAxis2.setQuestionId("q_03");
         cardAxis2.setParentId("q_02");
         cardAxis2.setSequencing(2L);
-        cardAxis2.setXAxis(100d);
-        cardAxis2.setYAxis(100d);
+        cardAxis2.setxAxis(100d);
+        cardAxis2.setyAxis(100d);
         cardAxis2.setWidth(100d);
         cardAxis2.setHeight(100d);
         cardAxis2.setPageNo(1L);
@@ -155,8 +155,8 @@ public class PPRTestDemoTest {
         cardAxis3.setQuestionId("q_04");
         cardAxis3.setParentId("q_02");
         cardAxis3.setSequencing(3L);
-        cardAxis3.setXAxis(100d);
-        cardAxis3.setYAxis(100d);
+        cardAxis3.setxAxis(100d);
+        cardAxis3.setyAxis(100d);
         cardAxis3.setWidth(100d);
         cardAxis3.setHeight(100d);
         cardAxis3.setPageNo(1L);
@@ -172,8 +172,8 @@ public class PPRTestDemoTest {
         cardAxis4.setQuestionId("q_04");
         cardAxis4.setParentId("");
         cardAxis4.setSequencing(4L);
-        cardAxis4.setXAxis(100d);
-        cardAxis4.setYAxis(100d);
+        cardAxis4.setxAxis(100d);
+        cardAxis4.setyAxis(100d);
         cardAxis4.setWidth(100d);
         cardAxis4.setHeight(100d);
         cardAxis4.setPageNo(1L);

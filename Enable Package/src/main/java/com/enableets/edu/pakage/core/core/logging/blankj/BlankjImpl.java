@@ -1,5 +1,6 @@
 package com.enableets.edu.pakage.core.core.logging.blankj;
 
+
 import com.blankj.utilcode.util.LogUtils;
 import com.enableets.edu.pakage.core.core.logging.Log;
 import com.enableets.edu.pakage.core.core.logging.LogFactory;

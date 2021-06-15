@@ -87,6 +87,10 @@ public class PPRPackageLifecycle extends DefaultPackageLifecycle {
     private EnablePPRBeanDefinition pprBeanDefinition;
     private EnableCardBeanDefinition cardBeanDefinition;
 
+    public PPRPackageLifecycle(){
+
+    }
+
     public PPRPackageLifecycle(PPRPackageWrapper pprPackageWrapper){
         super(pprPackageWrapper, pprPackageWrapper.getConfiguration());
         this.pprPackageWrapper = pprPackageWrapper;
@@ -98,6 +102,7 @@ public class PPRPackageLifecycle extends DefaultPackageLifecycle {
 
     @Override
     public void parse() {
+        if (pprPackageWrapper == null) return;
         String unZipDestDir = null;
         try {
             //1. Get .PPR File Local Path
@@ -118,6 +123,14 @@ public class PPRPackageLifecycle extends DefaultPackageLifecycle {
                 new File(unZipDestDir).delete();
             }
         }
+    }
+
+    public EnableCardPackage parse(String cardXml) {
+        XPathParser xPathParser = XPathParserFactory.buildToString(cardXml);
+        EnableCardPackage enableCardPackage = new EnableCardPackage();
+        enableCardPackage.setHeader(Utils.parseHeader(xPathParser.evalNode("/package/header")));
+        enableCardPackage.setBody(new CardBody(this.parseCardLayout(xPathParser.evalNode("/package/body/layout")), this.parseCardAnswer(xPathParser.evalNode("/package/body/answer")), this.parseCardAction(xPathParser.evalNode("/package/body/action")), this.parseCardMark(xPathParser.evalNode("/package/body/mark"))));
+        return enableCardPackage;
     }
 
     private void parseCardConstruction(String unZipDestDir) {
@@ -568,9 +581,9 @@ public class PPRPackageLifecycle extends DefaultPackageLifecycle {
         List<Item> items = new ArrayList<>();
         if (cardBeanDefinition != null) {
             items.add(new Item("id", cardBeanDefinition.getAnswerCardId()));
-            items.add(new Item("ref", cardBeanDefinition.getExamId()));
+            items.add(new Item("paperId", cardBeanDefinition.getExamId()));
         } else {
-            items.add(new Item("ref", pprBeanDefinition.getPaperId()));
+            items.add(new Item("paperId", pprBeanDefinition.getPaperId()));
         }
         return new Header(Constants.VERSION, Constants.ENCODING, Constants.VERIFICATION, Constants.ENCRYPTION, Constants.COMPRESSION, new Property(items));
     }
@@ -661,7 +674,7 @@ public class PPRPackageLifecycle extends DefaultPackageLifecycle {
             question.setId(entry.getKey());
             List<Axis> as = new ArrayList<>();
             for (CardAxisBO cardAxisBO : entry.getValue()) {
-                as.add(new Axis(cardAxisBO.getQuestionId(), cardAxisBO.getTypeCode(), cardAxisBO.getTypeName(), cardAxisBO.getXAxis(), cardAxisBO.getYAxis(), cardAxisBO.getWidth(), cardAxisBO.getHeight(), cardAxisBO.getPageNo(), cardAxisBO.getOptionCount(), cardAxisBO.getRowCount()));
+                as.add(new Axis(cardAxisBO.getQuestionId(), cardAxisBO.getTypeCode(), cardAxisBO.getTypeName(), cardAxisBO.getxAxis(), cardAxisBO.getyAxis(), cardAxisBO.getWidth(), cardAxisBO.getHeight(), cardAxisBO.getPageNo(), cardAxisBO.getOptionCount(), cardAxisBO.getRowCount()));
             }
             question.setAxises(as);
             questions.add(question);

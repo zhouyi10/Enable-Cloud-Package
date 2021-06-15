@@ -100,6 +100,15 @@ public class TestUserInfoPO {
 	@Column(name="update_time")
 	private Date updateTime;
 
+	@Column(name = "del_status")
+	private Integer delStatus;
+
+	@Column(name = "process_id")
+	private String processId;
+
+	@Column(name = "step_id")
+	private String stepId;
+
 	@Transient
 	private String testName;
 

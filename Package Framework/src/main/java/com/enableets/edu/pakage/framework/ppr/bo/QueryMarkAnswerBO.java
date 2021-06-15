@@ -11,7 +11,7 @@ public class QueryMarkAnswerBO {
 
     private String testId;
 
-    private String activityId;
+    private String stepId;
 
     private String examId;
 

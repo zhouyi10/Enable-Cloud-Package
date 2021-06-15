@@ -61,7 +61,7 @@ public class SignatureUtils {
             }
         } catch (Exception e) {
             LOGGER.error("Failed to parse get request parameter!", e);
-            throw new PakcageHttpClientException("Failed to parse get request parameter!");
+            throw new packageHttpClientException("Failed to parse get request parameter!");
         }
         if (StringUtils.isNotBlank(bodyStr)) paramMap.put("data", bodyStr);
         try {

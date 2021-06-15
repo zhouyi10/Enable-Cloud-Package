@@ -24,6 +24,9 @@ public class QueryTestInfoResultDTO {
     /** PPR File ID*/
     private String fileId;
 
+    /** Step Id*/
+    private String stepId;
+
     /** Activity ID*/
     private String activityId;
 
@@ -69,7 +72,7 @@ public class QueryTestInfoResultDTO {
     /** Test Start Time*/
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date beginTime;
+    private Date startTime;
 
     /** Test End Time*/
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

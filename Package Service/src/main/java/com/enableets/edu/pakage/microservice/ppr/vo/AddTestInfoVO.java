@@ -1,5 +1,6 @@
 package com.enableets.edu.pakage.microservice.ppr.vo;
 
+import com.enableets.edu.module.service.core.BaseVO;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.enableets.edu.module.service.core.MicroServiceException;
@@ -23,24 +24,36 @@ public class AddTestInfoVO extends BaseVO {
 
     @Override
     public void validate() throws MicroServiceException {
-        this.validate(this.getActivityId(), "activityId");
-        this.validate(this.getSchoolId(), "schoolId");
-        this.validate(this.getSchoolName(), "schoolName");
-        this.validate(this.getTermId(), "termId");
-        this.validate(this.getTermName(), "termName");
-        this.validate(this.getSubjectCode(), "subjectCode");
-        this.validate(this.getSubjectName(), "subjectName");
-        this.validate(this.getTestName(), "testName");
-        this.validate(this.getBeginTime(), "beginTime");
-        this.validate(this.getEndTime(), "endTime");
-        this.validate(this.getSender(), "sender");
-        this.validate(this.getSenderName(), "senderName");
-        this.validate(this.getTestCostTime(), "testCostTime");
-        this.validate(this.getDelaySubmit(), "delaySubmit");
-        this.validate(this.getResubmit(), "resubmit");
+        this.notBlank(this.testId, "testId");
+        this.notNull(this.stepId, "stepId");
+        this.notBlank(this.getActivityId(), "activityId");
+        this.notBlank(this.getSchoolId(), "schoolId");
+        this.notBlank(this.getSchoolName(), "schoolName");
+        this.notBlank(this.getTermId(), "termId");
+        this.notBlank(this.getTermName(), "termName");
+        this.notBlank(this.getSubjectCode(), "subjectCode");
+        this.notBlank(this.getSubjectName(), "subjectName");
+        this.notBlank(this.getTestName(), "testName");
+        this.notNull(this.getStartTime(), "startTime");
+        this.notNull(this.getEndTime(), "endTime");
+        this.notBlank(this.getSender(), "sender");
+        this.notBlank(this.getSenderName(), "senderName");
+        this.notNull(this.getDelaySubmit(), "delaySubmit");
+        this.notNull(this.getResubmit(), "resubmit");
+        this.notBlank(this.getRecipients(), "recipients");
     }
 
-    @ApiModelProperty(value = "Activity ID", required = true)
+    @ApiModelProperty(value = "Test Id：value Step Task of Step Send Paper Business Id")
+    private String testId;
+
+    /** Test Name*/
+    @ApiModelProperty(value="Test Name", required=true)
+    private String testName;
+
+    @ApiModelProperty(value = "Step Id", required = true)
+    private String stepId;
+
+    @ApiModelProperty(value = "Value Step Task of Step Id", required = true)
     private String activityId;
 
     /** Activity Type*/
@@ -50,14 +63,6 @@ public class AddTestInfoVO extends BaseVO {
     /**clientId**/
     @ApiModelProperty(value="clientId", required=false)
     private String appId;
-
-    /** Exam ID*/
-    @ApiModelProperty(value="Exam ID", required=false)
-    private String examId;
-
-    /** Exam Name*/
-    @ApiModelProperty(value="Exam Name", required=false)
-    private String examName;
 
     /** Exam Document File ID*/
     @ApiModelProperty(value="Exam Document File ID", required=false)
@@ -95,10 +100,6 @@ public class AddTestInfoVO extends BaseVO {
     @ApiModelProperty(value="Subject Name", required=true)
     private String subjectName;
 
-    /** Test Name*/
-    @ApiModelProperty(value="Test Name", required=true)
-    private String testName;
-
     /** Mark Type*/
     @ApiModelProperty(value="Mark Type", required=false)
     private String markType;
@@ -111,11 +112,11 @@ public class AddTestInfoVO extends BaseVO {
     @ApiModelProperty(value="Test Publish Type", required=false)
     private String testPublishType;
 
-    /** Test Begin Time*/
+    /** Test Start Time*/
     @JsonFormat(pattern = Constants.DEFAULT_DATE_TIME_FORMAT)
     @DateTimeFormat(pattern = Constants.DEFAULT_DATE_TIME_FORMAT)
-    @ApiModelProperty(value="Test Begin Time", required=true)
-    private Date beginTime;
+    @ApiModelProperty(value="Test Start Time", required=true)
+    private Date startTime;
 
     /** Test End Time*/
     @JsonFormat(pattern = Constants.DEFAULT_DATE_TIME_FORMAT)
@@ -130,10 +131,6 @@ public class AddTestInfoVO extends BaseVO {
     /** Test Sender User Name*/
     @ApiModelProperty(value="Test Sender User Name", required=true)
     private String senderName;
-
-    /** Test Cost Time*/
-    @ApiModelProperty(value="Test Cost Time", required=true)
-    private Integer testCostTime;
 
     /** Time allowed for late submission*/
     @ApiModelProperty(value="Time allowed for late submission", required=true)

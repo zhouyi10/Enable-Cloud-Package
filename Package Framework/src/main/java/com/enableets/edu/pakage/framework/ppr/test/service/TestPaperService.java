@@ -1,5 +1,6 @@
 package com.enableets.edu.pakage.framework.ppr.test.service;
 
+import com.enableets.edu.pakage.framework.ppr.core.PPRConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -39,7 +40,7 @@ public class TestPaperService {
 
     public PaperInfoBO get(String paperId){
         if (StringUtils.isBlank(paperId)) return null;
-        String redisKey = String.format("com:enableets:edu:package:ppr:paper:%s", paperId);
+        String redisKey = new StringBuilder(PPRConstants.PACKAGE_PPR_CACHE_KEY_PREFIX).append("paper:").append(paperId).toString();
         String paperStr = stringRedisTemplate.opsForValue().get(redisKey);
         if (StringUtils.isNotBlank(paperStr)){
             return JsonUtils.convert(paperStr, PaperInfoBO.class);

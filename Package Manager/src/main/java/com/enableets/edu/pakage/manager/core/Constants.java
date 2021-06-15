@@ -9,6 +9,8 @@ public class Constants {
 
     public static final String CONTEXT_PATH = "/manager/package";
 
+    public static final String PACKAGE_CACHE_KEY_PREFIX = "com:enableets:edu:package:";
+
     /** Cache Expire Time : 30 Min*/
     public static final Long DEFAULT_REDIS_CACHE_EXPIRE_TIME = 30 * 60L;
 
@@ -64,4 +66,29 @@ public class Constants {
     /**teaching methods: Offline */
     public static final String COURSE_TEACHING_METHOD_OFFLINE = "2";
 
+    /** Current semester status  */
+    public static final String STATUS_CURRENT_TERM = "2";
+
+    /** Section dictionary type **/
+    public static final String DICTIONARY_STAGE_TYPE_CODE = "02";
+
+    /** Assign review type*/
+    public static final String ASSIGNER_ACTION_TYPE = "1";
+
+    /** Review completed*/
+    public static final String MARK_TYPE_COMPLETE = "1";
+
+    /** Section dictionary type **/
+    public static final String DICTIONARY_DIFFICULTY_TYPE_CODE = "08";
+
+    /** Teacher role code**/
+    public static final String TEACHER_IDENTITY_CODE = "1";
+
+    /** Student role code */
+    public static final String STUDENT_IDENTITY_CODE = "2";
+
+    /** Administrator role code*/
+    public static final String ADMIN_IDENTITY_CODE = "3";
+    public static final String ANSWERCARD_ADD_QUESTION_TYPE = "@@word@@";
+    public static final String SELECT_QUESTION_TYPE_CODE = "@@03@@02@@";
 }

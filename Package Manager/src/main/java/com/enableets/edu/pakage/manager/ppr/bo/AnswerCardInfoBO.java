@@ -56,4 +56,8 @@ public class AnswerCardInfoBO {
     /** Axis Info*/
     private List<AnswerCardAxisBO> axises;
 
+    private List<CardTimeAxisBO> timelines;
+
+    private String editType;
+
 }

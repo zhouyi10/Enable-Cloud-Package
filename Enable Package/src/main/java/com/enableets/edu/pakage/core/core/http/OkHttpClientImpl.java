@@ -41,7 +41,7 @@ public class OkHttpClientImpl extends AbstractHttpClient {
             return response.body().string();
         } catch (IOException e) {
             logger.error("OkHttpClient doGet request failure!", e);
-            throw new PakcageHttpClientException("OkHttpClient doGet request failure!", e);
+            throw new packageHttpClientException("OkHttpClient doGet request failure!", e);
         }
     }
 
@@ -69,11 +69,11 @@ public class OkHttpClientImpl extends AbstractHttpClient {
             response = okHttpClient.newCall(request).execute();
         } catch (IOException e) {
             logger.error("OkHttpClient doPost request failure!", e);
-            throw new PakcageHttpClientException("OkHttpClient doPost request failure!", e);
+            throw new packageHttpClientException("OkHttpClient doPost request failure!", e);
         }
         if (response.isSuccessful()) return response.body().toString();
         else{
-            throw new PakcageHttpClientException("The interface["+url+"] error!");
+            throw new packageHttpClientException("The interface["+url+"] error!");
         }
     }
 }

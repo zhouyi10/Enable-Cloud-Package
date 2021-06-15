@@ -15,6 +15,8 @@ import java.util.List;
  **/
 public interface IPPRTestInfoService {
 
+    public QueryTestInfoResultDTO get(String testId);
+
     public QueryTestInfoResultDTO get(String testId, String stepId, String fileId, String examId);
 
     public QueryTestInfoResultDTO add(AddTestInfoDTO addTestInfoDTO);

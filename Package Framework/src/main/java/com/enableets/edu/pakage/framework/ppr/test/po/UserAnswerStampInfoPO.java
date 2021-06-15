@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * Answer time record table
@@ -12,6 +13,7 @@ import lombok.Data;
 @Entity
 @Table(name = "user_answer_stamp_info")
 @Data
+@Accessors(chain = true)
 public class UserAnswerStampInfoPO {
 
   /** */

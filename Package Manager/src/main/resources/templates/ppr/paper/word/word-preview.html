@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+    <style>
+        u{
+            white-space: break-spaces;
+        }
+    </style>
+</head>
+<body>
+    <div class="head">
+        <div style="font-size: 23px;padding: 18px 0px;font-weight:700;text-align:center" th:text="${paperInfo.name}"></div>
+        <div style="text-align: center;" class="total-score">试卷总分:[[${paperInfo.totalPoints}]]分</div>
+    </div>
+    <div class="sections" min-width = "500">
+        <th:block  th:each="node : ${paperInfo.nodes}">
+            <th:block th:switch="${node.level}">
+                <div th:case="1" class="kind">
+                    <div style="font-size: 19px; font-weight: 700; text-align: center;" class="name">[[${node.name}]]([[${node.points}]]分)</div>
+                </div>
+                <div th:case="2" class="type">
+                    <div style="font-size: 18px; font-weight: 600" class="name">[[${node.name}]]([[${node.points}]]分)</div>
+                </div>
+                <div th:case="3" class="exam-question">
+                    <table>
+                        <tr>
+                            <td width="85"  style="vertical-align: top; text-align: center">[[${node.externalNo}]]([[${node.points}]]分)</td>
+                            <th:block th:if="${node.question != null && node.question.stem != null && node.question.stem.richText != null}">
+                              <td width = "500" th:utext="${node.question.stem.richText}"></td>
+                                <th:block th:if="${#lists.size(node.question.options)} > 0">
+                                    <div class="option" th:each="option : ${node.question.options}"> [[${option.alias}]].[[${option.label}]]</div>
+                                </th:block>
+                            </th:block>
+                        </tr>
+                    </table>
+                </div>
+                <div th:case="4" class="exam-question-child">
+                    <table>
+                        <tr>
+                            <td width="85" style="vertical-align: top; text-align: center">[[${node.externalNo}]]([[${node.points}]]分)</td>
+                            <th:block th:if="${node.question != null && node.question.stem != null && node.question.stem.richText != null}">
+                                <td width = "500" th:utext="${node.question.stem.richText}"></td>
+                                <th:block th:if="${#lists.size(node.question.options)} > 0">
+                                    <div class="option" th:each="option : ${node.question.options}"> [[${option.alias}]].[[${option.label}]]</div>
+                                </th:block>
+                            </th:block>
+                        </tr>
+                    </table>
+                </div>
+            </th:block>
+        </th:block>
+
+    </div>
+</body>
+</html>

@@ -7,6 +7,7 @@ import javax.persistence.Transient;
 
 import java.util.List;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * user_answer_info
@@ -14,6 +15,7 @@ import lombok.Data;
 @Entity
 @Table(name = "user_answer_info")
 @Data
+@Accessors(chain = true)
 public class UserAnswerInfoPO {
 
 	@Column(name="answer_id")

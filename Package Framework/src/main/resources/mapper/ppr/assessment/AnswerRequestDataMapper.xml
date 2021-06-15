@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.enableets.edu.pakage.framework.ppr.test.dao.AnswerRequestDataDAO">
+
+    <update id="updateList" parameterType="list">
+        update answer_request_data
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="status=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.status!=null">
+                        when answer_request_id=#{item.answerRequestId} then #{item.status}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="retry_times=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.retryTimes!=null">
+                        when answer_request_id=#{item.answerRequestId} then #{item.retryTimes}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="error_code=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.errorCode!=null">
+                        when answer_request_id=#{item.answerRequestId} then #{item.errorCode}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="error_message=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.errorMessage!=null">
+                        when answer_request_id=#{item.answerRequestId} then #{item.errorMessage}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="creator=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.creator!=null">
+                        when answer_request_id=#{item.answerRequestId} then #{item.creator}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="create_time=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.createTime!=null">
+                        when answer_request_id=#{item.answerRequestId} then #{item.createTime}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="updator=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.updator!=null">
+                        when answer_request_id=#{item.answerRequestId} then #{item.updator}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="update_time=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.updateTime!=null">
+                        when answer_request_id=#{item.answerRequestId} then #{item.updateTime}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" separator="or" item="item" index="index">
+            answer_request_id=#{item.answerRequestId}
+        </foreach>
+    </update>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into answer_request_data(
+        answer_request_id, origin_data, status, retry_times, error_code, error_message, creator,
+        create_time, updator, update_time)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.answerRequestId}, #{item.originData}, #{item.status}, #{item.retryTimes}, #{item.errorCode},
+            #{item.errorMessage},
+            #{item.creator}, #{item.createTime}, #{item.updator}, #{item.updateTime}
+            )
+        </foreach>
+    </insert>
+
+    <update id="update">
+        update answer_request_data
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="status=" suffix=",">
+                <if test="status!=null">
+                    #{status}
+                </if>
+            </trim>
+            <trim prefix="retry_times=" suffix=",">
+                <if test="retryTimes!=null">
+                    #{retryTimes}
+                </if>
+            </trim>
+            <trim prefix="error_code=" suffix=",">
+                <if test="errorCode!=null">
+                    #{errorCode}
+                </if>
+            </trim>
+            <trim prefix="error_message=" suffix=",">
+                <if test="errorMessage!=null">
+                    #{errorMessage}
+                </if>
+            </trim>
+            <trim prefix="creator=" suffix=",">
+                <if test="creator!=null">
+                    #{creator}
+                </if>
+            </trim>
+            <trim prefix="create_time=" suffix=",">
+                <if test="createTime!=null">
+                    #{createTime}
+                </if>
+            </trim>
+            <trim prefix="updator=" suffix=",">
+                <if test="updator!=null">
+                    #{updator}
+                </if>
+            </trim>
+            <trim prefix="update_time=" suffix=",">
+                <if test="updateTime!=null">
+                    #{updateTime}
+                </if>
+            </trim>
+        </trim>
+        where answer_request_id=#{answerRequestId}
+    </update>
+
+</mapper>
+

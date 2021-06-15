@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ETS-School</title>
+    <link rel="stylesheet" type="text/css" data-th-href="${_contextPath} + @{/custom/package/ppr/css/exam/answer/videoQuestion.css}"></link>
+    <script type="text/javascript" data-th-src="${_contextPath} + @{/comm/plugins/jQuery/jquery-3.0.0.min.js(v=${_v})}"></script>
+    <script type="text/javascript" data-th-src="${_contextPath} + @{/comm/plugins/layer/layer.js(v=${_v})}"></script>
+    <script type="text/javascript" data-th-src="${_contextPath} + @{/custom/package/ppr/js/CommUtils.js(v=${_v})}"></script>
+    <script type="text/javascript" data-th-src="${_contextPath} + @{/custom/package/ppr/js/ppr/answer/videoQuestionAnswer.js}"></script>
+    <script type="text/javascript" th:src="${_contextPath} + @{/comm/js/BaseUtils.js(v=${_v})}"></script>
+    <script type="text/javascript" th:inline="javascript">
+        window.i18n = {
+            "submit_success" : [[#{MSG_70_01_01_004}]],
+            "submit_failed" : [[#{MSG_70_01_01_003}]]
+        };
+        $(function(){
+            $.extend(VideoAnswer, [[${condition}]]);
+            VideoAnswer.paper = [[${paperInfo}]];
+            VideoAnswer.saveUrl = [[${_contextPath} + @{'/ppr/exam/submit'}]];
+            VideoAnswer.init();
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="answer_card">
+            <div class="card">
+                <div class="title">答题卡</div>
+                <div class="questions">
+                    <ul class="question-list">
+                        <!--<li class="item type">第一关</li>-->
+                        <!--<li class="item question">1</li>-->
+                    </ul>
+                </div>
+                <div class="submit">
+                    <a class="submit_btn" onclick="VideoAnswer.submit()">
+                        交卷
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="video_container">
+            <div class="header">
+                <span class="title" th:text="${paperInfo.name}">试卷名称</span>
+                <span class="timer_area"><b>00:00</b></span>
+            </div>
+            <div class="video">
+                <div class="video_box">
+                    <div class="video_btns">
+                        <div class="btn" onclick="VideoAnswer.doPlayPause()">播放/暂停</div>
+                        <div class="btn" onclick="VideoAnswer.resize('0')">缩小</div>
+                        <div class="btn" onclick="VideoAnswer.resize('1')">放大</div>
+                    </div>
+                    <div class="resize"></div>
+                </div>
+                <div class="answer_question_area" style="display: none;">
+                    <div class="answer_question">
+                        <div class="title">
+                            <span class="q_no">第1题</span>
+                        </div>
+                        <div class="question_container">
+                            <div class="question">
+
+                            </div>
+                        </div>
+                        <div class="btns">
+                            <span class="btn next" onclick="VideoAnswer.nextQuestion()">下一题</span>
+                            <span class="btn replay" onclick="VideoAnswer.reView()">再看一遍</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div style="display: none">
+        <div id="questionTemplate">
+            <div class="item hidden" data-id="{1}">
+                <div>{0}</div>
+                <div class="answer_area"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

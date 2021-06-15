@@ -7,6 +7,9 @@ package com.enableets.edu.pakage.framework.core;
  **/
 public class Constants {
 
+    /** 测验信息模块 */
+    public static final String MODEL_TEST = "05";
+
     public static final String CONTEXT_PATH = "/manager/package";
 
     /** Cache Expire Time : 30 Min*/
@@ -59,5 +62,6 @@ public class Constants {
 
     /***/
     public static final String HEAD_ALLOWALL = "ALLOWALL";
+
 
 }

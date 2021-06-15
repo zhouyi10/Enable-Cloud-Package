@@ -11,7 +11,7 @@ public class MarkInfoVO {
 
     private String stepId;
 
-    private String paperId;
+    private String fileId;
 
     private String userId;
 

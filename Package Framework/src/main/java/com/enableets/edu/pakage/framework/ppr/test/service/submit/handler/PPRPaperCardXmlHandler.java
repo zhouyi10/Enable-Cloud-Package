@@ -1,10 +1,11 @@
 package com.enableets.edu.pakage.framework.ppr.test.service.submit.handler;
 
+import com.enableets.edu.framework.core.util.JsonUtils;
 import com.enableets.edu.framework.core.util.SpringBeanUtils;
+import com.enableets.edu.pakage.card.bean.EnableCardPackage;
 import com.enableets.edu.pakage.framework.ppr.test.service.AnswerInfoService;
-import com.enableets.edu.pakage.framework.ppr.test.service.submit.SubmitAnswerService;
 import com.enableets.edu.pakage.framework.ppr.test.service.submit.bo.SubmitAttributeBO;
-
+import com.enableets.edu.pakage.ppr.action.PPRPackageLifecycle;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -27,8 +28,9 @@ public class PPRPaperCardXmlHandler implements ISubmitXmlHandler {
 
     @Override
     public String submit(String xml, SubmitAttributeBO attribute) {
-        SubmitAnswerService submitAnswerService = SpringBeanUtils.getBean(SubmitAnswerService.class);
-        return SpringBeanUtils.getBean(AnswerInfoService.class).submit(submitAnswerService.getUserAnswer2(xml), attribute);
+        PPRPackageLifecycle lifecycle = new PPRPackageLifecycle();
+        EnableCardPackage cardPackage = lifecycle.parse(xml);
+        return SpringBeanUtils.getBean(AnswerInfoService.class).submit(cardPackage, attribute);
     }
 
 }

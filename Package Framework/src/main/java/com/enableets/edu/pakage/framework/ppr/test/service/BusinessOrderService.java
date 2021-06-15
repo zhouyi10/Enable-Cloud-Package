@@ -42,7 +42,7 @@ public class BusinessOrderService {
     @Autowired
     private ITokenGenerator tokenGenerator;
 
-    @Transactional
+    @Transactional(value = "packageTransactionManager")
     public BusinessOrderBO add(BusinessOrderBO bo) {
         // 1. invalidate original unprocessed data
         businessOrderDAO.invalid(bo.getBusinessId(), bo.getType(), BUSINESS_ORDER_STATUS_DEFAULT.toString());
@@ -56,7 +56,7 @@ public class BusinessOrderService {
         return bo;
     }
 
-    @Transactional
+    @Transactional(value = "packageTransactionManager")
     public List<BusinessOrderBO> batchAdd(List<BusinessOrderBO> bos, String type) {
         // 1. invalidate original unprocessed data
         List<String> businessIds = bos.stream().map(BusinessOrderBO::getBusinessId).collect(Collectors.toList());
@@ -201,7 +201,7 @@ public class BusinessOrderService {
      * @param orderId
      * @return true/false
      */
-    @Transactional
+    @Transactional(value = "packageTransactionManager")
     public boolean start(String orderId, String extendAttrs) {
         int updateCount = businessOrderDAO.start(orderId, extendAttrs);
         return updateCount > 0;
@@ -212,7 +212,7 @@ public class BusinessOrderService {
      * @param orderId order id
      * @return true/false
      */
-    @Transactional
+    @Transactional(value = "packageTransactionManager")
     public boolean success(String orderId, String extendAttrs) {
         int updateCount = businessOrderDAO.success(orderId, extendAttrs);
         return updateCount > 0;
@@ -225,7 +225,7 @@ public class BusinessOrderService {
      * @param errorMessage
      * @return true/false
      */
-    @Transactional
+    @Transactional(value = "packageTransactionManager")
     public boolean fail(String orderId, String errorCode, String errorMessage) {
         int updateCount = businessOrderDAO.fail(orderId, errorCode, errorMessage);
         return updateCount > 0;

@@ -20,4 +20,20 @@ public class QuestionAxisBO {
     private Float width;
 
     private Float height;
+
+    public Float getxAxis() {
+        return xAxis;
+    }
+
+    public void setxAxis(Float xAxis) {
+        this.xAxis = xAxis;
+    }
+
+    public Float getyAxis() {
+        return yAxis;
+    }
+
+    public void setyAxis(Float yAxis) {
+        this.yAxis = yAxis;
+    }
 }

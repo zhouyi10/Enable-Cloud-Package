@@ -1,10 +1,6 @@
 package com.enableets.edu.sdk.pakage.ppr.service;
 
-import com.enableets.edu.sdk.pakage.ppr.dto.EditCanvasInfoDTO;
-import com.enableets.edu.sdk.pakage.ppr.dto.MarkInfoDTO;
-import com.enableets.edu.sdk.pakage.ppr.dto.QueryAnswerDTO;
-import com.enableets.edu.sdk.pakage.ppr.dto.QueryTestUserResultDTO;
-import com.enableets.edu.sdk.pakage.ppr.dto.QueryUserAnswerTrackResultDTO;
+import com.enableets.edu.sdk.pakage.ppr.dto.*;
 
 import java.util.List;
 
@@ -18,7 +14,7 @@ public interface IPPRTestUserInfoService {
 
     public List<QueryTestUserResultDTO> queryAnswer(QueryAnswerDTO queryAnswerDTO);
 
-    public void mark(MarkInfoDTO markInfoDTO);
+    public TestMarkResultInfoDTO mark(MarkInfoDTO markInfoDTO);
 
     public void editCanvas(EditCanvasInfoDTO editCanvasInfoDTO);
 }

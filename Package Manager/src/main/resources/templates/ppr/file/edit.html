@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/" xmlns:v-on="http://www.w3.org/1999/xhtml"
+	  xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="UTF-8"/>
+	<title>ETS-School</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta content="yes" name="apple-mobile-web-app-capable"/>
+	<meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+	<meta content="telephone=yes" name="format-detection"/>
+	<meta content="email=yes" name="format-detection"/>
+	<link rel="stylesheet" th:href="${_contextPath} + @{/comm/plugins/bootstrap/bootstrap.min.css}" />
+	<link rel="stylesheet" type="text/css" th:href="${_contextPath} + @{/custom/package/ppr/css/file/baseStyle.css(v=${_v})}"/>
+	<link rel="stylesheet" th:href="${_contextPath} + @{/custom/package/ppr/css/file/index.css(v=${_v})}" />
+	<link rel="stylesheet" th:href="${_contextPath} + @{/custom/package/ppr/css//file/iconfont/iconfont.css(v=${_v})}"/>
+	<style th:inline="text">
+
+		.paperPage .contentCenter .top_ .title_1 {width: 100%;}
+		.paperPage .contentCenter .paper_cont .list_ .num_ em b {margin-right: 0px; padding-right: 3px;}
+		*[contenteditable="true"][edit-text] {padding-left: 2px; padding-right: 2px;}
+		/**[contenteditable="true"][edit-text]:focus, *[contenteditable="true"][edit-text]:hover {background-color: #eef8ff;}*/
+		.layui-layer-tips .layui-layer-content {padding: 5px 13px!important;}
+		.paperPage .contentCenter .paper_cont .list_ img {max-width: 98%;}
+		*[v-cloak] {display: none;}
+		.ContainerWarp20210527 .fixed_header .cont_ .rt_1 .btn_ i.i_7,
+		.ContainerWarp20210527 .fixed_header .cont_ .rt_1 .btn_ i.i_7 {
+			background: url([[${_contextPath} + @{/custom/package/ppr/css/paper/img/i_7.png}]]) 0 0 no-repeat;
+			background-size: 100% 100%;
+		}
+
+
+		.num_01 span:nth-child(2){
+			color: red;
+		}
+		.right-asider .box_auto .list_ .l_ .b_ .question_{
+			width : 30px;
+		}
+		@media screen and (max-width: 1100px) {
+			.layui-layer-iframe {
+				top: 50px!important;
+				left: 28px!important;
+			}
+		}
+	</style>
+
+	<script th:src="${_contextPath} + @{/comm/plugins/jQuery/jquery-3.0.0.min.js(v=${_v})}"></script>
+	<script type="text/javascript" th:src="${_contextPath} + @{/comm/js/BaseUtils.js(v=${_v})}"></script>
+	<script th:inline="javascript" th:src="${_contextPath} + @{/comm/fragments/fragments.0.0.2.js(v=${_v})}"></script>
+	<script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/layer/layer.js(v=${_v})}"></script>
+	<script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/vue-2.5.21/vue.min.js(v=${_v})}"></script>
+	<script type="text/javascript" th:src="${_contextPath} + @{/custom/package/ppr/js/Constants.js(v=${_v})}"></script>
+	<script type="text/javascript" th:src="${_contextPath} + @{/custom/package/ppr/js/CommUtils.js}"></script>
+	<script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/webUploader/webuploader.min.js(v=${_v})}"></script>
+	<script type="text/javascript" th:src="${_contextPath} + @{/comm/plugins/webUploader/UploadFileUtils.js(v=${_v})}"></script>
+	<script type="text/javascript" th:src="${_contextPath} + @{/custom/package/ppr/js/file/edit.js(v=${_v})}"></script>
+
+	<script type="text/javascript" th:inline="javascript">
+		if (window.i18n == undefined) {
+			window.i18n = {};
+		}
+
+		$(function(){
+			$.extend(i18n,{
+				'paper':[[#{UI_70_04_01_009}]],
+				'kind_0': [[#{UI_70_04_01_012}]],
+				'paper_info': [[#{UI_70_04_01_004}]],
+				'edit_paper_template': [[#{UI_70_04_01_013}]],
+				'kind_max_four': [[#{MSG_70_04_02_006}]], // 最多只能添加四个卷
+				'confirm': [[#{UI_70_00_008}]],
+				'success': [[#{MSG_70_04_02_007}]],
+				'fail': [[#{MSG_70_04_02_008}]],
+				'file_no_empty': [[#{MSG_70_04_02_009}]],
+			});
+
+			UploadFileUtils.global({
+				'uploadUrl': [[${uploadUrl}]],
+				'tokenUrl': [[${_contextPath} + @{'/file/request'}]],
+				'checkUrl': [[${_contextPath} + @{'/file/exists'}]],
+			});
+			if (window.location.href.indexOf("v2")>-1){
+				EditFilePage.type = "0";
+			}
+			EditFilePage.paper = [[${paper}]];
+			EditFilePage.questionTypes = [[${questionTypes}]] || [];
+			EditFilePage.teacherBaseInfoStr = [[${session['_TEACHER_SGS_BASE_INFO']}]];
+			EditFilePage.editBaseInfoUrl = [[${_contextPath} + @{'/ppr/file/baseinfo/preedit'}]]
+			EditFilePage.editPaperTemplateUrl = [[${_contextPath} + @{'/ppr/file/template/preedit'}]]
+			EditFilePage.answerCardTemplateUrl = [[${_contextPath} + @{'/ppr/answercard/template/preedit'}]]
+			EditFilePage.fileViewSrc = [[${fileView}]];
+			EditFilePage.saveUrl = [[${_contextPath} + @{'/ppr/file/save'}]]
+			// Set global layer title internationalization
+			layer.config({
+				title: i18n['tipBox_title']
+			});
+			EditFilePage.init();
+		})
+	</script>
+</head>
+<body style="overflow:scroll;overflow-y:hidden" >
+<div class="ContainerWarp20210527" v-cloak="" id="file">
+	<div class="fixed_header">
+		<div class="cont_ maxw">
+			<span class="lt_1" v-on:click="editBaseInfo"><b th:text="|#{UI_70_04_01_010}：|">手动组卷：</b><b class="select_" >{{ifEmpty(paper.name)}}</b><i class="i_edit" id="editPaperInfo"></i></span>
+			<span class="btn btn-custom" id="saveFile" th:text="#{UI_70_02_01_007}">保存</span>
+		</div>
+	</div>
+	<div class="container-wrapper" width="1100" height="">
+		<div class="exam-container">
+			<button type="button" style="display:none;" class="remove" id="remove">X</button>
+			<div class="exam-wrapper" id="exam">
+				<span class="btn btn-custom upload" id="upload" th:text="#{UI_70_04_01_011}">上传文件</span>
+			</div>
+		</div>
+		<div class="card-container">
+			<iframe id="answerCardTemplate"  frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="auto" style="width:163%;height:100%" ></iframe>
+		</div>
+	</div>
+	<div class="right-asider">
+		<div class="cont">
+			<div class="box_auto">
+				<div class="title_">
+					<h2 class="name" th:text="#{UI_70_04_01_001}">试卷结构</h2>
+					<div class="button_"><span class="add" id="addKNode">+</span></div>
+				</div>
+				<div class="list_" v-for="(kNode,index) in paper.nodes" >
+					<div class="head_01">
+						<h3 class="head_02" th:inline="text"><b>{{kNode.name}}</b>（[[#{UI_70_04_01_002}]]：{{kNode.points}}）</h3>
+						<div class="button_">
+							<span class="add" :id="'addTNode'+index" :value="index" v-on:click="addTNode">+</span>
+							<span class="remove" :id="'removeKNode'+index" :value="index" onclick="EditFilePage.removeKNode(event)">-</span>
+						</div>
+					</div>
+					<dl class="l_" v-for="(tNode,tIndex) in kNode.children">
+						<div class="head_03">
+							<dt class="h_" th:inline="text">{{tNode.name}}（[[#{UI_70_04_01_002}]] <em>{{tNode.points}}</em>）</dt>
+							<span class="remove" :id="'removeTNode'+tIndex" :value=(JSON.stringify(tNode)) onclick="EditFilePage.removeTNode(event)">
+								<i class="iconfont icon-shanchu2"></i>
+							</span>
+						</div>
+						<dd class="b_">
+							<!--<a class="question_" v-for="qNode in tNode.children" v-bind:href="'javascript:document.getElementById(\'' + qNode.nodeSearchCode + '\').scrollIntoView();'">{{qNode.externalNo}}</a>-->
+							<a class="question_" v-for="qNode in tNode.children">{{qNode.externalNo}}</a>
+							<a class="add" :value=(JSON.stringify(tNode)) onclick="EditFilePage.addQuestion(event)">+</a>
+							<a class="remove" :value=(JSON.stringify(tNode)) onclick="EditFilePage.removeQuestion(event)">-</a>
+						</dd>
+					</dl>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

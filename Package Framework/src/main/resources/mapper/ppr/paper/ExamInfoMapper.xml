@@ -75,7 +75,6 @@
 		<result column="subjectName" property="subjectName" />
 		<result column="schoolCode" property="schoolCode" />
 		<result column="schoolName" property="schoolName" />
-		<result column="schoolYear" property="schoolYear" />
 		<result column="termId" property="termId" />
 		<result column="termName" property="termName" />
 		<collection property="examKinds" ofType="com.enableets.edu.pakage.framework.ppr.paper.po.ExamKindInfoPO">
@@ -97,7 +96,7 @@
 					<result column="examQuestionOrder" property="questionOrder" />
 					<result column="examQuestionScore" property="score" />
 					<result column="questionId" property="questionId" />
-					<collection property="examQuestionChildren" ofType="com.enableets.edu.pakage.framework.ppr.paper.po.ExamQuestionChildInfoPO">
+					<collection property="examQuestionChildren" ofType="com.enableets.edu.pakage.framework.ppr.paper.po.ExamQuestionChildInfoPO" notNullColumn="examQuestionChildId">
 						<id column="examQuestionChildId" property="examQuestionChildId" />
 						<result column="examQuestionId" property="examQuestionId" />
 						<result column="examQuestionChildNo" property="questionChildNo" />

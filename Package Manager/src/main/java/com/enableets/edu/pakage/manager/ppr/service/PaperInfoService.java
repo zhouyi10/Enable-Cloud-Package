@@ -1,6 +1,11 @@
 package com.enableets.edu.pakage.manager.ppr.service;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.json.JSONObject;
 import com.enableets.edu.framework.core.util.JsonUtils;
+import com.enableets.edu.pakage.framework.ppr.paper.po.ExamStypeInfoPO;
+import com.enableets.edu.pakage.manager.core.PackageConfigReader;
+import com.enableets.edu.pakage.manager.ppr.bo.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,18 +16,24 @@ import com.enableets.edu.pakage.manager.bo.CodeNameMapBO;
 import com.enableets.edu.pakage.manager.bo.IdNameMapBO;
 import com.enableets.edu.pakage.manager.core.BaseInfoService;
 import com.enableets.edu.pakage.manager.core.Constants;
-import com.enableets.edu.pakage.manager.ppr.bo.ContentInfoBO;
-import com.enableets.edu.pakage.manager.ppr.bo.PaperInfoBO;
-import com.enableets.edu.pakage.manager.ppr.bo.QueryContentBO;
-import com.enableets.edu.pakage.manager.ppr.bo.QueryPaperBO;
 import com.enableets.edu.sdk.content.dto.ContentInfoDTO;
 import com.enableets.edu.sdk.content.service.IContentInfoService;
 import com.enableets.edu.sdk.pakage.ppr.dto.AddPaperInfoDTO;
 import com.enableets.edu.sdk.pakage.ppr.dto.QueryPaperInfoResultDTO;
 import com.enableets.edu.sdk.pakage.ppr.service.IPPRPaperInfoService;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringWebFluxTemplateEngine;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -43,6 +54,12 @@ public class PaperInfoService {
     @Autowired
     private IPPRPaperInfoService pprPaperInfoServiceSDK;
 
+    @Autowired
+    private ExamStypeInfoService examStypeInfoService;
+
+    @Autowired
+    private PackageConfigReader packageConfigReader;
+
     /**
      * Query Paper List
      * @param queryPaperBO
@@ -61,6 +78,47 @@ public class PaperInfoService {
     public PaperInfoBO get(Long paperId){
         QueryPaperInfoResultDTO queryPaperInfoResultDTO = pprPaperInfoServiceSDK.get(paperId);
         return BeanUtils.convert(queryPaperInfoResultDTO, PaperInfoBO.class);
+    }
+
+    public PaperInfoBO getV2(Long paperId){
+        PaperInfoBO paperInfoBO = this.get(paperId);
+        if (paperInfoBO == null) return null;
+        for (PaperNodeInfoBO node : paperInfoBO.getNodes()) {
+            if (node.getLevel().intValue() == 3 || node.getLevel().intValue() == 4) {
+                if (node.getQuestion() != null && node.getQuestion().getStem() != null) {
+                    if (StringUtils.isNotBlank(node.getQuestion().getStem().getRichText()) && node.getQuestion().getStem().getRichText().indexOf("questionoption") > -1){
+                        node.getQuestion().setOptions(new ArrayList<PaperQuestionOptionBO>());
+                    }
+                }
+            }
+        }
+        return paperInfoBO;
+    }
+
+    public PaperInfoBO getAboutLevel(Long paperId){
+        QueryPaperInfoResultDTO queryPaperInfoResultDTO = pprPaperInfoServiceSDK.get(paperId);
+        PaperInfoBO paper = BeanUtils.convert(queryPaperInfoResultDTO, PaperInfoBO.class);
+        paper.getNodes().forEach(node -> {
+            getChildren(paper, node);
+        });
+        Iterator<PaperNodeInfoBO> it = paper.getNodes().iterator();
+        while (it.hasNext()) {
+            PaperNodeInfoBO node = it.next();
+            if (node.getLevel().intValue() > 1) it.remove();
+        }
+        return paper;
+    }
+
+    private void getChildren(PaperInfoBO paper, PaperNodeInfoBO node){
+        List<PaperNodeInfoBO> children = new ArrayList<>();
+        for (PaperNodeInfoBO e : paper.getNodes()) {
+            if (node.getLevel().intValue() == 4) break;
+            if (e.getLevel().intValue() == node.getLevel().intValue() + 1 && e.getParentNodeId().longValue() == node.getNodeId().longValue()){
+                getChildren(paper, e);
+                children.add(e);
+            }
+        }
+        node.setChildren(children);
     }
 
     /**
@@ -130,6 +188,13 @@ public class PaperInfoService {
         paperInfoBO.setUser(BeanUtils.convert(baseInfoService.getUserInfo(paperInfoBO.getUserId()), IdNameMapBO.class));
         paperInfoBO.setSchool(BeanUtils.convert(baseInfoService.getUserSchoolInfo(paperInfoBO.getUserId()), IdNameMapBO.class));
         QueryPaperInfoResultDTO paper = pprPaperInfoServiceSDK.add(BeanUtils.convert(paperInfoBO, AddPaperInfoDTO.class));
+        JSONObject examStypeinfoPOjsonObj = new JSONObject(paperInfoBO.getExamStypeinfoPO());
+        ExamStypeInfoPO ExamStypeinfoPO = BeanUtils.convert(examStypeinfoPOjsonObj, ExamStypeInfoPO.class);
+        ExamStypeinfoPO.setExamId(String.valueOf(paper.getPaperId()));
+        Timestamp timestamp = new Timestamp(new Date().getTime());
+        ExamStypeinfoPO.setCreateTime(timestamp);
+        ExamStypeinfoPO.setCreator(paperInfoBO.getUser().getName());
+        Integer integer = examStypeInfoService.addExamStypeinfoPO(ExamStypeinfoPO);
         return BeanUtils.convert(paper, PaperInfoBO.class);
     }
 
@@ -191,5 +256,41 @@ public class PaperInfoService {
     public String getContentJson(Long paperId) {
         ContentInfoDTO content = contentInfoServiceSDK.get(paperId).getData();
         return JsonUtils.convert(BeanUtils.convert(content, ContentInfoBO.class));
+    }
+
+    public String createStaticHtml(Long paperId){
+        PrintWriter writer = null;
+        try {
+            PaperInfoBO paper = this.getV2(paperId);
+            if (paper == null) return null;
+            //1、Template Resolver
+            ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
+            //2、 Template Path
+            resolver.setPrefix("/templates/ppr/paper/word/");
+            //3、 Template Suffix
+            resolver.setSuffix(".html");
+            TemplateEngine templateEngine = new SpringWebFluxTemplateEngine();
+            templateEngine.setTemplateResolver(resolver);
+            //4、 Template Context
+            Context context = new Context();
+            context.setVariable("paperInfo", paper);
+            //5、 Print document
+            File dir = new File(packageConfigReader.getPaperStaticPath());
+            if (!dir.exists())  FileUtil.mkdir(dir);
+            File file = new File(packageConfigReader.getPaperStaticPath(), paper.getPaperId() + ".html");
+            if (!file.exists()) FileUtil.touch(file);
+            //else return file.toString();
+            writer = new PrintWriter(file, "UTF-8");
+            templateEngine.process("word-preview", context, writer);
+            return file.toString();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if (writer != null) {
+                writer.flush();
+                writer.close();
+            }
+        }
+        return null;
     }
 }
