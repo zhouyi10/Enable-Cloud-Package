@@ -63,5 +63,10 @@ public class Constants {
     /***/
     public static final String HEAD_ALLOWALL = "ALLOWALL";
 
+    public static final Integer DEFAULT_BATCH_SAVE_SIZE = 10;
+
+    public static final String PARAM_PAGE_INDEX = "pageIndex";
+
+    public static final String PARAM_PAGE_SIZE = "pageSize";
 
 }

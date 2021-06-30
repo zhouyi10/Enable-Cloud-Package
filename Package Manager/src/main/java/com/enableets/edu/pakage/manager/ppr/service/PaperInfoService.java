@@ -29,12 +29,10 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -59,6 +57,8 @@ public class PaperInfoService {
 
     @Autowired
     private PackageConfigReader packageConfigReader;
+
+
 
     /**
      * Query Paper List
@@ -258,7 +258,7 @@ public class PaperInfoService {
         return JsonUtils.convert(BeanUtils.convert(content, ContentInfoBO.class));
     }
 
-    public String createStaticHtml(Long paperId){
+   /* public String createStaticHtml(Long paperId){
         PrintWriter writer = null;
         try {
             PaperInfoBO paper = this.getV2(paperId);
@@ -274,6 +274,59 @@ public class PaperInfoService {
             //4、 Template Context
             Context context = new Context();
             context.setVariable("paperInfo", paper);
+            //5、 Print document
+            File dir = new File(packageConfigReader.getPaperStaticPath());
+            if (!dir.exists())  FileUtil.mkdir(dir);
+            File file = new File(packageConfigReader.getPaperStaticPath(), paper.getPaperId() + ".html");
+            if (!file.exists()) FileUtil.touch(file);
+            //else return file.toString();
+            writer = new PrintWriter(file, "UTF-8");
+            templateEngine.process("word-preview", context, writer);
+            return file.toString();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if (writer != null) {
+                writer.flush();
+                writer.close();
+            }
+        }
+        return null;
+    }*/
+
+
+    public String createStaticHtml(Long paperId){
+        PrintWriter writer = null;
+        try {
+            PaperInfoBO paper = this.getV2(paperId);
+            if (paper == null) return null;
+            List<PaperNodeInfoBO> nodes = paper.getNodes();
+            List<PaperNodeInfoBO> newnodes = new ArrayList<PaperNodeInfoBO>();
+            for (PaperNodeInfoBO paperNodeInfoBO:nodes){
+                BigDecimal value = new BigDecimal(paperNodeInfoBO.getPoints());
+                BigDecimal noZeros = value.stripTrailingZeros();
+                String result = noZeros.toPlainString();
+                paperNodeInfoBO.setRealPoints(result);
+                newnodes.add(paperNodeInfoBO);
+            }
+            paper.setNodes(newnodes);
+            ExamStypeInfoPO examStypeinfoPO = examStypeInfoService.querybyid(String.valueOf(paperId));
+            //1、Template Resolver
+            ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
+            //2、 Template Path
+            resolver.setPrefix("/templates/ppr/paper/word/");
+            //3、 Template Suffix
+            resolver.setSuffix(".html");
+            TemplateEngine templateEngine = new SpringWebFluxTemplateEngine();
+            templateEngine.setTemplateResolver(resolver);
+            //4、 Template Context
+            Context context = new Context();
+            context.setVariable("paperInfo", paper);
+            context.setVariable("examStypeinfoPO", examStypeinfoPO);
+            /*HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("paperInfo", paper);
+            hashMap.put("examStypeinfoPO",examStypeInfoPO);
+            context.setVariables(hashMap);*/
             //5、 Print document
             File dir = new File(packageConfigReader.getPaperStaticPath());
             if (!dir.exists())  FileUtil.mkdir(dir);

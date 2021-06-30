@@ -286,7 +286,7 @@ var EditFilePage = window.EditFilePage = {
         $("#upload").hide();
         $("#remove").show();
         $("#exam").append(
-            '<iframe  src="' + src + '" width="140%" height="100%" frameborder="no" border="0" marginwidth="0" marginheight="0" style="overflow: scroll" id="fileview" ></iframe>'
+            '<iframe  src="' + src + '" width="140%" height="100%" frameborder="no" border="0" marginwidth="0"  marginheight="0" style="overflow: scroll" id="fileview" ></iframe>'
         )
     },
     initPaper: function () { //init paper info
@@ -464,6 +464,10 @@ var EditFilePage = window.EditFilePage = {
     },
     initIframe: function () {
         let _this = this;
+        
+        var height = $("#exam").height();
+        $("#upload").css("margin-top", 0.45 * height);
+
         $("#answerCardTemplate").attr("src", _this.answerCardTemplateUrl);
         $("#answerCardTemplate").on("load", function () {
             _this.iframeAnswerCard = document.getElementById("answerCardTemplate").contentWindow.answerCard;

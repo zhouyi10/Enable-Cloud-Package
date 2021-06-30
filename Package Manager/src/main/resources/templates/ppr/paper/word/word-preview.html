@@ -7,26 +7,111 @@
         u{
             white-space: break-spaces;
         }
+        .bottomline {
+            width: 50px;
+            border-top:1px #ffffff solid;
+            border-left:1px #ffffff solid;
+            border-right:1px #ffffff solid;
+        }
     </style>
 </head>
 <body>
+    <div id="secrecySymbolDiv" class="secrecySymbolDiv" th:if="${examStypeinfoPO.secrecySymbol} eq 1">
+                        <span style="float: left;margin-left: 20%" >
+                             <b  value="1" th:text="'绝密'+'★'+'启用前'">  </b>
+                        </span><br />
+    </div>
     <div class="head">
         <div style="font-size: 23px;padding: 18px 0px;font-weight:700;text-align:center" th:text="${paperInfo.name}"></div>
         <div style="text-align: center;" class="total-score">试卷总分:[[${paperInfo.totalPoints}]]分</div>
     </div>
+    <div id="subtitleDiv" class="subtitleDiv" style="margin-top: 15px">
+        <div th:if="${examStypeinfoPO.subtitle} != null " style="text-align: center" >
+            <b id="subtitle" class="subtitle"  align="center" th:text="${examStypeinfoPO.subtitle}"></b><br />
+        </div>
+    </div>
+    <div id="testInfoDiv" class="testInfoDiv" style="margin-top: 10px">
+        <div th:if="${examStypeinfoPO.testInfo} != null " style="text-align: center">
+            <span style="text-align: center;display:block;"><b id="testInfo" class="testInfo"   th:text="${examStypeinfoPO.testInfo}"></b></span><br />
+        </div>
+    </div>
+    <div id="stuInfoColumnDiv" class="stuInfoColumnDiv"  th:if="${examStypeinfoPO.stuInfoColumn} eq 1" style="text-align: center;margin-top: 15px" >
+					<span style="text-align: center;display:block;" >
+						学校：_______
+						姓名：_______
+						班级：_______
+						考号：_______
+					</span><br />
+    </div>
+    <div id="recordScoreColumnDiv" class="recordScoreColumnDiv" th:if="${examStypeinfoPO.recordScoreColumn} eq 1" style="margin-top: 15px">
+					<span style="text-align: center;display:block;height: auto">
+                        <!--<b th:text="得分栏"></b>-->
+                            <table  id="rscTable2" class="rscTable" border="1" style="border-collapse:collapse;width: auto;height: auto" align="center">
+                                <tr>
+                                     <td style="width: 60px;text-align: center">题号</td>
+                                     <div th:each="i:${#numbers.sequence(1,examStypeinfoPO.sumBigtopic)} "
+                                         th:switch="${i}"
+                                         style="width: 60px">
+                                          <td class="indexSelected" th:case = "1" style="width: 60px;text-align: center">
+                                              一
+                                          </td>
+                                         <td class="indexSelected" th:case = "2" style="width: 60px;text-align: center">
+                                             二
+                                          </td>
+                                         <td class="indexSelected" th:case = "3" style="width: 60px;text-align: center">
+                                              三
+                                          </td>
+                                         <td class="indexSelected" th:case = "4" style="width: 60px;text-align: center">
+                                            四
+                                          </td>
+                                         <td class="indexSelected" th:case = "5" style="width: 60px;text-align: center">
+                                            五
+                                          </td>
+                                          <td class="indexSelected" th:case = "6" style="width: 60px;text-align: center">
+                                            六
+                                          </td>
+                                          <td class="indexSelected" th:case = "7" style="width: 60px;text-align: center">
+                                            七
+                                          </td>
+                                          <td class="indexSelected" th:case = "8" style="width: 60px;text-align: center">
+                                            八
+                                          </td>
+                                          <td class="indexSelected" th:case = "9" style="width: 60px;text-align: center">
+                                            九
+                                          </td>
+                                          <td class="indexSelected" th:case="*" style="width: 60px;text-align: center">
+                                            *
+                                          </td>
+                                     </div>
+                                     <td style="width: 80px;text-align: center">总分</td>
+                                </tr>
+                                <tr>
+                                     <td style="width: 60px;text-align: center">得分</td>
+                                     <td th:each="i:${#numbers.sequence(1,examStypeinfoPO.sumBigtopic)}" style="width: 60px"></td>
+                                     <td></td>
+                                </tr>
+                            </table>
+                    </span><br />
+    </div>
+    <div id="mattersAttentionDiv" class="mattersAttentionDiv">
+        <div  th:if="${examStypeinfoPO.mattersAttention} != null ">
+            <span  style="float: left;margin-left: 20%" ><b   class="mattersAttention"  th:text="${examStypeinfoPO.mattersAttention}"></b></span><br />
+        </div>
+    </div>
+
     <div class="sections" min-width = "500">
         <th:block  th:each="node : ${paperInfo.nodes}">
             <th:block th:switch="${node.level}">
                 <div th:case="1" class="kind">
-                    <div style="font-size: 19px; font-weight: 700; text-align: center;" class="name">[[${node.name}]]([[${node.points}]]分)</div>
+                    <div style="font-size: 19px; font-weight: 700; text-align: center;" class="name">[[${node.name}]]([[${node.realPoints}]]分)</div>
                 </div>
                 <div th:case="2" class="type">
-                    <div style="font-size: 18px; font-weight: 600" class="name">[[${node.name}]]([[${node.points}]]分)</div>
+                    <div style="font-size: 18px; font-weight: 600" class="name">[[${node.name}]]([[${node.realPoints}]]分)</div>
                 </div>
                 <div th:case="3" class="exam-question">
                     <table>
                         <tr>
-                            <td width="85"  style="vertical-align: top; text-align: center">[[${node.externalNo}]]([[${node.points}]]分)</td>
+                            <td width="85"  style="vertical-align: top; text-align: center">[[${node.externalNo}]]([[${node.realPoints}]]分)</td>
                             <th:block th:if="${node.question != null && node.question.stem != null && node.question.stem.richText != null}">
                               <td width = "500" th:utext="${node.question.stem.richText}"></td>
                                 <th:block th:if="${#lists.size(node.question.options)} > 0">
@@ -39,11 +124,11 @@
                 <div th:case="4" class="exam-question-child">
                     <table>
                         <tr>
-                            <td width="85" style="vertical-align: top; text-align: center">[[${node.externalNo}]]([[${node.points}]]分)</td>
+                            <td width="85" style="vertical-align: top; text-align: center">[[${node.externalNo}]]([[${node.realPoints}]]分)</td>
                             <th:block th:if="${node.question != null && node.question.stem != null && node.question.stem.richText != null}">
                                 <td width = "500" th:utext="${node.question.stem.richText}"></td>
                                 <th:block th:if="${#lists.size(node.question.options)} > 0">
-                                    <div class="option" th:each="option : ${node.question.options}"> [[${option.alias}]].[[${option.label}]]</div>
+                                    <div class="option" th     :each="option : ${node.question.options}"> [[${option.alias}]].[[${option.label}]]</div>
                                 </th:block>
                             </th:block>
                         </tr>
@@ -53,5 +138,12 @@
         </th:block>
 
     </div>
+
+
+
+    <script type="text/javascript" th:inline="javascript">
+
+    </script>
+
 </body>
 </html>

@@ -49,6 +49,6 @@ public class CoursePackageAdditionalInfoBO {
 	/**
 	 * Group information
 	 */
-	private List<GroupBO> groups;
+//	private List<GroupBO> groups;
 
 }

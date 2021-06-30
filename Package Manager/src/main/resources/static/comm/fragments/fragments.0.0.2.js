@@ -1,5 +1,6 @@
 
-$(document).attr("title","ETS-School");
+$(document).attr("title","三三云学堂");
+
 
 var headerFn = function(){
     // logo图片

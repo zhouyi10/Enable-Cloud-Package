@@ -20,7 +20,6 @@ E:\project_new\package\20210430\Enable-Cloud-Package\Enable Package\src\main\jav
 E:\project_new\package\20210430\Enable-Cloud-Package\Enable Package\src\main\java\com\enableets\edu\pakage\core\action\IPackageLifecycle.java
 E:\project_new\package\20210430\Enable-Cloud-Package\Enable Package\src\main\java\com\enableets\edu\pakage\core\core\htmlparser\multipart\ITask.java
 E:\project_new\package\20210430\Enable-Cloud-Package\Enable Package\src\main\java\com\enableets\edu\pakage\core\core\xpath\XPathParser.java
-E:\project_new\package\20210430\Enable-Cloud-Package\Enable Package\src\main\java\com\enableets\edu\pakage\core\core\http\PakcageHttpClientException.java
 E:\project_new\package\20210430\Enable-Cloud-Package\Enable Package\src\main\java\com\enableets\edu\pakage\core\bean\DefaultEnablePackage.java
 E:\project_new\package\20210430\Enable-Cloud-Package\Enable Package\src\main\java\com\enableets\edu\pakage\core\core\http\AbstractHttpClient.java
 E:\project_new\package\20210430\Enable-Cloud-Package\Enable Package\src\main\java\com\enableets\edu\pakage\core\core\logging\commons\JakartaCommonsLoggingImpl.java
@@ -28,6 +27,7 @@ E:\project_new\package\20210430\Enable-Cloud-Package\Enable Package\src\main\jav
 E:\project_new\package\20210430\Enable-Cloud-Package\Enable Package\src\main\java\com\enableets\edu\pakage\core\core\logging\Log.java
 E:\project_new\package\20210430\Enable-Cloud-Package\Enable Package\src\main\java\com\enableets\edu\pakage\core\source\PackageSource.java
 E:\project_new\package\20210430\Enable-Cloud-Package\Enable Package\src\main\java\com\enableets\edu\pakage\core\core\htmlparser\multipart\HandleCallable.java
+E:\project_new\package\20210430\Enable-Cloud-Package\Enable Package\src\main\java\com\enableets\edu\pakage\core\core\http\packageHttpClientException.java
 E:\project_new\package\20210430\Enable-Cloud-Package\Enable Package\src\main\java\com\enableets\edu\pakage\core\bean\AbstractEnablePackageDecorator.java
 E:\project_new\package\20210430\Enable-Cloud-Package\Enable Package\src\main\java\com\enableets\edu\pakage\core\core\htmlparser\multipart\ResultBean.java
 E:\project_new\package\20210430\Enable-Cloud-Package\Enable Package\src\main\java\com\enableets\edu\pakage\core\core\htmlparser\parser\AttachmentHtmlHandTask.java

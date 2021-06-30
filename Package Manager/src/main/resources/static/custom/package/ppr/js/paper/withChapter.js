@@ -585,12 +585,12 @@ $(function () {
 
         // Resource library type, add three or three cloud question bank
         _this.providers = _this.providers.splice(0,3);
-        if (_this.cloudResourceEnable) {
-            _this.providers.push({
-                code: "R03",
-                name: _this.i18n['cloud_question_repository']
-            });
-        }
+        // if (_this.cloudResourceEnable) {
+        //     _this.providers.push({
+        //         code: "R03",
+        //         name: _this.i18n['cloud_question_repository']
+        //     });
+        // }
         _this.parentSearchData.providers = _this.providers;
 
         if (_this.difficultys) {

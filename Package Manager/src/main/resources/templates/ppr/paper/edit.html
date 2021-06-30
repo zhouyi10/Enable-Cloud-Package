@@ -426,10 +426,10 @@
 		<div class="cont_ maxw">
 			<span class="lt_1" th:utext="${#messages.msg('UI_70_01_02_023', '&lt;em&gt;{{questionCount}}&lt;/em&gt;')} + '&lt;em&gt;{{paper.totalPoints}}&lt;/em&gt;' + #{UI_70_01_02_046}">共<em>{{questionCount}}</em>道题<em>{{paper.totalPoints}}</em>分</span>
 			<div class="btn_box">
-				<span class="btn_01" v-on:click="previewPaper(event)" >预览试卷</span>
+				<!--<span class="btn_01" v-on:click="previewPaper(event)" >预览试卷</span>-->
 				<span class="btn_01" v-bind:class="questionCount==0 ? 'bg3' : ''" v-on:click="viewKnowledgeStatistics" th:text="#{UI_70_01_02_021}">查看知识点</span>
 				<span class="btn_01" th:if="${answerCard != false}" v-bind:class="paper.isSaved ? '' : 'bg3'" v-on:click="viewAnswerCard" th:text="#{UI_70_01_02_047}">答题卡</span>
-				<span class="btn_01" v-bind:class="paper.isSaved ? '' : 'bg3'" v-on:click="viewPaper" th:text="#{UI_70_01_02_022}">下载试卷</span>
+				<span class="btn_01" v-bind:class="paper.isSaved ? '' : 'bg3'" v-on:click="viewPaper" th:text="#{UI_70_01_02_022}">预览试卷</span>
 				<span class="btn_01" v-bind:class="!paper.isSaved ? 'bg2' : 'bg3'" v-on:click="savePaper(event)" th:text="#{UI_70_01_02_048}">保存试卷</span>
 				<!--<th:block th:if="${paper.paperId != null}">
 					<span class="btn_01" v-if="!EditPaperPage.isCertify" v-bind:class="!paper.isSaved ? 'bg2' : 'bg3'" v-on:click="savePaper(event,'1')" th:text="#{UI_70_01_02_065}">另存</span>

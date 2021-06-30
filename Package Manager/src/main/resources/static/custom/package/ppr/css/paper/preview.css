@@ -297,7 +297,7 @@ td, th {
     cursor: pointer;
     position: fixed;
     right: 20px;
-    bottom: 250px;
+    bottom: 300px;
     background-size: 41px;
     background-color: #c8c8c8;
 }
@@ -309,7 +309,7 @@ td, th {
     cursor: pointer;
     position: fixed;
     right: 20px;
-    bottom: 200px;
+    bottom: 250px;
 }
 .btnPrint {
     width: 40px;
@@ -319,9 +319,19 @@ td, th {
     cursor: pointer;
     position: fixed;
     right: 20px;
-    bottom: 150px;
+    bottom: 200px;
 }
 .export {
+    width: 40px;
+    height: 40px;
+    background:url(../../img/preview/bgIcon.png) -56px -513px;
+    border: 0;
+    cursor: pointer;
+    position: fixed;
+    right: 20px;
+    bottom: 150px;
+}
+.exportWord {
     width: 40px;
     height: 40px;
     background:url(../../img/preview/bgIcon.png) -56px -513px;

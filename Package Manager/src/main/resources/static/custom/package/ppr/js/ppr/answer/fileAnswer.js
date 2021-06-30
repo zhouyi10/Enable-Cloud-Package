@@ -76,7 +76,7 @@
 							quesHtml += '<div class="answer_canvas_area"><div><i class="fa fa-paint-brush"></i></div><div class="img_all"></div></div>';
 						}
                         quesHtml += '</div>';
-						html += '<div class="question_item not_click" title="请点击题目开始作答" id="ques_' + node.question.questionId + '" question-id="' + node.question.questionId + '" exam-question-id="' + node.nodeId + '" answer-stamp="">' + quesHtml + '</div>';
+						html += '<div class="question_item" title="请点击题目开始作答" id="ques_' + node.question.questionId + '" question-id="' + node.question.questionId + '" exam-question-id="' + node.nodeId + '" answer-stamp="">' + quesHtml + '</div>';
 						newQuestionNo++;
 					}
 				});
@@ -147,10 +147,6 @@
 				$('.question_area').find(".question_item").on("click",function () {
 					if ($(this).attr("question-id") == _this.curQuestionId) {
 						return;
-					}
-					if($(this).hasClass("not_click")) {
-						$(this).siblings().addClass('not_click');
-						$(this).removeClass('not_click');
 					}
 					_this.curQuestionId = $(this).attr("question-id");
 					var $curQuesItem = $('.question_item#ques_' + _this.curQuestionId);

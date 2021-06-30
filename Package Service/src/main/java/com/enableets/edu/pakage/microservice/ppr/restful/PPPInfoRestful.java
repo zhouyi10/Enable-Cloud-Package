@@ -26,7 +26,7 @@ import io.swagger.annotations.ApiParam;
  * @author walle_yu@enable-ets.com
  * @since 2020/10/23
  **/
-@Api(value = "[1]PPR Info Api", tags = "PPR Info Api", position = 1)
+@Api(value = "(1)PPR Info Api", tags = "(1)PPR Info Api", position = 1)
 @RestController
 @RequestMapping(value = "/microservice/packageservice/ppr")
 public class PPPInfoRestful extends ServiceControllerAdapter<String> {

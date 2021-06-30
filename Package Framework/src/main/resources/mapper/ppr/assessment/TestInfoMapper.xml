@@ -101,4 +101,151 @@
 	<update id="setTestProcessInstanceId" parameterType="java.lang.String">
 		update test_info set process_instance_id = #{processInstanceId} where test_id = #{testId}
 	</update>
+
+	<select id="queryResultForTeacher" parameterType="java.util.HashMap" resultType="com.enableets.edu.pakage.framework.ppr.test.po.ReportTestInfoPO">
+		select
+			t1.test_id as testId,
+			t1.step_id as stepId,
+			t1.activity_id as activityId,
+			t1.activity_type as activityType,
+			t1.school_id as schoolId,
+			t1.term_id as termId,
+			t1.grade_code as gradeCode,
+			t1.grade_name as gradeName,
+			t1.subject_code as subjectCode,
+			t1.subject_name as subjectName,
+			t1.test_name as testName,
+			t1.exam_id as examId,
+			t1.file_id as fileId,
+			t1.mark_type as markType,
+		    t1.test_type as testType,
+		    t1.test_publish_type as testPublishType,
+			t1.test_publish_time as testPublishTime,
+			t1.test_time as testTime,
+			t1.start_time as startTime,
+			t1.end_time as endTime,
+			t1.start_submit_time as startSubmitTime,
+			t1.end_submit_time as endSubmitTime,
+			t1.sender as sender,
+			t1.sender_name as senderName,
+			t1.creator as creator,
+			t1.create_time as createTime,
+			t1.updator as updator,
+			t1.update_time as updateTime,
+			t1.del_status as delStatus,
+			t1.test_cost_time as testCostTime,
+			t1.app_id as appId,
+			t1.delay_submit AS delaySubmit,
+			t1.resubmit,
+			t1.process_instance_id AS processInstanceId,
+			t5.class_id AS classId,
+			t5.class_name AS className,
+			t5.group_id AS groupId,
+			t5.group_name AS groupName,
+			t5.school_id AS schoolCode
+		FROM
+		test_info as t1 inner join (
+			SELECT distinct
+			t2.test_id,
+			t4.class_id,
+			t4.class_name,
+			t4.group_id,
+			t4.group_name,
+			t3.school_id
+		    FROM
+			test_info t2
+			LEFT JOIN test_user_info t3 ON t2.test_id = t3.test_id
+			LEFT JOIN test_recipient_info t4 ON (t3.test_id = t4.test_id and t4.user_id = t3.user_id)
+			<where>
+				t2.del_status = 0 and t2.test_type != '1' and t3.mark_status = '1'
+				<if test="testId != null and testId != ''">
+					and t2.test_id = #{testId}
+				</if>
+				<if test="userId != null and userId != ''">
+					and t2.creator = #{userId}
+				</if>
+				<if test="gradeCode != null and gradeCode != ''">
+					and t2.grade_code = #{gradeCode}
+				</if>
+				<if test="classId != null and classId != ''">
+					and t3.class_id = #{classId}
+				</if>
+				<if test="subjectCode != null and subjectCode != ''">
+					and t2.subject_code = #{subjectCode}
+				</if>
+				<if test="testName != null and testName != ''">
+					and t2.test_name like '%' #{testName} '%'
+				</if>
+				<if test="createTime != null and createTime != ''">
+					and t2.create_time &lt; #{createTime}
+				</if>
+				<choose>
+					<when test="activityType != null and activityType != ''">
+						and t2.activity_type = #{activityType}
+					</when>
+					<otherwise>
+						and t2.activity_type in('50')
+					</otherwise>
+				</choose>
+			</where>
+			group by t4.group_id, t2.test_id
+		) t5 on t1.test_id = t5.test_id
+		ORDER BY
+		t1.create_time DESC,t5.group_name ASC
+		<if test="offset != null and offset >=0 and rows != null and rows > 0">
+			limit #{offset}, #{rows}
+		</if>
+
+	</select>
+
+	<select id="countResultForTeacher" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT
+		count(1)
+		FROM
+		test_info as t1 inner join (
+		SELECT
+		t2.test_id,
+		t3.class_id,
+		t3.group_id,
+		t3.group_name
+		FROM
+		test_info t2
+		INNER JOIN test_user_info t3 ON t2.test_id = t3.test_id
+		LEFT JOIN test_recipient_info t4 ON (t3.test_id = t4.test_id and t4.user_id = t3.user_id)
+		<where>
+			t2.del_status = 0 and t2.test_type != '1' and t3.mark_status = '1'
+			<if test="testId != null and testId != ''">
+				and t2.test_id = #{testId}
+			</if>
+			<if test="userId != null and userId != ''">
+				and t2.creator = #{userId}
+			</if>
+			<if test="gradeCode != null and gradeCode != ''">
+				and t2.grade_code = #{gradeCode}
+			</if>
+			<if test="classId != null and classId != ''">
+				and t3.class_id = #{classId}
+			</if>
+			<if test="subjectCode != null and subjectCode != ''">
+				and t2.subject_code = #{subjectCode}
+			</if>
+			<if test="testName != null and testName != ''">
+				and t2.test_name like '%' #{testName} '%'
+			</if>
+			<if test="createTime != null and createTime != ''">
+				and t2.create_time &lt; #{createTime}
+			</if>
+			<choose>
+				<when test="activityType != null and activityType != ''">
+					and t2.activity_type = #{activityType}
+				</when>
+				<otherwise>
+					and t2.activity_type in('50')
+				</otherwise>
+			</choose>
+		</where>
+		group by t3.group_id, t2.test_id order by t2.create_time DESC
+		) t5 on t1.test_id = t5.test_id
+	</select>
+
 </mapper>

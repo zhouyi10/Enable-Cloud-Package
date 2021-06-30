@@ -24,11 +24,11 @@ com\enableets\edu\pakage\core\core\logging\slf4j\Slf4jImpl.class
 com\enableets\edu\pakage\core\core\xpath\XPathParserFactory.class
 com\enableets\edu\pakage\core\source\URLSource.class
 com\enableets\edu\pakage\core\core\xpath\XPathParser.class
-com\enableets\edu\pakage\core\core\http\PakcageHttpClientException.class
 com\enableets\edu\pakage\core\source\PPRIdSource.class
 com\enableets\edu\pakage\core\core\htmlparser\FetchResult.class
 com\enableets\edu\pakage\core\core\logging\Log.class
 com\enableets\edu\pakage\core\core\htmlparser\multipart\ITask.class
+com\enableets\edu\pakage\core\core\http\packageHttpClientException.class
 com\enableets\edu\pakage\core\source\PackageSource.class
 com\enableets\edu\pakage\core\core\xstream\EntityToXmlUtils.class
 com\enableets\edu\pakage\core\bean\Body.class

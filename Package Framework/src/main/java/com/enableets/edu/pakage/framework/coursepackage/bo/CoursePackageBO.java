@@ -148,4 +148,8 @@ public class CoursePackageBO {
 	 * create Time
 	 */
 	private String createTime;
+
+	private List<CoursePackagePlanInfoBO> plans;
+
+	private List<String> typeCodes;
 }

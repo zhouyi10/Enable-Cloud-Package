@@ -303,4 +303,28 @@
 		</if>
 		where order_id = #{orderId}
 	</update>
+
+	<select id="getOneBusinessOrder" resultType="com.enableets.edu.pakage.framework.ppr.test.po.BusinessOrderPO">
+		select
+			order_id as orderId,
+			business_id as businessId,
+			`type`,
+			origin_data as originData,
+			extend_attrs as extendAttrs,
+			`status`,
+			retry_times as retryTimes,
+			error_code as errorCode,
+			error_message as errorMessage,
+			`creator`,
+			create_time as createTime,
+			`updator`,
+			update_time as updateTime
+		from
+			business_order
+			where status = 0
+			and type = 'ERROR_QUESTION'
+			limit 1
+	</select>
+
+
 </mapper>

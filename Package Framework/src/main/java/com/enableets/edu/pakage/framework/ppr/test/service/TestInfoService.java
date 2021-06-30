@@ -17,7 +17,6 @@ import com.enableets.edu.pakage.framework.ppr.core.PPRConstants;
 import com.enableets.edu.pakage.framework.ppr.core.RecipientCacheMap;
 import com.enableets.edu.pakage.framework.ppr.core.tablecopy.TableCopyComponent;
 import com.enableets.edu.pakage.framework.ppr.paper.service.PaperInfoService;
-import com.enableets.edu.pakage.framework.ppr.test.bo.TestActionFlowBO;
 import com.enableets.edu.pakage.framework.ppr.test.dao.*;
 import com.enableets.edu.pakage.framework.ppr.test.po.*;
 import com.enableets.edu.pakage.framework.ppr.test.service.submit.utils.AutoMarkStrategyUtils;
@@ -92,7 +91,7 @@ public class TestInfoService {
 //    @Autowired
 //    private TestActionService testActionService;
 
-   /* @RabbitListener(queues = RabbitMQConfig.QUEUE_SEND_PAPER)
+    @RabbitListener(queues = RabbitMQConfig.QUEUE_SEND_PAPER)
     public void send(String msg, Message message, Channel channel) throws IOException{
         channel.basicQos(1);
         long deliveryTag = message.getMessageProperties().getDeliveryTag();
@@ -110,7 +109,7 @@ public class TestInfoService {
         }
         channel.basicAck(deliveryTag, false);
     }
-*/
+
     /**
      * Convert Step task Queue message To Test
      * @param stepTaskInfo
@@ -525,5 +524,54 @@ public class TestInfoService {
             assignmentRecipients.add(assignmentRecipient);
         }
         return assignmentRecipients;
+    }
+
+    public List<ReportTestBO> queryResultForTeacher(ReportTestBO test,Long timestamp, Integer offset, Integer rows){
+
+        Assert.notNull(test.getUserId(), "userId is null!");
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("testId", test.getTestId());
+        condition.put("userId", test.getUserId());
+        condition.put("gradeCode", test.getGradeCode());
+        condition.put("classId", test.getClassId());
+        condition.put("subjectCode", test.getSubjectCode());
+        condition.put("testName", test.getTestName());
+        condition.put("activityType", test.getActivityType());
+        if (timestamp != null) {
+            try {
+                condition.put("createTime", new Date(timestamp));
+                if (offset == null) condition.put("offset", 0);
+            } catch (Exception e) {
+                throw new MicroServiceException("", "timestamp Formatting error");
+            }
+        }
+        condition.put("offset", offset);
+        condition.put("rows", rows);
+        List<ReportTestInfoPO> testInfos = testInfoDAO.queryResultForTeacher(condition);
+        if (testInfos == null || testInfos.size() == 0) {
+            return null;
+        }
+        return  BeanUtils.convert(testInfos,ReportTestBO.class);
+    }
+
+    public Integer countResultForTeacher(ReportTestBO test, Long timestamp){
+
+        Assert.notNull(test.getUserId(), "userId is null!");
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("testId", test.getTestId());
+        condition.put("userId", test.getUserId());
+        condition.put("gradeCode", test.getGradeCode());
+        condition.put("classId", test.getClassId());
+        condition.put("subjectCode", test.getSubjectCode());
+        condition.put("testName", test.getTestName());
+        condition.put("activityType", test.getActivityType());
+        if (timestamp != null) {
+            try {
+                condition.put("createTime", new Date(timestamp));
+            } catch (Exception e) {
+                throw new MicroServiceException("", "timestamp Formatting error");
+            }
+        }
+        return  testInfoDAO.countResultForTeacher(condition);
     }
 }

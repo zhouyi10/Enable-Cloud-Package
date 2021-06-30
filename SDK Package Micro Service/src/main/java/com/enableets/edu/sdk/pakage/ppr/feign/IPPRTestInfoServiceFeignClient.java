@@ -1,5 +1,6 @@
 package com.enableets.edu.sdk.pakage.ppr.feign;
 
+import com.enableets.edu.sdk.pakage.ppr.dto.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -8,11 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.enableets.edu.sdk.core.Response;
-import com.enableets.edu.sdk.pakage.ppr.dto.AddTestInfoDTO;
-import com.enableets.edu.sdk.pakage.ppr.dto.QueryQuestionAssignmentMarkProgressResultDTO;
-import com.enableets.edu.sdk.pakage.ppr.dto.QueryQuestionAssignmentResultDTO;
-import com.enableets.edu.sdk.pakage.ppr.dto.QueryTestInfoResultDTO;
-import com.enableets.edu.sdk.pakage.ppr.dto.QuestionAssignmentDTO;
 
 import java.util.List;
 
@@ -64,4 +60,21 @@ public interface IPPRTestInfoServiceFeignClient {
      */
     @RequestMapping(value = "/microservice/packageservice/ppr/tests/mark/assign", method = RequestMethod.POST)
     public Response<Boolean> addTestAssignerTeacher(@RequestBody List<QuestionAssignmentDTO> assignments);
+
+
+    /**
+     * Query Test Information
+     * @return
+     */
+    @RequestMapping(value = "/microservice/packageservice/ppr/tests/teacher", method = RequestMethod.POST)
+    public Response<List<TeacherTestResultDTO>> queryResultForTeacher(@RequestBody QueryTeacherTestDTO teacherDTO);
+
+
+    /**
+     * Query Test Count
+     * @return
+     */
+    @RequestMapping(value = "/microservice/packageservice/ppr/tests/count", method = RequestMethod.POST)
+    public Response<Integer> countResultForTeacher(@RequestBody QueryTeacherTestDTO teacherDTO);
+
 }

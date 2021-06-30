@@ -14,5 +14,6 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Data
 public class XKWGradeBO extends XKWIdNameBO{
+    /* 学段id */
     private String stageId;
 }

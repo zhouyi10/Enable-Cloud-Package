@@ -138,9 +138,9 @@
 			  <foreach collection="list" separator="," open="(" close=")" item="item">
 				  #{item}
 			  </foreach>
-			) tmp
-		set a.user_score = tmp.score, mark_status='1', update_time=now()
-		WHERE a.test_user_id = tmp.test_user_id
+			) tmp,test_info ti
+		set a.user_score = tmp.score, a.mark_status='1', a.update_time=now(),ti.mark_status='1', ti.update_time=now()
+		WHERE a.test_user_id = tmp.test_user_id and a.test_id = ti.test_id
 	</update>
 
 	<update id="recalculateTotalScore" parameterType="java.util.List">

@@ -56,4 +56,12 @@ public class PPRConstants {
 
     /** Frame choose paper*/
     public static final String IMG_FRAME_CHOOSE_PAPER = "4";
+
+    public static final String XKW_INTERFACE_ERROR_CODE = "40001";
+
+    /** JSON字符串头尾 */
+    public static final String JSON_HAND_TAIL = "\\\"";
+
+    /** HTTP 头 */
+    public static final String HTTP_HAND = "http";
 }

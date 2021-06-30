@@ -1,11 +1,11 @@
 package com.enableets.edu.pakage.manager.ppr.controller;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 
 import cn.hutool.core.io.FileUtil;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.enableets.edu.pakage.framework.ppr.bo.BaseSearchConditionBO;
@@ -22,6 +22,7 @@ import com.enableets.edu.pakage.manager.ppr.bo.*;
 import com.enableets.edu.pakage.manager.ppr.core.PPRBaseInfoService;
 import com.enableets.edu.pakage.manager.ppr.service.*;
 import com.enableets.edu.pakage.manager.ppr.vo.*;
+import com.enableets.edu.pakage.manager.util.ExportWordUtil;
 import com.enableets.edu.sdk.paper.service.IPaperInfoService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,9 +94,12 @@ public class PaperInfoController {
             this.initPaperBaseInfo(paper);
             pprBaseInfoService.getTeacherBaseInfo(session, paper.getUserId());
         }
-        ExamStypeInfoPO examStypeinfoPO =null;
+        ExamStypeInfoPO examStypeinfoPO =null;;
         if (StringUtils.isNotBlank(paper.getPaperId())){
             examStypeinfoPO = examStypeInfoService.querybyid(paper.getPaperId());
+            if (examStypeinfoPO == null){
+                examStypeinfoPO = new ExamStypeInfoPO();
+            }
         }else {
             examStypeinfoPO = new ExamStypeInfoPO();
         }
@@ -435,34 +439,40 @@ public class PaperInfoController {
     }
 
 
- /*   @ResponseBody
+
+
+    @ResponseBody
     @RequestMapping(value = "/exportWord")
-    public void exportWord( @RequestBody  String id, Model model, WebRequest request,HttpServletResponse response) throws IOException {
+    public void exportWord(String id,HttpServletResponse response) throws IOException {
         String staticHtmlPath = paperInfoService.createStaticHtml(Long.valueOf(id));
+        OperationResult operationResult = new OperationResult();
         if (StringUtils.isBlank(staticHtmlPath)) {
-            String str = "试卷不存在!";
-            response.setContentType("text/html;charset=utf-8");
-            PrintWriter out = response.getWriter();
-            out.write(str);
-            out.close();
+          /*  operationResult.setStatus(0);
+            operationResult.setMessage("试卷不存在!");*/
+
         }else {
-            InputStream inputStream = FileUtil.getInputStream(staticHtmlPath);
-            byte[] buffer = new byte[inputStream.available()];
-            inputStream.read(buffer);
-            inputStream.close();
-            response.reset();
-            OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
-            toClient.write(buffer);
-            toClient.flush();
-            toClient.close();
-            try {
-                boolean b = ExportWordUtil.exportWord(staticHtmlPath);
-                System.out.println(b);
-            } catch (Exception e) {
-                e.printStackTrace();
+            String filepath = ExportWordUtil.writeWordFile(staticHtmlPath);
+            InputStream  fin = new FileInputStream(new File(filepath));
+            response.setCharacterEncoding("utf-8");
+            response.setContentType("application/msword");
+            // 设置浏览器以下载的方式处理该文件默认名为resume.doc
+            response.addHeader("Content-Disposition","attachment;filename="+id+".doc");
+            ServletOutputStream out = response.getOutputStream();
+            byte[] buffer = new byte[512]; // 缓冲区
+            int bytesToRead = -1;
+            // 通过循环将读入的Word文件的内容输出到浏览器中
+            while ((bytesToRead = fin.read(buffer)) != -1) {
+                out.write(buffer, 0, bytesToRead);
             }
+
+            //return null;
         }
-    }*/
+
+    }
+
+
+
+
 
     @RequestMapping(value = "/answercard/template/preedit")
     public String answercardTemplatePreedit(String paperId, String userId, boolean isPdf, Model model){

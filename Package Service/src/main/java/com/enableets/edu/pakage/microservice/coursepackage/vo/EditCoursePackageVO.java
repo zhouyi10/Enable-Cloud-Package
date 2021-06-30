@@ -14,5 +14,4 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @ApiModel(value = "EditCoursePackageVO", description = "EditCoursePackageVO")
 public class EditCoursePackageVO extends AddCoursePackageVO {
-
 }

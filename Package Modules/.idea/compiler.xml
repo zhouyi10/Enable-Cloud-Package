@@ -22,22 +22,6 @@
         <module name="enable-package-service" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="enable-package" target="1.8" />
-      <module name="enable-package-book" target="1.8" />
-      <module name="enable-package-card" target="1.8" />
-      <module name="enable-package-etm" target="1.8" />
-      <module name="enable-package-ppr" target="1.8" />
-      <module name="enable-package-service" target="1.8" />
-      <module name="package-framework" target="1.8" />
-      <module name="package-modules" target="1.8" />
-      <module name="package-service" target="1.8" />
-      <module name="ppr-paper-adapter" target="1.8" />
-      <module name="sdk-package" target="1.8" />
-      <module name="sdk-package-core-adapters" target="1.8" />
-      <module name="sdk-ppr-core" target="1.8" />
-      <module name="sdk-ppr-core-adapters" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

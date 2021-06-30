@@ -16,12 +16,16 @@ import java.util.List;
 @Data
 public class XKWChildQuestionBO {
 
+    /* 小题答案 */
     private String childAnswer;
 
+    /* 小题题文 */
     private String childBody;
 
+    /* 小题序号 */
     private Integer number;
 
+    /* 小题选项集合 */
     private List<XKWIdNameBO> childOptions;
 
 }

@@ -1,5 +1,6 @@
 package com.enableets.edu.pakage.microservice.annotation;
 
+import com.enableets.edu.restful.tools.respone.template.result.annotation.EnableResponseResultTemplate;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  **/
 @ComponentScan(basePackages = {"com.enableets.edu.pakage.framework", "com.enableets.edu.pakage.microservice", "com.enableets.edu.ppr.adapter.service"}, nameGenerator = PackageMicroServiceConfiguration.CustomAnnotationBeanNameGenerator.class)
 @MapperScan(basePackages = {"com.enableets.edu.pakage.framework.ppr.assessment.dao", "com.enableets.edu.pakage.framework.ppr.paper.dao", "com.enableets.edu.pakage.framework.ppr.question.dao", "com.enableets.edu.ppr.adapter.dao"})
+@EnableResponseResultTemplate
 public class PackageMicroServiceConfiguration extends DefaultSwaggerConfiguration {
 
     @Value("${system-identifier.datacenter-id}")

@@ -140,4 +140,6 @@ public interface BusinessOrderDAO extends BaseDao<BusinessOrderPO> {
      * @return update count
      */
     int success(@Param("orderId") String orderId, @Param("extendAttrs") String extendAttrs);
+
+    BusinessOrderPO getOneBusinessOrder();
 }

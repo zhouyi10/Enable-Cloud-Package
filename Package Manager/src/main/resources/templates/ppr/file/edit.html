@@ -104,16 +104,19 @@
 			<span class="btn btn-custom" id="saveFile" th:text="#{UI_70_02_01_007}">保存</span>
 		</div>
 	</div>
-	<div class="container-wrapper" width="1100" height="">
-		<div class="exam-container">
-			<button type="button" style="display:none;" class="remove" id="remove">X</button>
-			<div class="exam-wrapper" id="exam">
-				<span class="btn btn-custom upload" id="upload" th:text="#{UI_70_04_01_011}">上传文件</span>
+	<div class="container-wrapper">
+		<div class="left-asider">
+			<div class="exam-container">
+				<button type="button" style="display:none;" class="remove" id="remove">X</button>
+				<div class="exam-wrapper" id="exam">
+					<span class="btn btn-custom upload" id="upload" th:text="#{UI_70_04_01_011}">上传文件</span>
+				</div>
+			</div>
+			<div class="card-container">
+				<iframe id="answerCardTemplate"  frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="auto" style="width:100%;height:100%" ></iframe>
 			</div>
 		</div>
-		<div class="card-container">
-			<iframe id="answerCardTemplate"  frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="auto" style="width:163%;height:100%" ></iframe>
-		</div>
+
 	</div>
 	<div class="right-asider">
 		<div class="cont">

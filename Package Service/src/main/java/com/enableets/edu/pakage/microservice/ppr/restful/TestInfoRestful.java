@@ -1,5 +1,7 @@
 package com.enableets.edu.pakage.microservice.ppr.restful;
 
+import com.enableets.edu.pakage.framework.ppr.bo.ReportTestBO;
+import com.enableets.edu.pakage.microservice.ppr.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,11 +17,6 @@ import com.enableets.edu.pakage.framework.ppr.test.service.TestInfoService;
 import com.enableets.edu.pakage.framework.ppr.bo.QuestionAssignmentBO;
 import com.enableets.edu.pakage.framework.ppr.bo.QuestionAssignmentMarkedProcessBO;
 import com.enableets.edu.pakage.framework.ppr.bo.TestInfoBO;
-import com.enableets.edu.pakage.microservice.ppr.vo.AddTestInfoVO;
-import com.enableets.edu.pakage.microservice.ppr.vo.QueryQuestionAssignmentMarkProgressResultVO;
-import com.enableets.edu.pakage.microservice.ppr.vo.QueryQuestionAssignmentResultVO;
-import com.enableets.edu.pakage.microservice.ppr.vo.QueryTestInfoResultVO;
-import com.enableets.edu.pakage.microservice.ppr.vo.QuestionAssignmentVO;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,7 +28,7 @@ import java.util.List;
  * @author walle_yu@enable-ets.com
  * @since 2020/08/20
  **/
-@Api(value = "[3]PPR Test Api", tags = "Paper Test Info Api", position = 3)
+@Api(value = "(3)PPR Test Api", tags = "(3)Paper Test Info Api", position = 3)
 @RestController
 @RequestMapping(value = "/microservice/packageservice/ppr")
 public class TestInfoRestful extends ServiceControllerAdapter<String> {
@@ -106,5 +103,22 @@ public class TestInfoRestful extends ServiceControllerAdapter<String> {
     public Response<Boolean> addTestAssignerTeacher(@ApiParam(value = "Assign Information", required = true) @RequestBody List<QuestionAssignmentVO> list){
         testInfoService.addTestAssignerTeacher(BeanUtils.convert(list, QuestionAssignmentBO.class));
         return responseTemplate.format(Boolean.TRUE);
+    }
+
+    /**
+     *  Query Teacher Test Information
+     * @param teacherTest
+     * @return
+     */
+    @ApiOperation(value = "Query Teacher Test Information", notes = "Query Teacher Test Information")
+    @RequestMapping(value = "/tests/teacher", method = RequestMethod.POST)
+    public Response<List<TeacherTestResultVO>> queryTeacherTest(@ApiParam(value="User Test Info", required=true) @RequestBody QueryTeacherTestVO teacherTest){
+        return responseTemplate.format(BeanUtils.convert(testInfoService.queryResultForTeacher(BeanUtils.convert(teacherTest, ReportTestBO.class), teacherTest.getTimestamp(), teacherTest.getOffset() , teacherTest.getRows()), TeacherTestResultVO.class));
+    }
+
+    @ApiOperation(value = "Query Teacher Test Count", notes = "Query Teacher Test Count")
+    @RequestMapping(value = "/tests/count", method = RequestMethod.POST)
+    public Response<Integer> countTeacherTest(@ApiParam(value="User Test Info", required=true) @RequestBody QueryTeacherTestVO teacherTest){
+        return responseTemplate.format(testInfoService.countResultForTeacher(BeanUtils.convert(teacherTest, ReportTestBO.class), teacherTest.getTimestamp()));
     }
 }

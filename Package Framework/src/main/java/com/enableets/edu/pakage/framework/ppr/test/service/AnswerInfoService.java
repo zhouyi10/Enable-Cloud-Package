@@ -27,6 +27,7 @@ import com.enableets.edu.pakage.framework.ppr.test.service.submit.bo.SubmitAttri
 import com.enableets.edu.pakage.framework.ppr.test.service.submit.utils.AutoMarkStrategyUtils;
 import com.enableets.edu.pakage.ppr.action.PPRPackageLifecycle;
 import com.enableets.edu.sdk.steptask.dto.AddStepRecordDTO;
+import com.enableets.edu.sdk.steptask.dto.AddStepRecordListDTO;
 import com.enableets.edu.sdk.steptask.service.IStepRecordV2Service;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -121,12 +122,17 @@ public class AnswerInfoService {
     }
 
     private void sendMarkInfo(String testUserId, Float score, String userId) {
+        AddStepRecordListDTO addStepRecordListDTO = new AddStepRecordListDTO();
+        addStepRecordListDTO.setAddStepRecordList(new ArrayList<>());
+
         AddStepRecordDTO stepRecordDTO = new AddStepRecordDTO();
         stepRecordDTO.setStepInstanceId(testUserId);
         stepRecordDTO.setScore(Float.toString(score));
         stepRecordDTO.setUserId(userId);
+
+        addStepRecordListDTO.getAddStepRecordList().add(stepRecordDTO);
         try {
-            iStepRecordV2ServiceSDK.mark(stepRecordDTO);
+            iStepRecordV2ServiceSDK.mark(addStepRecordListDTO);
         }catch (Exception e) {
             LOGGER.error("Auto Mark notify Step Task Error, StepInstanceId=" + testUserId + ", score=" + score + ", userId=" + userId, e);
             throw new MicroServiceException("AnswerInfoService-submit-001", "Auto Mark notify Step Task Error, StepInstanceId=" + testUserId + ", score=" + score + ", userId=" + userId);

@@ -1,20 +1,15 @@
 package com.enableets.edu.pakage.framework.ppr.test.service;
 
 import com.enableets.edu.framework.core.util.BeanUtils;
+import com.enableets.edu.framework.core.util.token.ITokenGenerator;
 import com.enableets.edu.pakage.framework.core.RabbitMQConfig;
 import com.enableets.edu.pakage.framework.ppr.bo.*;
 import com.enableets.edu.pakage.framework.ppr.core.PPRConfigReader;
 import com.enableets.edu.pakage.framework.ppr.core.PPRConstants;
 import com.enableets.edu.pakage.framework.ppr.paper.service.PaperInfoService;
 import com.enableets.edu.pakage.framework.ppr.test.bo.TestMarkResultInfoBO;
-import com.enableets.edu.pakage.framework.ppr.test.dao.PackageUserAnswerInfoDAO;
-import com.enableets.edu.pakage.framework.ppr.test.dao.TestUserInfoDAO;
-import com.enableets.edu.pakage.framework.ppr.test.dao.UserAnswerCanvasInfoDAO;
-import com.enableets.edu.pakage.framework.ppr.test.dao.UserAnswerStampInfoDAO;
-import com.enableets.edu.pakage.framework.ppr.test.po.TAsUserAnswerStampPO;
-import com.enableets.edu.pakage.framework.ppr.test.po.TestUserInfoPO;
-import com.enableets.edu.pakage.framework.ppr.test.po.UserAnswerCanvasInfoPO;
-import com.enableets.edu.pakage.framework.ppr.test.po.UserAnswerInfoPO;
+import com.enableets.edu.pakage.framework.ppr.test.dao.*;
+import com.enableets.edu.pakage.framework.ppr.test.po.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +48,13 @@ public class TestUserInfoService {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private BusinessOrderDAO businessOrderDAO;
+
+    @Autowired
+    private ITokenGenerator iTokenGenerator;
+
 
     /**
      * Query Answer By Marking Condition
@@ -137,6 +139,15 @@ public class TestUserInfoService {
         }
         if (type != null && (type == PPRConstants.MARK_TYPE_COMPLETE || type == PPRConstants.MARK_TYPE_ALL_COMPLETE)) {
             testUserInfoDAO.completeMark(testUserIds);
+            BusinessOrderPO businessOrderPO = new BusinessOrderPO();
+            businessOrderPO.setOrderId(iTokenGenerator.getToken().toString());
+            businessOrderPO.setBusinessId(testId);
+            businessOrderPO.setType("ERROR_QUESTION");
+            businessOrderPO.setStatus(0);
+            businessOrderPO.setVersion(0);
+            businessOrderPO.setCreateTime(Calendar.getInstance().getTime());
+            businessOrderPO.setUpdateTime(businessOrderPO.getCreateTime());
+            businessOrderDAO.insertSelective(businessOrderPO);
         } else {
             testUserInfoDAO.recalculateTotalScore(testUserIds);
         }

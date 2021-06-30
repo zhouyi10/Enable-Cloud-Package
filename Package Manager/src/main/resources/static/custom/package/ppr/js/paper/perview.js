@@ -38,21 +38,16 @@
             });
 
             $("#exportWord").on("click", function(){
-                //alert(PerView.paperInfo.paperId);
-                var url = _this.exportWordUrl;
-                $.ajax({
-                    url: url,
-                    type:"POST",
-                    data:PerView.paperInfo.paperId,
-                    contentType:"application/json; charset=utf-8",
-                    dataType:"json",
-                    async: true,
-                    success: function(data){
-                    },
-                    error: function () {
+                var url = _this.exportWordUrl+"?id="+PerView.paperInfo.paperId;
+                try {
+                    var elemIF = document.createElement("iframe");
+                    elemIF.src = url;
+                    elemIF.style.display = "none";
+                    document.body.appendChild(elemIF);
+                } catch (e) {
+                    layer.msg("服务异常，请联系管理员！", { icon: 7, time: 1000, shade: [0.6, '#000', true] });
+                }
 
-                    }
-                });
 
             });
         },

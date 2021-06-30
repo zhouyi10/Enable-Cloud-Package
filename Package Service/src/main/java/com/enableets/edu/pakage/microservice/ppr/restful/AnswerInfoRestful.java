@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
  * @author walle_yu@enable-ets.com
  * @since 2020/07/31
  **/
-@Api(value = "[5]Test answer Info Api", tags = "answer、submit 、mark info!", position = 5)
+@Api(value = "(5)Test answer Info Api", tags = "(5)answer、submit 、mark info!", position = 5)
 @RestController
 @RequestMapping(value = "/microservice/packageservice/ppr/answer")
 public class AnswerInfoRestful extends ServiceControllerAdapter<String> {

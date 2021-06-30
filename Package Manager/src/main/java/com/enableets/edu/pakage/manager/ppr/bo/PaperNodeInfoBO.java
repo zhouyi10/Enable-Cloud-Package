@@ -37,6 +37,9 @@ public class PaperNodeInfoBO implements Comparable<PaperNodeInfoBO> {
 	/** Score */
 	private Float points;
 
+	/** Score */
+	private String realPoints;
+
 	/** Question info  */
 	private PaperQuestionBO question;
 

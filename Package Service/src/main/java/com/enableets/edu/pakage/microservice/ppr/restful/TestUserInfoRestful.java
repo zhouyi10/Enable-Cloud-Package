@@ -31,7 +31,7 @@ import java.util.List;
  * @author walle_yu@enable-ets.com
  * @since 2020/10/19
  **/
-@Api(value = "[4]PPR Test User Api", tags = "Paper Test User Info Api", position = 4)
+@Api(value = "(4)PPR Test User Api", tags = "(4)Paper Test User Info Api", position = 4)
 @RestController
 @RequestMapping(value = "/microservice/packageservice/ppr/tests/users")
 public class TestUserInfoRestful extends ServiceControllerAdapter<String> {

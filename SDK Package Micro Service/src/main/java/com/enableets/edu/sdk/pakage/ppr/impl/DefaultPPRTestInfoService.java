@@ -1,10 +1,6 @@
 package com.enableets.edu.sdk.pakage.ppr.impl;
 
-import com.enableets.edu.sdk.pakage.ppr.dto.AddTestInfoDTO;
-import com.enableets.edu.sdk.pakage.ppr.dto.QueryQuestionAssignmentMarkProgressResultDTO;
-import com.enableets.edu.sdk.pakage.ppr.dto.QueryQuestionAssignmentResultDTO;
-import com.enableets.edu.sdk.pakage.ppr.dto.QueryTestInfoResultDTO;
-import com.enableets.edu.sdk.pakage.ppr.dto.QuestionAssignmentDTO;
+import com.enableets.edu.sdk.pakage.ppr.dto.*;
 import com.enableets.edu.sdk.pakage.ppr.feign.IPPRTestInfoServiceFeignClient;
 import com.enableets.edu.sdk.pakage.ppr.service.IPPRTestInfoService;
 
@@ -50,5 +46,15 @@ public class DefaultPPRTestInfoService implements IPPRTestInfoService {
     @Override
     public boolean addTestAssignerTeacher(List<QuestionAssignmentDTO> assignments) {
         return pprTestInfoServiceFeignClient.addTestAssignerTeacher(assignments).getData();
+    }
+
+    @Override
+    public List<TeacherTestResultDTO> queryResultForTeacher(QueryTeacherTestDTO teacherDTO) {
+        return pprTestInfoServiceFeignClient.queryResultForTeacher(teacherDTO).getData();
+    }
+
+    @Override
+    public Integer countResultForTeacher(QueryTeacherTestDTO teacherDTO) {
+        return pprTestInfoServiceFeignClient.countResultForTeacher(teacherDTO).getData();
     }
 }

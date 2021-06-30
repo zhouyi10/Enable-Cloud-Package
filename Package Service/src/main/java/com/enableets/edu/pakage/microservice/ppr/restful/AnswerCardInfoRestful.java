@@ -21,7 +21,7 @@ import java.util.List;
  * @author walle_yu@enable-ets.com
  * @since 2020/11/02
  **/
-@Api(value = "[2]PPR AnswerCard Info Api", tags = "PPR AnswerCard Info Api", position = 2)
+@Api(value = "(2)PPR AnswerCard Info Api", tags = "(2)PPR AnswerCard Info Api", position = 2)
 @RestController
 @RequestMapping(value = "/microservice/packageservice/ppr/answercards")
 public class AnswerCardInfoRestful extends ServiceControllerAdapter<String> {

@@ -16,24 +16,39 @@ import org.springframework.stereotype.Component;
 @Data
 public class XKWConfigReader {
 
-    @Value("${xkw.appId:xuechuang")
+    @Value("${xkw.appId:xuechuang_1}")
     private String appId;
 
-    @Value("${xkw.secret:1cb69ce3943d4b58838f47fd37943cd2")
+    @Value("${xkw.secret:eee3fd99600144c8877107edd22b8de4}")
     private String secret;
 
-    @Value("${xkw.interface.search-quesitons:/questions/%s")
+    @Value("${xkw.interface.domain:http://api.xkw.com}")
+    private String domain;
+
+    @Value("${xkw.img.domain:http://api.xkw.com}")
+    private String imgDomain;
+
+    @Value("${xkw.interface.get-all-category-root:/zujuan/v2/banks/category_root}")
+    private String getAllCategoryRootUrl;
+
+    @Value("${xkw.interface.query-category-by-root-id:/zujuan/v2/categories/%s}")
+    private String queryCategoryByRootId;
+
+    @Value("${xkw.interface.search-quesitons:/zujuan/v2/questions/%s/search}")
     private String searchQuestionsUrl;
 
-    @Value("${xkw.interface.search-quesitons-photo:/questions/photo/search")
+    @Value("${xkw.interface.search-quesitons-photo:/zujuan/v2/questions/photo/search}")
     private String searchQuestionsByPhotoUrl;
 
-    @Value("${xkw.interface.search-quesitons-ocr:/questions/ocr/search")
+    @Value("${xkw.interface.search-quesitons-ocr:/zujuan/v2/questions/ocr/search}")
     private String searchQuestionsByOCRUrl;
 
-    @Value("${xkw.interface.search-quesitons-picture:/questions/picture/search")
+    @Value("${xkw.interface.search-quesitons-picture:/zujuan/v2/questions/picture/search}")
     private String searchQuestionsByPictureUrl;
 
-    @Value("${xkw.interface.searcg-quesitons-recommend:/questions/{bankId}/recommend/{questionId}")
+    @Value("${xkw.interface.searcg-quesitons-recommend:/zujuan/v2/questions/%s/recommend/%s}")
     private String searchQuestionsByRecommendUrl;
+
+    @Value("${xkw.interface.timeout:1000}")
+    private int timeout;
 }

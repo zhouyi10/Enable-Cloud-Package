@@ -14,8 +14,10 @@ import lombok.experimental.Accessors;
 @Data
 public class XKWIdNameBO {
 
+    /* id */
     private String id;
 
+    /* 名称 */
     private String name;
     
 }

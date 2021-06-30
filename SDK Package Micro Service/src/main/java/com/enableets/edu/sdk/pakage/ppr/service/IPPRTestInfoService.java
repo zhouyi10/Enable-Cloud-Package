@@ -1,10 +1,6 @@
 package com.enableets.edu.sdk.pakage.ppr.service;
 
-import com.enableets.edu.sdk.pakage.ppr.dto.AddTestInfoDTO;
-import com.enableets.edu.sdk.pakage.ppr.dto.QueryQuestionAssignmentMarkProgressResultDTO;
-import com.enableets.edu.sdk.pakage.ppr.dto.QueryQuestionAssignmentResultDTO;
-import com.enableets.edu.sdk.pakage.ppr.dto.QueryTestInfoResultDTO;
-import com.enableets.edu.sdk.pakage.ppr.dto.QuestionAssignmentDTO;
+import com.enableets.edu.sdk.pakage.ppr.dto.*;
 
 import java.util.List;
 
@@ -26,4 +22,8 @@ public interface IPPRTestInfoService {
     public List<QueryQuestionAssignmentMarkProgressResultDTO> queryMarkedProgress(String stepId, String fileId);
 
     public boolean addTestAssignerTeacher(List<QuestionAssignmentDTO> assignments);
+
+    public List<TeacherTestResultDTO> queryResultForTeacher(QueryTeacherTestDTO teacherDTO);
+
+    public Integer countResultForTeacher(QueryTeacherTestDTO teacherDTO);
 }

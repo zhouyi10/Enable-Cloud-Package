@@ -19,6 +19,8 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Redis Configuration
@@ -39,8 +41,14 @@ public class RedisConfiguration extends CachingConfigurerSupport {
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer()))
                 .disableCachingNullValues();
 
+        // 针对不同cacheName，设置不同的过期时间
+        Map<String, RedisCacheConfiguration> initialCacheConfiguration = new HashMap<String, RedisCacheConfiguration>() {{
+            put("xkw", RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(7))); //7小时
+        }};
+
         return RedisCacheManager.builder(redisConnectionFactory)
                 .cacheDefaults(config)
+                .withInitialCacheConfigurations(initialCacheConfiguration)
                 .build();
     }
 

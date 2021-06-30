@@ -173,27 +173,32 @@ a:focus {
 }
 .ContainerWarp20210527  .container-wrapper {
   position: relative;
-  width: 1050px;
+  width: 1070px;
   height: 90%;
   margin: 35px auto;
   padding: 15px;
   background-color: #e2e2e2;
-  /*overflow: hidden;*/
+  overflow-x: auto;
+  overflow-y: hidden;
   float: left;
   margin-left: 30px;
-
+  display: flex;
 }
-.ContainerWarp20210527  .container-wrapper .exam-container {
+.ContainerWarp20210527  .container-wrapper .left-asider {
+  height: 100%;
+  width: 1700px;
+  flex-shrink: 0;
+}
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container {
   position: relative;
-  width: 500px;
+  width: 48%;
   height: 100%;
   border: 1px solid black;
   float: left;
   background-color: #F2F2F2;
   margin-right: 20px;
-
 }
-.ContainerWarp20210527  .container-wrapper .exam-container .exam-wrapper {
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .exam-wrapper {
   position: relative;
   width: 100%;
   height: 100%;
@@ -201,18 +206,18 @@ a:focus {
   overflow-y:hidden;
   z-index: 1;
 }
-.ContainerWarp20210527  .container-wrapper .exam-container .remove{
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .remove{
   position: absolute;
   right: 0px;
   top: 0px;
   z-index: 9999;
 
 }
-.ContainerWarp20210527  .container-wrapper .exam-container .exam-wrapper .upload {
-  margin: 45% 42%;
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .exam-wrapper .upload {
+  margin: 45% 45%;
 
 }
-.ContainerWarp20210527  .container-wrapper .exam-container .exam-wrapper .exam-item-file {
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .exam-wrapper .exam-item-file {
   -moz-user-select: none;
   -khtml-user-select: none;
   -ms-user-select: none;
@@ -223,33 +228,33 @@ a:focus {
   margin: 10px auto;
   text-align: center;
 }
-.ContainerWarp20210527  .container-wrapper .exam-container .exam-wrapper .exam-item-file img {
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .exam-wrapper .exam-item-file img {
   max-width: 796px;
 }
-.ContainerWarp20210527  .container-wrapper .exam-container .exam-wrapper .exam-item-file .file-operation {
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .exam-wrapper .exam-item-file .file-operation {
   position: absolute;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
 }
-.ContainerWarp20210527  .container-wrapper .exam-container .exam-wrapper .exam-item-file .file-operation .file-operation-header {
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .exam-wrapper .exam-item-file .file-operation .file-operation-header {
   position: relative;
   height: 0;
   display: none;
 }
-.ContainerWarp20210527  .container-wrapper .exam-container .exam-wrapper .exam-item-file .file-operation .file-operation-header .btn-group {
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .exam-wrapper .exam-item-file .file-operation .file-operation-header .btn-group {
   float: right;
 }
-.ContainerWarp20210527  .container-wrapper .exam-container .exam-wrapper .exam-item-file .file-operation.hover .file-operation-header {
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .exam-wrapper .exam-item-file .file-operation.hover .file-operation-header {
   display: block;
 }
-.ContainerWarp20210527  .container-wrapper .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item {
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item {
   position: absolute;
   border: 1px solid #FC6873;
   cursor: pointer;
 }
-.ContainerWarp20210527  .container-wrapper .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item .ques-item-control {
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item .ques-item-control {
   display: none;
   position: absolute;
 
@@ -261,27 +266,27 @@ a:focus {
   cursor: n-resize;
   background: white;
 }
-.ContainerWarp20210527  .container-wrapper .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item .ques-item-header {
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item .ques-item-header {
   top: -6px;
 }
-.ContainerWarp20210527  .container-wrapper .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item .ques-item-footer {
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item .ques-item-footer {
   bottom: -6px;
 }
-.ContainerWarp20210527  .container-wrapper .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item .ques-item-operation {
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item .ques-item-operation {
   display: none;
   position: absolute;
   top: -1px;
   right: -1px;
   text-align: center;
 }
-.ContainerWarp20210527  .container-wrapper .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item .ques-item-operation span {
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item .ques-item-operation span {
   display: inline-block;
   min-width: 80px;
   padding: 6px 10px;
   border: 1px solid #FC6873;
   background-color: #fff;
 }
-.ContainerWarp20210527  .container-wrapper .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item .ques-item-no {
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item .ques-item-no {
   display: none;
   position: absolute;
   left: 0;
@@ -294,31 +299,31 @@ a:focus {
   background-color: rgba(45, 218, 147, 0.5);
   color: #fff;
 }
-.ContainerWarp20210527  .container-wrapper .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item.hover .ques-item-control,
-.ContainerWarp20210527  .container-wrapper .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item.selected .ques-item-control,
-.ContainerWarp20210527  .container-wrapper .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item.hover .ques-item-operation,
-.ContainerWarp20210527  .container-wrapper .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item.selected .ques-item-operation {
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item.hover .ques-item-control,
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item.selected .ques-item-control,
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item.hover .ques-item-operation,
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item.selected .ques-item-operation {
   display: block;
 }
-.ContainerWarp20210527  .container-wrapper .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item.hover .ques-item-no,
-.ContainerWarp20210527  .container-wrapper .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item.selected .ques-item-no {
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item.hover .ques-item-no,
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item.selected .ques-item-no {
   background-color: #2DCA93;
 }
-.ContainerWarp20210527  .container-wrapper .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item.hover.related,
-.ContainerWarp20210527  .container-wrapper .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item.selected.related {
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item.hover.related,
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item.selected.related {
   border-color: #2DCA93;
 }
-.ContainerWarp20210527  .container-wrapper .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item.related {
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item.related {
   border-color: rgba(45, 218, 147, 0.5);
 }
-.ContainerWarp20210527  .container-wrapper .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item.related .ques-item-no {
+.ContainerWarp20210527  .container-wrapper .left-asider  .exam-container .exam-wrapper .exam-item-file .file-operation .ques-item.related .ques-item-no {
   display: block;
 }
-.ContainerWarp20210527  .container-wrapper .card-container {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container {
   position: relative;
-  width: 500px;
+  width: 48%;
   height: 100%;
-  overflow-y: hidden;
+  overflow: hidden;
   /*float: right;*/
   background-color: white;
   color: #000000;
@@ -338,7 +343,7 @@ a:focus {
   /* .No_radius_h {   width: 48px;   height: 24px;   border-radius: 12px;   border: 1px solid #989898;   cursor: pointer; } */
   /*.MaxContanier, .marginFixBot {width: auto; max-width: 1171px;}*/
 }
-.ContainerWarp20210527  .container-wrapper .card-container .card-item {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .card-item {
   position: relative;
   width: 798px;
   height: 1125px;
@@ -346,7 +351,7 @@ a:focus {
   border: 1px solid #000000;
   background-color: #ffffff;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .card-operation {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .card-operation {
   position: relative;
   top: 0;
   left: 0;
@@ -354,12 +359,12 @@ a:focus {
   height: 0px;
   margin: 0px auto;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .card-operation .card-ques-area {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .card-operation .card-ques-area {
   position: absolute;
   z-index: 1;
   border: 1px solid rgba(255, 255, 255, 0);
 }
-.ContainerWarp20210527  .container-wrapper .card-container .card-operation .card-ques-area span.fa-check-circle {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .card-operation .card-ques-area span.fa-check-circle {
   display: none;
   width: 14px;
   height: 14px;
@@ -369,7 +374,7 @@ a:focus {
   color: #2DCA93;
   font-size: 18px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .card-operation .card-ques-area span.fa-check-circle-o {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .card-operation .card-ques-area span.fa-check-circle-o {
   display: none;
   width: 14px;
   height: 14px;
@@ -379,7 +384,7 @@ a:focus {
   color: #2DCA93;
   font-size: 18px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .card-operation .card-ques-area .card-ques-area-btn {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .card-operation .card-ques-area .card-ques-area-btn {
   -moz-user-select: none;
   -khtml-user-select: none;
   -ms-user-select: none;
@@ -389,45 +394,45 @@ a:focus {
   padding: 0px 5px;
   background-color: rgba(255, 255, 255, 0.6);
 }
-.ContainerWarp20210527  .container-wrapper .card-container .card-operation .card-ques-area .card-ques-area-btn span {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .card-operation .card-ques-area .card-ques-area-btn span {
   display: inline-block;
   width: 14px;
   height: 14px;
   cursor: pointer;
   background-color: white;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .card-operation .card-ques-area .card-ques-area-btn span:hover {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .card-operation .card-ques-area .card-ques-area-btn span:hover {
   transform: scale(1.3);
 }
-.ContainerWarp20210527  .container-wrapper .card-container .card-operation .card-ques-area .card-ques-area-btn span.fa-crop {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .card-operation .card-ques-area .card-ques-area-btn span.fa-crop {
   color: #FC6873;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .card-operation .card-ques-area .card-ques-area-btn span.fa-file-text-o {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .card-operation .card-ques-area .card-ques-area-btn span.fa-file-text-o {
   color: #1C63D0;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .card-operation .card-ques-area:hover,
-.ContainerWarp20210527  .container-wrapper .card-container .card-operation .card-ques-area.selected {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .card-operation .card-ques-area:hover,
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .card-operation .card-ques-area.selected {
   border-color: #FC6873;
   /*transform: scale(1.1);*/
 }
-.ContainerWarp20210527  .container-wrapper .card-container .card-operation .card-ques-area:hover .card-ques-area-btn,
-.ContainerWarp20210527  .container-wrapper .card-container .card-operation .card-ques-area.selected .card-ques-area-btn {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .card-operation .card-ques-area:hover .card-ques-area-btn,
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .card-operation .card-ques-area.selected .card-ques-area-btn {
   display: block;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .card-operation .card-ques-area.related .card-ques-area-btn {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .card-operation .card-ques-area.related .card-ques-area-btn {
   /*background-color: @green-color;*/
 }
-.ContainerWarp20210527  .container-wrapper .card-container .card-operation .card-ques-area.related .fa-check-circle {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .card-operation .card-ques-area.related .fa-check-circle {
   display: inline-block;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .card-operation .card-ques-area.related.disable .fa-check-circle {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .card-operation .card-ques-area.related.disable .fa-check-circle {
   color: #CCCCCC;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .card-operation .card-ques-area.related:hover,
-.ContainerWarp20210527  .container-wrapper .card-container .card-operation .card-ques-area.related.selected {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .card-operation .card-ques-area.related:hover,
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .card-operation .card-ques-area.related.selected {
   border-color: #2DCA93;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .MaxContanier_l {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .MaxContanier_l {
   -moz-user-select: none;
   -khtml-user-select: none;
   -ms-user-select: none;
@@ -438,16 +443,16 @@ a:focus {
   height: 1123px;
   page-break-after: always;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .ContainerHeader {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .ContainerHeader {
   display: flex;
   padding: 20px 20px 0;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .marginWidth {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .marginWidth {
   width: 690px;
   margin: 0 auto;
   /* margin-top: 196px; */
 }
-.ContainerWarp20210527  .container-wrapper .card-container .ballBlack {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .ballBlack {
   position: absolute;
   left: 20px;
   top: 20px;
@@ -456,7 +461,7 @@ a:focus {
   background-color: #000000;
   border-radius: 13px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .ballBlack2 {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .ballBlack2 {
   position: absolute;
   right: 20px;
   top: 20px;
@@ -465,12 +470,12 @@ a:focus {
   background-color: #000000;
   border-radius: 13px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .SquareBlack {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .SquareBlack {
   width: 10px;
   height: 10px;
   background-color: #000000;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .TitleContent {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .TitleContent {
   display: flex;
   /* border-bottom: 1px dashed #000000; */
   height: 170px;
@@ -480,40 +485,40 @@ a:focus {
   left: 52px;
   top: 22px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Sealline {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Sealline {
   border-bottom: 1px dashed #000000;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Sealline_none {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Sealline_none {
   border-bottom: none;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .TitleContent1 {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .TitleContent1 {
   width: 441px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .TestName {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .TestName {
   font-size: 23px;
   font-weight: 700;
   text-align: center;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .StdInfo {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .StdInfo {
   display: flex;
   margin-bottom: 10px;
   font-size: 16px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .COL_StdInfo {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .COL_StdInfo {
   height: 120px;
   font-size: 16px;
   display: flex;
   justify-content: space-between;
   padding-left: 10px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .COL_StdInfo li {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .COL_StdInfo li {
   height: 35px;
   margin-bottom: 10px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Small_COL_StdInfo {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Small_COL_StdInfo {
   height: 120px;
   font-size: 16px;
   display: flex;
@@ -521,11 +526,11 @@ a:focus {
   justify-content: space-between;
   margin-left: 10px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Small_COL_StdInfo li {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Small_COL_StdInfo li {
   height: 35px;
   margin-bottom: 10px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .QR_Code {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .QR_Code {
   height: 122px;
   width: 122px;
   border: 1px solid #000000;
@@ -534,7 +539,7 @@ a:focus {
   align-items: center;
   margin-left: 90px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .QR_Code2 {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .QR_Code2 {
   height: 122px;
   width: 122px;
   border: 1px solid #000000;
@@ -543,35 +548,35 @@ a:focus {
   margin-left: 168px;
   align-items: center;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .TwoBorder {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .TwoBorder {
   display: flex;
   margin-top: -7px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .underline {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .underline {
   /* width: 75px; border-bottom: 1px solid #000000; margin-right: 10px; */
   width: 86px;
   border-bottom: 1px solid #000000;
   margin-right: 13px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Col_underline {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Col_underline {
   width: 86px;
   border-bottom: 1px solid #000000;
   margin-left: 50px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .dashed_border {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .dashed_border {
   border-bottom: 1px dashed #000000;
   padding-bottom: 12px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Ab_Two {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Ab_Two {
   position: absolute;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .TitleContent2 {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .TitleContent2 {
   width: 114px;
   height: 114px;
   border: 1px solid #000000;
   margin: 29px 10px 0 0;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .TitleContent3 {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .TitleContent3 {
   height: 145px;
   width: 120px;
   border: 1px solid #000000;
@@ -579,40 +584,40 @@ a:focus {
   justify-content: center;
   align-items: center;
 }
-.ContainerWarp20210527  .container-wrapper .card-container ul li {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container ul li {
   list-style: none;
 }
-.ContainerWarp20210527  .container-wrapper .card-container td.allNumberB span {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container td.allNumberB span {
   margin-left: 3px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .allNumberB {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .allNumberB {
   width: 253px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .rowBorder {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .rowBorder {
   height: 122px;
   margin-top: -7px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .rowBorder tr td:nth-child(1),
-.ContainerWarp20210527  .container-wrapper .card-container .rowBorder tr td:nth-child(2) {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .rowBorder tr td:nth-child(1),
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .rowBorder tr td:nth-child(2) {
   width: 28px;
   /* text-align: center; */
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Attention {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Attention {
   display: flex;
   justify-content: space-around;
   margin-top: 192px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Attention22 {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Attention22 {
   display: flex;
   justify-content: space-around;
   margin-top: 290px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Attention_l {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Attention_l {
   border: 1px solid #000000;
   width: 437px;
   padding: 3px 8px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Attention_r ul li {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Attention_r ul li {
   width: 224px;
   border: 1px solid #000000;
   height: 26px;
@@ -621,20 +626,20 @@ a:focus {
   display: flex;
   align-items: center;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .margin_top {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .margin_top {
   margin-top: 10px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .rectangle {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .rectangle {
   width: 25px;
   height: 17px;
   background-color: #000000;
   margin-left: 67px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .l_r_red {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .l_r_red {
   border-left: 1px solid #9E280B;
   border-right: 1px solid #9E280B;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .error span {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .error span {
   width: 28px;
   height: 18px;
   margin-right: 6px;
@@ -643,74 +648,74 @@ a:focus {
   justify-content: center;
   align-items: center;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .error_border {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .error_border {
   width: 8px;
   height: 8px;
   border-radius: 4px;
   background-color: #000000;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .error_angle {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .error_angle {
   width: 8px;
   height: 8px;
   background-color: #000000;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .EmptySpace {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .EmptySpace {
   width: 25px;
   height: 15px;
   border: 1px solid #000000;
   margin-left: 20px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .AllTable {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .AllTable {
   display: flex;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Font_flew {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Font_flew {
   display: flex;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Tb_com_1 {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Tb_com_1 {
   border: 1px solid #000000;
   padding: 15px;
   min-height: 50px;
   display: flex;
   flex-wrap: wrap;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Tb_com_1 > div {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Tb_com_1 > div {
   margin: 6px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Tb_com {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Tb_com {
   border: 1px solid #000000;
   padding: 0px 5px 15px;
   margin-bottom: 14px;
   position: relative;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .AllTable_one {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .AllTable_one {
   border: 1px solid #BB4313;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .AllTable_one tr {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .AllTable_one tr {
   text-align: center;
   height: 22px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .AllTable_one tr th {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .AllTable_one tr th {
   width: 30px;
   text-align: center;
   font-weight: normal;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Write_text {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Write_text {
   width: 640px;
   border-bottom: 1px solid #000000;
   height: 30px;
   cursor: pointer;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Write_text:hover {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Write_text:hover {
   border-bottom: 1px solid #1E92E0;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .AllSmallUnder {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .AllSmallUnder {
   display: flex;
   flex-wrap: wrap;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Write_text_s:hover {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Write_text_s:hover {
   border-bottom: 1px solid #1E92E0;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Write_text_s {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Write_text_s {
   min-width: 200px;
   max-width: 425px;
   border-bottom: 1px solid #000000;
@@ -720,30 +725,30 @@ a:focus {
   resize: horizontal;
   overflow: auto;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .BigBorder {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .BigBorder {
   display: flex;
   margin-top: 10px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .title_number {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .title_number {
   margin-top: 12px;
   width: 20px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .textarea {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .textarea {
   border: transparent;
   margin-top: 20px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .locity {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .locity {
   margin: 28px 11px 0 4px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .locity2 {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .locity2 {
   margin: 100px 11px 0 4px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .l_width {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .l_width {
   width: 22px;
   height: 11px;
   background-color: #000000;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .l_width_1 {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .l_width_1 {
   width: 22px;
   height: 11px;
   background-color: #000000;
@@ -751,71 +756,71 @@ a:focus {
   left: 22px;
   top: 300px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Four_black {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Four_black {
   margin: 56px 4px 0 10px;
   position: absolute;
   right: 21px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Four_black div {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Four_black div {
   margin-bottom: 11px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Numberone {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Numberone {
   margin-right: 32px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .NumberTwo {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .NumberTwo {
   margin-right: 33px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .bottom_border {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .bottom_border {
   width: 24px;
   height: 24px;
   border-radius: 12px;
   background-color: #000000;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .all_width {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .all_width {
   display: flex;
   justify-content: space-between;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .bt_four {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .bt_four {
   display: flex;
   margin-top: 7px;
   padding: 0 10px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .bt_four .l_width {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .bt_four .l_width {
   margin-right: 8px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .ContainerCenter {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .ContainerCenter {
   display: flex;
   padding: 0 20px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Essay_table {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Essay_table {
   margin-bottom: 3px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Essay_table tr {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Essay_table tr {
   height: 31px;
   /* margin-bottom: 3px; */
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Essay_table tr td {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Essay_table tr td {
   width: 31px;
   border: 2px solid #000000;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .All_table {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .All_table {
   border: 1px solid #000000;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .five_Essay_p {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .five_Essay_p {
   margin: 10px 0 10px 0px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .MaxContanier_r {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .MaxContanier_r {
   width: 272px;
   background-color: #FFFFFF;
   /* position: absolute; right: 0; height: 100%; */
 }
-.ContainerWarp20210527  .container-wrapper .card-container .fix_right {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .fix_right {
   position: fixed;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .MaxContanier_r h4 {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .MaxContanier_r h4 {
   background-color: #F7F7F7;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Nav_title {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Nav_title {
   height: 45px;
   line-height: 45px;
   font-size: 16px;
@@ -823,18 +828,18 @@ a:focus {
   background-color: #f7f7f7;
   padding-left: 20px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .All_barrier {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .All_barrier {
   display: flex;
   justify-content: space-around;
   padding: 20px 10px 0;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .All_barrier div {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .All_barrier div {
   text-align: center;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .All_barrier div p {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .All_barrier div p {
   margin-top: 5px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .barrier {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .barrier {
   width: 73px;
   height: 64px;
   border: 1px solid #989898;
@@ -843,34 +848,34 @@ a:focus {
   align-items: center;
   cursor: pointer;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .b_active {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .b_active {
   border: 2px solid #1F92E0;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .one_barrier {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .one_barrier {
   height: 34px;
   width: 43px;
   background-color: #CBCBCB;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .two_barrier {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .two_barrier {
   height: 34px;
   width: 23px;
   background-color: #CBCBCB;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .three_barrier {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .three_barrier {
   height: 34px;
   width: 17px;
   background-color: #CBCBCB;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .gray_font {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .gray_font {
   color: #989898;
   margin-left: 15px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .All_format {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .All_format {
   display: flex;
   justify-content: space-around;
   margin: 10px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .border_fm {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .border_fm {
   height: 33px;
   width: 74px;
   border: 1px solid #989898;
@@ -878,87 +883,87 @@ a:focus {
   justify-content: center;
   align-items: center;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .NodecideFont {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .NodecideFont {
   display: none;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Four_font {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Four_font {
   display: flex;
   justify-content: space-between;
   /* padding: 20px; */
 }
-.ContainerWarp20210527  .container-wrapper .card-container .nav-tabs > li > a {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .nav-tabs > li > a {
   font-size: 16px;
   color: #333333;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .nav-tabs > li.active > a,
-.ContainerWarp20210527  .container-wrapper .card-container .nav-tabs > li.active > a:focus,
-.ContainerWarp20210527  .container-wrapper .card-container .nav-tabs > li.active > a:hover {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .nav-tabs > li.active > a,
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .nav-tabs > li.active > a:focus,
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .nav-tabs > li.active > a:hover {
   /* background-color: #1F92E0; */
   color: #ffffff;
   text-decoration: none;
   border: none;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .bgc_font {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .bgc_font {
   background-color: #A8A8A8;
   color: #000000;
   padding: 15px 0;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .border_fm a {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .border_fm a {
   color: #000000;
 }
-.ContainerWarp20210527  .container-wrapper .card-container a,
-.ContainerWarp20210527  .container-wrapper .card-container a:focus,
-.ContainerWarp20210527  .container-wrapper .card-container a:hover {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container a,
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container a:focus,
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container a:hover {
   text-decoration: none;
   border: none;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .TitleContent_number {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .TitleContent_number {
   display: flex;
   margin: 10px;
   justify-content: space-between;
   position: absolute;
   left: 48px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .rectangle_number {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .rectangle_number {
   width: 25px;
   height: 17px;
   background-color: #000000;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .EmptySpace_number {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .EmptySpace_number {
   width: 25px;
   height: 15px;
   border: 1px solid #000000;
   margin-right: 6px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Attention_l_number {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Attention_l_number {
   border: 1px solid #000000;
   width: 440px;
   padding: 3px 8px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .TitleContent1_number {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .TitleContent1_number {
   /* width: 441px; */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 250px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .number_zhun tr th {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .number_zhun tr th {
   text-align: center;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .number_zhun tr {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .number_zhun tr {
   height: 20px;
   text-align: center;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .number_zhun tr td {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .number_zhun tr td {
   width: 30px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .allNumber {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .allNumber {
   height: 185px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .small_number {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .small_number {
   margin-right: 25px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .add_underline {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .add_underline {
   position: absolute;
   right: -40px;
   /* top: 20px; */
@@ -966,48 +971,48 @@ a:focus {
   display: none;
   bottom: 0;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .add_underline2 {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .add_underline2 {
   position: absolute;
   right: -21px;
   bottom: 0px;
   cursor: pointer;
   display: none;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .AllWriteUnder {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .AllWriteUnder {
   position: relative;
   display: flex;
   flex-wrap: wrap;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .AllWriteUnder:hover .add_underline {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .AllWriteUnder:hover .add_underline {
   display: block;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .AllWriteUnder:hover .add_underline2 {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .AllWriteUnder:hover .add_underline2 {
   display: block;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .layCont {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .layCont {
   margin: 0 auto;
   /* width: 279px; */
   /* margin-top: 8%; */
 }
-.ContainerWarp20210527  .container-wrapper .card-container .AddRemove {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .AddRemove {
   display: flex;
   border: 1px solid #CBCBCB;
   /* width: 188px; */
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Add_P {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Add_P {
   display: flex;
   align-items: center;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .AddOpen img {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .AddOpen img {
   cursor: pointer;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Three_n {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Three_n {
   display: flex;
   justify-content: space-between;
   align-items: center;
   /* width: 250px; */
 }
-.ContainerWarp20210527  .container-wrapper .card-container .China_number {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .China_number {
   width: 66px;
   height: 35px;
   border: 1px solid #CACACA;
@@ -1016,87 +1021,87 @@ a:focus {
   align-items: center;
   cursor: pointer;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .C_active {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .C_active {
   background-color: #4599EB;
   color: #ffffff;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Def_P {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Def_P {
   display: flex;
   align-items: center;
   padding-left: 18px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .layui-layer-btn.layui-layer-btn- {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .layui-layer-btn.layui-layer-btn- {
   text-align: center;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .removeOpen img {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .removeOpen img {
   cursor: pointer;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .layui-layer-title {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .layui-layer-title {
   background-color: #4598EC;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .layui-layer.layui-layer-my .layui-layer-title {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .layui-layer.layui-layer-my .layui-layer-title {
   background-color: #4598EC;
   /* 标题背景颜色 */
 }
-.ContainerWarp20210527  .container-wrapper .card-container .setting {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .setting {
   position: absolute;
   right: -32px;
   top: -1px;
   cursor: pointer;
   display: none;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .MagicPen {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .MagicPen {
   position: absolute;
   right: 6px;
   top: 3px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .MagicPen2 {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .MagicPen2 {
   position: absolute;
   right: 6px;
   top: 3px;
   display: none;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .custom_over,
-.ContainerWarp20210527  .container-wrapper .card-container .custom {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .custom_over,
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .custom {
   width: 88px;
   position: relative;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Def_n {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Def_n {
   background-color: #4598EC;
   color: #ffffff;
 }
-.ContainerWarp20210527  .container-wrapper .card-container input.InputN {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container input.InputN {
   width: 86px;
   height: 31px;
   padding-left: 12px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container input.InputY {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container input.InputY {
   width: 86px;
   height: 31px;
   padding-left: 12px;
   background-color: #4598EC;
   color: #ffffff;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .displayBlock {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .displayBlock {
   display: block;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .diaplayNone {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .diaplayNone {
   display: none;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .InputN::-webkit-input-placeholder {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .InputN::-webkit-input-placeholder {
   color: #000000;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .InputN::-ms-input-placeholder {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .InputN::-ms-input-placeholder {
   color: #000000;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .defaultNumber {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .defaultNumber {
   position: absolute;
   right: 4px;
   top: 3px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .defaultNumber span:nth-child(1),
-.ContainerWarp20210527  .container-wrapper .card-container .defaultNumber span:nth-child(2),
-.ContainerWarp20210527  .container-wrapper .card-container .defaultNumber span:nth-child(3) {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .defaultNumber span:nth-child(1),
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .defaultNumber span:nth-child(2),
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .defaultNumber span:nth-child(3) {
   height: 31px;
   border: 1px solid #CBCBCB;
   width: 76px;
@@ -1106,49 +1111,49 @@ a:focus {
   margin-left: 5px;
   cursor: pointer;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .defaultNumber span img {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .defaultNumber span img {
   vertical-align: baseline;
   width: 11px;
   height: 11px;
   cursor: pointer;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .rowNumber {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .rowNumber {
   /*display: none;*/
   position: absolute;
   right: 0;
   top: 0;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .rowDiscern {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .rowDiscern {
   display: none;
   position: absolute;
   right: 0;
   top: 0;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .rowDiscern td {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .rowDiscern td {
   width: 50px;
   border-bottom: 1px solid #0000001f;
   border-left: 1px solid #0000001f;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .rowDiscern .point {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .rowDiscern .point {
   font-size: 20px;
   text-align: end;
   vertical-align: bottom;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .AllWriteUnder {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .AllWriteUnder {
   width: 440px !important;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .AllWriteUnder .Write_text_s .rowDiscern {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .AllWriteUnder .Write_text_s .rowDiscern {
   width: 200px !important;
   top: 10px;
   border-top: 1px solid #0000001f;
   border-right: 1px solid #0000001f;
   left: 444px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .ContainerBottom {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .ContainerBottom {
   display: flex;
   padding: 20px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .ContanierBottomFix {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .ContanierBottomFix {
   position: fixed;
   bottom: 0;
   height: 62px;
@@ -1156,7 +1161,7 @@ a:focus {
   width: 100%;
   border-top: 1px solid #1F92E0;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .marginFixBot {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .marginFixBot {
   width: 1171px;
   margin: 0 auto;
   display: flex;
@@ -1164,10 +1169,10 @@ a:focus {
   align-items: center;
   height: 60px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .red_font {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .red_font {
   color: #FF0302;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .input_font {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .input_font {
   width: 88px;
   height: 34px;
   background-color: #1F92E0;
@@ -1178,10 +1183,10 @@ a:focus {
   margin-left: 10px;
   cursor: pointer;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .All_input_font {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .All_input_font {
   display: flex;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .SettingThree li {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .SettingThree li {
   height: 39px;
   line-height: 39px;
   border-bottom: 1px solid #CBCBCB;
@@ -1191,7 +1196,7 @@ a:focus {
   justify-content: space-between;
   align-items: center;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .radius_bor {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .radius_bor {
   width: 48px;
   height: 24px;
   margin-right: 10px;
@@ -1199,11 +1204,11 @@ a:focus {
   background-color: #1F92E0;
   cursor: pointer;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .English_border li {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .English_border li {
   height: 36px;
   border-bottom: 1px solid #000000;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .radius_bor_line {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .radius_bor_line {
   width: 48px;
   height: 24px;
   margin-right: 10px;
@@ -1211,14 +1216,14 @@ a:focus {
   background-color: #1F92E0;
   cursor: pointer;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .radius_bor_h {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .radius_bor_h {
   width: 48px;
   height: 24px;
   border-radius: 12px;
   background-color: #1F92E0;
   cursor: pointer;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .No_radius {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .No_radius {
   width: 48px;
   height: 24px;
   margin-right: 10px;
@@ -1226,13 +1231,13 @@ a:focus {
   border: 1px solid #989898;
   cursor: pointer;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .block_n {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .block_n {
   display: none;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .block_y {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .block_y {
   display: block;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .no {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .no {
   width: 15px;
   height: 15px;
   border-radius: 7px;
@@ -1240,7 +1245,7 @@ a:focus {
   margin-top: 4px;
   margin-left: 26px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .ok {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .ok {
   width: 15px;
   height: 15px;
   border-radius: 7px;
@@ -1248,16 +1253,16 @@ a:focus {
   margin-top: 4px;
   margin-left: 5px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .displayBlock {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .displayBlock {
   display: block;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .diaplayNone {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .diaplayNone {
   display: none;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .disable {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .disable {
   pointer-events: none;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .AllTable_one td p.ques_option {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .AllTable_one td p.ques_option {
   font-family: Futura, Trebuchet MS, Arial, sans-serif !important;
   font-size: 12px !important;
   -webkit-transform: scale(0.8) !important;
@@ -1266,7 +1271,7 @@ a:focus {
   margin: 0px !important;
   padding: 0 2px 0 2px!important;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Tb_com_1 .judge_ques p.judge_ques_option {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Tb_com_1 .judge_ques p.judge_ques_option {
   display: inline-block;
   font-family: Futura, Trebuchet MS, Arial, sans-serif !important;
   font-size: 12px !important;
@@ -1275,160 +1280,160 @@ a:focus {
   margin: 0px !important;
   padding: 0 3px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .bgc_font {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .bgc_font {
   padding: 15px 45px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .ContainerHeader {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .ContainerHeader {
   display: block;
   margin-bottom: 10px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .square_black_group {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .square_black_group {
   position: absolute;
   left: 56px;
   top: 28px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .SquareBlack {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .SquareBlack {
   margin-right: 10px;
   float: left;
   background: black!important;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .rowBorder tr td:nth-child(1) {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .rowBorder tr td:nth-child(1) {
   width: 24px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .QR_Code {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .QR_Code {
   margin-left: 60px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .allNumberB {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .allNumberB {
   width: 290px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container td.allNumberB span {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container td.allNumberB span {
   margin-left: 2px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container img.qr-image {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container img.qr-image {
   width: 110px;
   height: 110px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .TestName {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .TestName {
   height: 32px;
   overflow: hidden;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Attention {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Attention {
   margin-top: 0;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Numberone {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Numberone {
   margin-right: auto;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .rectangle,
-.ContainerWarp20210527  .container-wrapper .card-container .error_border,
-.ContainerWarp20210527  .container-wrapper .card-container .error_angle {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .rectangle,
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .error_border,
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .error_angle {
   background: black!important;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Title_Content {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Title_Content {
   display: flex;
   height: 170px;
   justify-content: flex-end;
   margin-top: 20px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .TitleContent_number {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .TitleContent_number {
   position: inherit;
   margin: 20px auto 0px;
   padding-bottom: 4px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .TitleContent_number.dashed_border {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .TitleContent_number.dashed_border {
   padding-bottom: 3px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .AllTable_one tr th,
-.ContainerWarp20210527  .container-wrapper .card-container .AllTable_one tr td {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .AllTable_one tr th,
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .AllTable_one tr td {
   min-width: 30px;
   max-width: 30px;
   overflow: hidden;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Tb_com {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Tb_com {
   margin-bottom: 0px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .BigBorder {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .BigBorder {
   margin-top: 0px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .title_number {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .title_number {
   height: 18px;
   margin-top: 22px;
   width: 24px;
   text-align: center;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .AllWriteUnder {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .AllWriteUnder {
   width: 640px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .Write_text_s {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Write_text_s {
   min-width: 50px;
   height: 40px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .add_underline {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .add_underline {
   position: relative;
   width: 0px;
   right: 0px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .add_underline_op {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .add_underline_op {
   width: 46px;
   margin-top: 18px;
   height: 20px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .judge_ques {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .judge_ques {
   width: 150px;
   overflow: hidden;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .judge_ques div {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .judge_ques div {
   width: 50px;
   height: 20px;
   float: left;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .judge_ques div.ques_no {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .judge_ques div.ques_no {
   width: 34px;
   overflow: hidden;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .textarea {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .textarea {
   resize: none;
 }
-.ContainerWarp20210527  .container-wrapper .card-container textarea:disabled {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container textarea:disabled {
   background-color: white;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .custom {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .custom {
   top: -1px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .ContainerBottom {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .ContainerBottom {
   position: absolute;
   bottom: 0px;
   width: 100%;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .bottom_border {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .bottom_border {
   width: 26px;
   height: 26px;
   border-radius: 13px;
   background: black!important;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .input_font {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .input_font {
   border: 1px solid #1F92E0;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .input_font.un_reach {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .input_font.un_reach {
   background-color: #ffffff;
   color: #1F92E0;
 }
 @media print {
-  .ContainerWarp20210527  .container-wrapper .card-container .MaxContanier_l {
+  .ContainerWarp20210527  .container-wrapper .left-asider  .card-container .MaxContanier_l {
     margin-bottom: 0px;
     border: 0px;
     height: 1123px;
     width: 796px;
   }
-  .ContainerWarp20210527  .container-wrapper .card-container .Write_text_s {
+  .ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Write_text_s {
     resize: none;
   }
-  .ContainerWarp20210527  .container-wrapper .card-container .no-print {
+  .ContainerWarp20210527  .container-wrapper .left-asider  .card-container .no-print {
     display: none;
   }
-  .ContainerWarp20210527  .container-wrapper .card-container .rowDiscern {
+  .ContainerWarp20210527  .container-wrapper .left-asider  .card-container .rowDiscern {
     display: block;
   }
-  .ContainerWarp20210527  .container-wrapper .card-container .AllTable_one td p.ques_option {
+  .ContainerWarp20210527  .container-wrapper .left-asider  .card-container .AllTable_one td p.ques_option {
     font-family: Futura, Trebuchet MS, Arial, sans-serif !important;
     font-size: 12px !important;
     -webkit-transform: scale(0.8) !important;
@@ -1437,20 +1442,20 @@ a:focus {
     margin: 0px !important;
     padding: 0 2px 0 2px!important;
   }
-  .ContainerWarp20210527  .container-wrapper .card-container .Tb_com_1 .judge_ques p.judge_ques_option {
+  .ContainerWarp20210527  .container-wrapper .left-asider  .card-container .Tb_com_1 .judge_ques p.judge_ques_option {
     display: inline-block !important;
     margin: 0px !important;
     padding: 0 3px !important;
   }
 }
-.ContainerWarp20210527  .container-wrapper .card-container .MaxContanier[mode="preview"] {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .MaxContanier[mode="preview"] {
   width: 796px;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .MaxContanier[mode="preview"] .bgc_font {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .MaxContanier[mode="preview"] .bgc_font {
   padding: 10px 0px 0px;
   background-color: #EFEFEF;
 }
-.ContainerWarp20210527  .container-wrapper .card-container .sectionName {
+.ContainerWarp20210527  .container-wrapper .left-asider  .card-container .sectionName {
   height: 15px;
 }
 
@@ -1693,6 +1698,6 @@ a:focus {
 ._lock_card .container-wrapper {
   z-index: 15;
 }
-._lock_card .container-wrapper .card-container {
+._lock_card .container-wrapper .left-asider  .card-container {
   z-index: 15;
 }

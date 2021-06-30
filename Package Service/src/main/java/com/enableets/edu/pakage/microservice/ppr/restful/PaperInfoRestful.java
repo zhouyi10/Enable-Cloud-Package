@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiParam;
  * @date 2020/07/21
  */
 
-@Api(value = "PPR Paper Info Api", tags = "Paper Info Api")
+@Api(value = "(0)PPR Paper Info Api", tags = "(0)Paper Info Api")
 @RestController
 @RequestMapping(value = "/microservice/packageservice/ppr/paper")
 public class PaperInfoRestful extends ServiceControllerAdapter<String> {
